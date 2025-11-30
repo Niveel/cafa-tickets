@@ -23,8 +23,8 @@ const metrophobic = Metrophobic({
 });
 
 export const metadata: Metadata = {
-  title: "Bellak",
-  description: "A voting platform.",
+  title: "Cafa Tickets",
+  description: "An Event ticketing platform.",
 };
 
 export default function RootLayout({
