@@ -1,8 +1,17 @@
-import React from 'react'
+import { Navbar, Footer } from "@/components"
+import { currentUser } from "@/data/dummy.general"
+// import { getCurrentUser, isAuthenticated } from "../lib/auth"
 
-const RootLayout = () => {
+const RootLayout = async ({children}: {children: React.ReactNode}) => {
+  // const isLoggedIn = await isAuthenticated()
+  // const user = await getCurrentUser()
+
   return (
-    <div>RootLayout</div>
+    <div>
+        <Navbar currentUser={currentUser} />
+        {children}
+        <Footer />
+    </div>
   )
 }
 

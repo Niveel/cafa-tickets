@@ -1,8 +1,10 @@
-import React from 'react'
+import { Landing } from "@/components"
 
 const HomePage = () => {
   return (
-    <div>HomePage</div>
+    <div>
+      <Landing />
+    </div>
   )
 }
 
