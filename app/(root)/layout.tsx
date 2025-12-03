@@ -8,7 +8,7 @@ const RootLayout = async ({children}: {children: React.ReactNode}) => {
 
   return (
     <div>
-        <Navbar currentUser={currentUser} />
+        <Navbar currentUser={currentUser} isLoggedIn={true} />
         {children}
         <Footer />
     </div>

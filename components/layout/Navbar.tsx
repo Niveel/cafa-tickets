@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Menu, X, Ticket, Plus } from "lucide-react";
+import { Menu, X, Plus } from "lucide-react";
 
 import { placeholderPic } from '@/data/constants';
 import { navLinks, profileMenuItems } from "@/data/static.general";
@@ -13,10 +13,10 @@ import { CurrentUser as CurrentUserType } from "@/types/general.types";
 
 interface NavBarProps {
     isLoggedIn?: boolean;
-    currentUser: CurrentUserType;
+    currentUser?: CurrentUserType | null;
 }
 
-const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
+const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
     const [navbarActive, setNavbarActive] = useState<boolean>(true);
     const [showBg, setShowBg] = useState<boolean>(false);
     const [mobileNavMenuActive, setMobileNavMenuActive] = useState<boolean>(false);
@@ -149,12 +149,12 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                     transition-all duration-500
                     ${navbarActive ? "translate-y-0" : "-translate-y-full"}
                     ${showBg 
-                        ? 'bg-accent backdrop-blur-xl shadow-lg border-b border-purple-100/20' 
+                        ? 'bg-primary backdrop-blur-xl shadow-lg border-b border-accent' 
                         : 'bg-transparent'
                     }
                 `}
             >
-                <div className="inner-wrapper">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center h-16 sm:h-20">
                         {/* Logo Section */}
                         <div className="flex items-center gap-6 sm:gap-8">
@@ -163,7 +163,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                                 className="flex items-center gap-3 group"
                                 aria-label="Cafa Tickets Home"
                             >
-                                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden ring-2 ring-purple-400/30 group-hover:ring-purple-500 transition-all duration-300 group-hover:scale-105">
+                                <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden ring-2 ring-accent/30 group-hover:ring-accent transition-all duration-300 group-hover:scale-105">
                                     <Image
                                         src="/assets/images/logo.png"
                                         width={48}
@@ -176,7 +176,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                                     <h1 className="big-text-5 font-bold text-white">
                                         Cafa Tickets
                                     </h1>
-                                    <p className="small-text-2 text-slate-100 -mt-1">
+                                    <p className="small-text-2 text-slate-200 -mt-1">
                                         Your Event Partner
                                     </p>
                                 </div>
@@ -197,8 +197,8 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                                                 flex items-center gap-2
                                                 transition-all duration-300
                                                 ${isActive
-                                                    ? 'bg-linear-to-r from-purple-600 to-indigo-600 text-white shadow-md'
-                                                    : 'text-white hover:bg-white hover:text-primary'
+                                                    ? 'bg-accent text-white shadow-md border border-accent'
+                                                    : 'text-white hover:bg-primary-100 hover:text-slate-100 border border-transparent'
                                                 }
                                             `}
                                         >
@@ -218,7 +218,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                                     <div className="hidden sm:block">
                                         <AppButton
                                             title="Create Event"
-                                            url="/dashboard/events/create"
+                                            url="/events/create"
                                             variant="primary"
                                             size="md"
                                             icon={<Plus className="w-4 h-4" />}
@@ -228,9 +228,9 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
 
                                     {/* Profile Dropdown */}
                                     <ProfileDropdown
-                                        image={currentUser.profile_image || placeholderPic}
-                                        userName={currentUser.full_name}
-                                        userEmail={currentUser.email}
+                                        image={currentUser?.profile_image || placeholderPic}
+                                        userName={currentUser?.full_name}
+                                        userEmail={currentUser?.email}
                                         menuItems={profileMenuItems}
                                         onClick={handleLogoutClick}
                                     />
@@ -255,7 +255,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
 
                             {/* Mobile Menu Toggle */}
                             <button
-                                className="lg:hidden p-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors duration-300"
+                                className="lg:hidden p-2 rounded-lg bg-accent text-white hover:bg-accent-100 transition-colors duration-300"
                                 aria-label="Open mobile menu"
                                 onClick={() => setMobileNavMenuActive(true)}
                                 type="button"
@@ -271,7 +271,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
             <div
                 ref={mobileMenuRef}
                 className={`
-                    fixed inset-0 bg-white z-50000
+                    fixed inset-0 bg-primary z-50000
                     transition-all duration-500 ease-out
                     ${mobileNavMenuActive
                         ? "opacity-100 translate-x-0 visible pointer-events-auto"
@@ -283,9 +283,9 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                 aria-label="Mobile navigation menu"
             >
                 {/* Mobile Menu Header */}
-                <div className="flex justify-between items-center p-4 border-b border-slate-200 bg-linear-to-r from-purple-50 to-indigo-50">
+                <div className="flex justify-between items-center p-4 border-b border-accent bg-linear-to-r from-primary-100 to-primary-200">
                     <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-purple-400/30">
+                        <div className="w-10 h-10 rounded-xl overflow-hidden ring-2 ring-accent/30">
                             <Image
                                 src="/assets/images/logo.png"
                                 width={40}
@@ -295,13 +295,13 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                             />
                         </div>
                         <div>
-                            <h2 className="normal-text font-bold text-slate-900">Cafa Tickets</h2>
-                            <p className="small-text text-slate-600">Menu</p>
+                            <h2 className="normal-text font-bold text-white">Cafa Tickets</h2>
+                            <p className="small-text text-slate-200">Menu</p>
                         </div>
                     </div>
                     <button
                         ref={closeButtonRef}
-                        className="p-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+                        className="p-2 rounded-lg bg-accent text-white hover:bg-accent-100 transition-colors"
                         aria-label="Close mobile menu"
                         onClick={() => setMobileNavMenuActive(false)}
                         type="button"
@@ -313,10 +313,10 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                 {/* Mobile Menu Content */}
                 <div className="overflow-y-auto h-[calc(100vh-73px)] p-6">
                     {/* User Info Section - Mobile */}
-                    {isLoggedIn && (
-                        <div className="mb-6 p-4 rounded-xl bg-linear-to-br from-purple-50 via-indigo-50 to-blue-50 border border-purple-200/30">
+                    {isLoggedIn && currentUser && (
+                        <div className="mb-6 p-4 rounded-xl bg-linear-to-br from-primary-100 via-primary-200 to-primary border border-accent/30">
                             <div className="flex items-center gap-3 mb-4">
-                                <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-purple-400">
+                                <div className="w-14 h-14 rounded-full overflow-hidden ring-2 ring-accent">
                                     <Image
                                         src={currentUser.profile_image || placeholderPic}
                                         width={56}
@@ -326,10 +326,10 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                                     />
                                 </div>
                                 <div>
-                                    <p className="normal-text font-bold text-slate-900">
+                                    <p className="normal-text font-bold text-white">
                                         {currentUser.full_name}
                                     </p>
-                                    <p className="small-text text-slate-600">
+                                    <p className="small-text text-slate-200">
                                         {currentUser.email}
                                     </p>
                                 </div>
@@ -337,14 +337,14 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                             <div className="grid grid-cols-2 gap-2">
                                 <Link
                                     href="/tickets"
-                                    className="px-3 py-2 rounded-lg bg-white text-purple-700 text-center small-text font-medium hover:bg-purple-100 transition-colors"
+                                    className="px-3 py-2 rounded-lg bg-primary-200 text-white text-center small-text font-medium hover:bg-primary-100 transition-colors border border-accent/20"
                                     onClick={() => setMobileNavMenuActive(false)}
                                 >
                                     My Tickets
                                 </Link>
                                 <Link
                                     href="/events/create"
-                                    className="px-3 py-2 rounded-lg bg-purple-600 text-white text-center small-text font-medium hover:bg-purple-700 transition-colors"
+                                    className="px-3 py-2 rounded-lg bg-accent text-white text-center small-text font-medium hover:bg-accent-100 transition-colors"
                                     onClick={() => setMobileNavMenuActive(false)}
                                 >
                                     Create Event
@@ -355,7 +355,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
 
                     {/* Navigation Links */}
                     <nav className="space-y-2 mb-6">
-                        <p className="small-text font-semibold text-slate-500 uppercase tracking-wider mb-3">
+                        <p className="small-text font-semibold text-slate-300 uppercase tracking-wider mb-3">
                             Navigation
                         </p>
                         {navLinks.map((link) => {
@@ -369,8 +369,8 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                                         flex items-center gap-3 px-4 py-3 rounded-xl
                                         transition-all duration-300
                                         ${isActive
-                                            ? 'bg-linear-to-r from-purple-600 to-indigo-600 text-white shadow-lg'
-                                            : 'text-slate-700 hover:bg-purple-50 hover:text-purple-700'
+                                            ? 'bg-accent text-white shadow-lg border border-accent'
+                                            : 'text-slate-200 hover:bg-primary-100 hover:text-white border border-transparent hover:border-accent/20'
                                         }
                                     `}
                                     onClick={() => setMobileNavMenuActive(false)}
@@ -384,7 +384,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
 
                     {/* Auth Section - Mobile */}
                     {!isLoggedIn && (
-                        <div className="space-y-3 pt-6 border-t border-slate-200">
+                        <div className="space-y-3 pt-6 border-t border-accent/30">
                             <AppButton
                                 title="Login"
                                 url="/login"
@@ -449,7 +449,7 @@ const Navbar = ({ isLoggedIn = true, currentUser }: NavBarProps) => {
                     <p className="normal-text text-slate-600 mb-4">
                         Are you sure you want to logout? You will need to login again to access your account.
                     </p>
-                    {isLoggedIn && (
+                    {isLoggedIn && currentUser && (
                         <div className="bg-red-50 border border-red-200 rounded-lg p-3">
                             <p className="normal-text-2 text-red-800">
                                 User: <span className="font-bold">{currentUser.full_name}</span>

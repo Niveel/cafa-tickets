@@ -117,11 +117,6 @@ const ProfileDropdown = ({
                             alt="User avatar"
                         />
                     </div>
-                    {/* Online status indicator */}
-                    <span 
-                        className="absolute bottom-0 right-0 w-3 h-3 bg-accent-50 border-2 border-white rounded-full"
-                        aria-label="Online status"
-                    ></span>
                 </div>
 
                 {/* Chevron indicator */}
@@ -202,11 +197,11 @@ const ProfileDropdown = ({
                                                 `}
                                                 aria-label={`Navigate to ${item.label}`}
                                             >
-                                                <span className="flex items-center gap-3">
+                                                <span className="flex items-center gap-2">
                                                     {IconComponent && (
                                                         <span 
                                                             className={`
-                                                                w-8 h-8 rounded-lg flex items-center justify-center
+                                                                w-6 h-6 small-text rounded-md  flex items-center justify-center
                                                                 ${isLogout ? 'bg-accent/20 text-accent' : 'bg-accent text-white'}
                                                                 group-hover:scale-110 transition-transform duration-200
                                                             `}
@@ -232,7 +227,7 @@ const ProfileDropdown = ({
                                                 role="menuitem"
                                                 type="button"
                                                 className={`
-                                                    w-full text-left py-2 px-3 rounded-lg
+                                                    w-full text-left py-2 px-3
                                                     flex items-center justify-between
                                                     normal-text-2
                                                     transition-all duration-200
@@ -260,7 +255,7 @@ const ProfileDropdown = ({
                                                         </span>
                                                     ) : isLogout ? (
                                                         <span 
-                                                            className="w-8 h-8 rounded-lg flex items-center justify-center bg-accent/20 text-accent group-hover:scale-110 transition-transform duration-200"
+                                                            className="w-7 h-7 rounded-lg flex items-center justify-center bg-accent/20 text-accent group-hover:scale-110 transition-transform duration-200"
                                                             aria-hidden="true"
                                                         >
                                                             <LogOut className="w-4 h-4" />
