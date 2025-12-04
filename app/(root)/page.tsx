@@ -1,10 +1,13 @@
-import { Landing } from "@/components"
+import { Landing, HomeCategoryBar, SoonEvents, HomeEvents } from "@/components"
 
 const HomePage = () => {
   return (
-    <div>
+    <main>
       <Landing />
-    </div>
+      <HomeCategoryBar />
+      <SoonEvents />
+      <HomeEvents />
+    </main>
   )
 }
 

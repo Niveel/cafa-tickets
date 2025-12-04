@@ -1,6 +1,6 @@
 import { Event } from "@/types/events.types";
 
-// UPCOMING EVENTS
+// UPCOMING/ongoing EVENTS
 export const events: Event[] = [
     {
         id: 1,

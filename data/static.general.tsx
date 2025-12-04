@@ -86,3 +86,5 @@ export const profileMenuItems: ProfileMenuItem[] = [
         isLogout: true,
     },
 ];
+
+export const cities = ["Accra", "Kumasi", "Tamale", "Takoradi", "Cape Coast", "Tema", "Ashaiman", "Obuasi"];
