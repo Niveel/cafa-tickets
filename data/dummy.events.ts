@@ -1,4 +1,4 @@
-import { Event } from "@/types/events.types";
+import { Event, EventDetails, RecurringEventDetails } from "@/types/events.types";
 
 // UPCOMING/ongoing EVENTS
 export const events: Event[] = [
@@ -2047,3 +2047,173 @@ export const pastEvents: Event[] = [
         created_at: "2025-08-20T14:30:00Z"
     }
 ];
+
+export const eventDetails: EventDetails = {
+    id: 1,
+    title: "Afrobeats Night",
+    slug: "afrobeats-night",
+
+    organizer: {
+        id: 1,
+        username: "johndoe",
+        email: "john@example.com",
+        full_name: "John Doe",
+        profile_image: "https://images.unsplash.com/photo-1557862921-37829c790f19?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        bio: "Professional event organizer specializing in music events",
+        events_organized: 15,
+        total_tickets_sold: 2500,
+        member_since: "2024-01-15"
+    },
+
+    category: {
+        id: 1,
+        name: "Music",
+        slug: "music",
+        description: "Musical events and concerts",
+        icon: "FaMusic"
+    },
+
+    description:
+        "# Afrobeats Night\nJoin us for the biggest Afrobeats party in Accra!\n\n" +
+        "## What to Expect\n" +
+        "- Amazing performances by top DJs\n" +
+        "- Live band performances\n" +
+        "- Food and drinks available\n" +
+        "- VIP lounge with reserved seating\n\n" +
+        "## Event Schedule\n" +
+        "- 20:00 - Doors open\n" +
+        "- 21:00 - Opening act\n" +
+        "- 22:00 - Main performance\n" +
+        "- 02:00 - Event ends\n\n" +
+        "## Important Information\n" +
+        "- Age restriction: 18+\n" +
+        "- Dress code: Smart casual\n" +
+        "- No outside food or drinks", // markdown supported
+
+    short_description: "The biggest Afrobeats party in Accra",
+    featured_image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+
+    images: [
+        "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1169&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1464047736614-af63643285bf?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+
+    venue: {
+        name: "National Theatre",
+        address: "Liberation Road",
+        city: "Accra",
+        country: "Ghana",
+        latitude: "5.5600",
+        longitude: "-0.2057",
+        google_maps_url: "https://www.google.com/maps?q=5.5600,-0.2057"
+    },
+
+    start_date: "2025-07-15",
+    end_date: "2025-07-15",
+    start_time: "20:00:00",
+    end_time: "02:00:00",
+    timezone: "Africa/Accra",
+
+    max_attendees: 500,
+    tickets_sold: 150,
+    tickets_available: 350,
+
+    status: "upcoming",
+    is_recurring: false,
+    recurrence_info: null,
+    check_in_policy: "single_entry",
+    is_published: true,
+
+    created_at: "2025-06-01T10:00:00Z",
+    updated_at: "2025-06-15T14:30:00Z",
+
+    ticket_types: [
+        {
+            id: 1,
+            name: "Regular",
+            description: "Standard admission with access to main area",
+            price: "50.00",
+            quantity: 300,
+            tickets_sold: 100,
+            tickets_remaining: 200,
+            min_purchase: 1,
+            max_purchase: 10,
+            available_from: "2025-06-01T00:00:00Z",
+            available_until: "2025-07-15T18:00:00Z",
+            is_available: true
+        },
+        {
+            id: 2,
+            name: "VIP",
+            description: "VIP access with complimentary drinks and reserved seating",
+            price: "150.00",
+            quantity: 100,
+            tickets_sold: 50,
+            tickets_remaining: 50,
+            min_purchase: 1,
+            max_purchase: 5,
+            available_from: "2025-06-01T00:00:00Z",
+            available_until: "2025-07-15T18:00:00Z",
+            is_available: true
+        },
+        {
+            id: 3,
+            name: "Early Bird",
+            description: "Limited early bird tickets - SOLD OUT",
+            price: "35.00",
+            quantity: 100,
+            tickets_sold: 100,
+            tickets_remaining: 0,
+            min_purchase: 1,
+            max_purchase: 5,
+            available_from: "2025-06-01T00:00:00Z",
+            available_until: "2025-06-30T23:59:59Z",
+            is_available: false,
+            sold_out_at: "2025-06-28T16:45:00Z"
+        }
+    ],
+
+    similar_events: [
+        {
+            id: 2,
+            title: "Highlife Night",
+            slug: "highlife-night",
+            featured_image: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            start_date: "2025-07-20",
+            venue_city: "Accra",
+            lowest_price: "40.00"
+        },
+        {
+            id: 8,
+            title: "Reggae Beach Party",
+            slug: "reggae-beach-party",
+            featured_image: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            start_date: "2025-08-05",
+            venue_city: "Accra",
+            lowest_price: "60.00"
+        }
+    ],
+
+    share_urls: {
+        facebook: "https://www.facebook.com/sharer/sharer.php?u=https://cafatickets.com/events/afrobeats-night",
+        twitter: "https://twitter.com/intent/tweet?url=https://cafatickets.com/events/afrobeats-night&text=Check%20out%20Afrobeats%20Night",
+        whatsapp: "https://wa.me/?text=Check%20out%20Afrobeats%20Night%20https://cafatickets.com/events/afrobeats-night",
+        email: "mailto:?subject=Afrobeats%20Night&body=Check%20out%20this%20event:%20https://cafatickets.com/events/afrobeats-night"
+    }
+};
+
+// Recurring Event Example:
+export const recurringEventDetails: RecurringEventDetails = {
+    ...eventDetails,
+    "id": 10,
+    "title": "Weekly Comedy Night",
+    "is_recurring": true,
+    "recurrence_info": {
+        "frequency": "weekly",
+        "interval": 1,
+        "end_date": "2025-12-31",
+        "total_occurrences": 26
+    },
+    "check_in_policy": "daily_entry",
+}

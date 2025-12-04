@@ -13,3 +13,13 @@ export {default as HomeEvents} from './home/HomeEvents';
 // cards
 export {default as SoonEventCard} from './cards/SoonEventCard';
 export {default as EventCard} from './cards/EventCard';
+export {default as TicketCard} from './cards/TicketCard';
+export {default as SimilarEventCard} from './cards/SimilarEventCard';
+// events
+export {default as EventHero} from './events/EventHero';
+export {default as TicketsSection} from './events/TicketsSection';
+export {default as EventDescription} from './events/EventDescription';
+export {default as OrganizerSection} from './events/OrganizerSection';
+export {default as VenueSection} from './events/VenueSection';
+export {default as SimilarEventsSection} from './events/SimilarEventsSection';
+export {default as ShareSection} from './events/ShareSection';
