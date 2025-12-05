@@ -1,13 +1,14 @@
 import {
     FaMobile,
     FaCalendarAlt,
-    FaListUl,
+    FaSignOutAlt, 
+    FaTicketAlt,
+    FaHistory
 } from "react-icons/fa";
 import {
     FaFacebookF,
     FaYoutube,
 } from 'react-icons/fa6';
-import { FaSignOutAlt, FaTicketAlt } from "react-icons/fa";
 import { MdDashboard, MdCalendarMonth } from "react-icons/md";
 
 import { NavLink, ProfileMenuItem } from "@/types/general.types";
@@ -27,9 +28,9 @@ export const navLinks: NavLink[] = [
     },
     {
         id: 5,
-        name: "Categories",
-        url: "/categories",
-        icon: <FaListUl />,
+        name: "Events History",
+        url: "/events/history",
+        icon: <FaHistory />,
     },
 ];
 

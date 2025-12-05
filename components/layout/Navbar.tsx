@@ -185,7 +185,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                             {/* Desktop Navigation Links */}
                             <div className="hidden lg:flex items-center gap-1">
                                 {navLinks.map((link) => {
-                                    const isActive = pathname === link.url || pathname.startsWith(link.url + '/');
+                                    const isActive = pathname === link.url;
 
                                     return (
                                         <Link
@@ -359,7 +359,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                             Navigation
                         </p>
                         {navLinks.map((link) => {
-                            const isActive = pathname === link.url || pathname.startsWith(link.url + '/');
+                            const isActive = pathname === link.url;
 
                             return (
                                 <Link

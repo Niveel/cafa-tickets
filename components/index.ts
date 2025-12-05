@@ -23,3 +23,12 @@ export {default as OrganizerSection} from './events/OrganizerSection';
 export {default as VenueSection} from './events/VenueSection';
 export {default as SimilarEventsSection} from './events/SimilarEventsSection';
 export {default as ShareSection} from './events/ShareSection';
+export {default as EventsCategoryTabs} from './events/EventsCategoryTabs';
+export {default as EventsHero} from './events/EventsHero';
+export {default as EventsSortTab} from './events/EventsSortTab';
+export {default as ActiveFiltersDisplay} from './events/ActiveFiltersDisplay';
+export {default as EventsFilter} from './events/EventsFilter';
+export {default as EventsResultsHeader} from './events/EventsResultsHeader';
+export {default as EventsGrid} from './events/EventsGrid';
+export {default as EventsEmptyState} from './events/EventsEmptyState';
+

@@ -1,35 +1,26 @@
 "use client";
 
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { events } from '@/data/dummy.events';
 import { Event } from '@/types/events.types';
-import {EventsHero, EventsCategoryTabs, EventsFilter, EventsSortTab, ActiveFiltersDisplay, EventsResultsHeader, EventsGrid, EventsEmptyState} from "@/components"
+import { History, Archive } from 'lucide-react';
+import {EventsCategoryTabs, EventsSortTab, ActiveFiltersDisplay, EventsResultsHeader, EventsGrid, EventsEmptyState} from "@/components"
 
-interface FilterOptions {
-    city: string | null;
-    status: 'upcoming' | 'ongoing' | 'all';
-    date_from: string;
-    date_to: string;
-    price_min: string;
-    price_max: string;
-}
-
-const EventsPage = () => {
+const EventsHistoryPage = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
+
+    // Get only past events
+    const pastEvents = useMemo(() => 
+        events.filter(event => event.status === 'past'),
+        []
+    );
 
     // State
     const [searchQuery, setSearchQuery] = useState<string>(searchParams.get('search') || '');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category') || null);
-    const [filters, setFilters] = useState<FilterOptions>({
-        city: searchParams.get('city') || null,
-        status: (searchParams.get('status') as 'upcoming' | 'ongoing' | 'all') || 'upcoming',
-        date_from: searchParams.get('date_from') || '',
-        date_to: searchParams.get('date_to') || '',
-        price_min: searchParams.get('price_min') || '',
-        price_max: searchParams.get('price_max') || ''
-    });
+    const [selectedCity, setSelectedCity] = useState<string | null>(searchParams.get('city') || null);
     const [sortBy, setSortBy] = useState<string>(searchParams.get('ordering') || '-start_date');
     const [displayedEvents, setDisplayedEvents] = useState<Event[]>([]);
     const [page, setPage] = useState<number>(1);
@@ -43,21 +34,16 @@ const EventsPage = () => {
 
         if (searchQuery) params.set('search', searchQuery);
         if (selectedCategory) params.set('category', selectedCategory);
-        if (filters.city) params.set('city', filters.city);
-        if (filters.status !== 'upcoming') params.set('status', filters.status);
-        if (filters.date_from) params.set('date_from', filters.date_from);
-        if (filters.date_to) params.set('date_to', filters.date_to);
-        if (filters.price_min) params.set('price_min', filters.price_min);
-        if (filters.price_max) params.set('price_max', filters.price_max);
+        if (selectedCity) params.set('city', selectedCity);
         if (sortBy !== '-start_date') params.set('ordering', sortBy);
 
         const queryString = params.toString();
-        router.push(`/events${queryString ? `?${queryString}` : ''}`, { scroll: false });
-    }, [searchQuery, selectedCategory, filters, sortBy, router]);
+        router.push(`/events/history${queryString ? `?${queryString}` : ''}`, { scroll: false });
+    }, [searchQuery, selectedCategory, selectedCity, sortBy, router]);
 
     // Filter and sort events
     const filteredAndSortedEvents = useMemo(() => {
-        let result = [...events];
+        let result = [...pastEvents];
 
         // Filter by search query
         if (searchQuery) {
@@ -76,29 +62,8 @@ const EventsPage = () => {
         }
 
         // Filter by city
-        if (filters.city) {
-            result = result.filter(event => event.venue_city === filters.city);
-        }
-
-        // Filter by status
-        if (filters.status !== 'all') {
-            result = result.filter(event => event.status === filters.status);
-        }
-
-        // Filter by date range
-        if (filters.date_from) {
-            result = result.filter(event => new Date(event.start_date) >= new Date(filters.date_from));
-        }
-        if (filters.date_to) {
-            result = result.filter(event => new Date(event.start_date) <= new Date(filters.date_to));
-        }
-
-        // Filter by price range
-        if (filters.price_min) {
-            result = result.filter(event => parseFloat(event.lowest_price) >= parseFloat(filters.price_min));
-        }
-        if (filters.price_max) {
-            result = result.filter(event => parseFloat(event.lowest_price) <= parseFloat(filters.price_max));
+        if (selectedCity) {
+            result = result.filter(event => event.venue_city === selectedCity);
         }
 
         // Sort events
@@ -112,10 +77,6 @@ const EventsPage = () => {
                     return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
                 case '-created_at':
                     return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                case 'price':
-                    return parseFloat(a.lowest_price) - parseFloat(b.lowest_price);
-                case '-price':
-                    return parseFloat(b.lowest_price) - parseFloat(a.lowest_price);
                 case 'popularity':
                     return b.tickets_sold - a.tickets_sold;
                 default:
@@ -124,16 +85,16 @@ const EventsPage = () => {
         });
 
         return result;
-    }, [events, searchQuery, selectedCategory, filters, sortBy]);
+    }, [pastEvents, searchQuery, selectedCategory, selectedCity, sortBy]);
 
     // Update displayed events when filters change
-    useEffect(() => {
+    React.useEffect(() => {
         setDisplayedEvents(filteredAndSortedEvents.slice(0, pageSize));
         setPage(1);
     }, [filteredAndSortedEvents]);
 
     // Update URL when filters/sort change
-    useEffect(() => {
+    React.useEffect(() => {
         updateURL();
     }, [updateURL]);
 
@@ -143,7 +104,6 @@ const EventsPage = () => {
 
         setIsLoading(true);
         
-        // Simulate loading delay
         setTimeout(() => {
             const nextPage = page + 1;
             const startIndex = page * pageSize;
@@ -156,70 +116,33 @@ const EventsPage = () => {
         }, 500);
     }, [page, filteredAndSortedEvents, isLoading]);
 
-    // Handle search
-    const handleSearchSubmit = () => {
-        updateURL();
-    };
-
-    // Handle category change
-    const handleCategoryChange = (category: string | null) => {
-        setSelectedCategory(category);
-    };
-
-    // Handle filter change
-    const handleFilterChange = (newFilters: FilterOptions) => {
-        setFilters(newFilters);
-    };
-
-    // Handle sort change
-    const handleSortChange = (sort: string) => {
-        setSortBy(sort);
-    };
-
     // Clear all filters
     const handleClearAllFilters = () => {
         setSearchQuery('');
         setSelectedCategory(null);
-        setFilters({
-            city: null,
-            status: 'upcoming',
-            date_from: '',
-            date_to: '',
-            price_min: '',
-            price_max: ''
-        });
+        setSelectedCity(null);
         setSortBy('-start_date');
     };
 
-    // Get active filters for display
+    // Get active filters
     const activeFilters = useMemo(() => {
         const active: Array<{ key: string; label: string; value: string }> = [];
 
         if (searchQuery) active.push({ key: 'search', label: 'Search', value: searchQuery });
         if (selectedCategory) {
-            const category = events.find(e => e.category.slug === selectedCategory)?.category;
+            const category = pastEvents.find(e => e.category.slug === selectedCategory)?.category;
             if (category) active.push({ key: 'category', label: 'Category', value: category.name });
         }
-        if (filters.city) active.push({ key: 'city', label: 'City', value: filters.city });
-        if (filters.status !== 'upcoming') active.push({ key: 'status', label: 'Status', value: filters.status });
-        if (filters.date_from) active.push({ key: 'date_from', label: 'From', value: filters.date_from });
-        if (filters.date_to) active.push({ key: 'date_to', label: 'To', value: filters.date_to });
-        if (filters.price_min) active.push({ key: 'price_min', label: 'Min Price', value: `GHS ${filters.price_min}` });
-        if (filters.price_max) active.push({ key: 'price_max', label: 'Max Price', value: `GHS ${filters.price_max}` });
+        if (selectedCity) active.push({ key: 'city', label: 'City', value: selectedCity });
 
         return active;
-    }, [searchQuery, selectedCategory, filters]);
+    }, [searchQuery, selectedCategory, selectedCity, pastEvents]);
 
     // Remove single filter
     const handleRemoveFilter = (key: string) => {
         if (key === 'search') setSearchQuery('');
         else if (key === 'category') setSelectedCategory(null);
-        else if (key === 'city') setFilters({ ...filters, city: null });
-        else if (key === 'status') setFilters({ ...filters, status: 'upcoming' });
-        else if (key === 'date_from') setFilters({ ...filters, date_from: '' });
-        else if (key === 'date_to') setFilters({ ...filters, date_to: '' });
-        else if (key === 'price_min') setFilters({ ...filters, price_min: '' });
-        else if (key === 'price_max') setFilters({ ...filters, price_max: '' });
+        else if (key === 'city') setSelectedCity(null);
     };
 
     const hasMore = displayedEvents.length < filteredAndSortedEvents.length;
@@ -228,39 +151,77 @@ const EventsPage = () => {
     return (
         <main className="min-h-screen bg-primary">
             {/* Hero Section */}
-            <EventsHero
-                totalEvents={events.length}
-                searchQuery={searchQuery}
-                onSearchChange={setSearchQuery}
-                onSearchSubmit={handleSearchSubmit}
-            />
+            <section className="relative bg-primary pt-24 sm:pt-28 pb-8 sm:pb-12">
+                <div className="absolute inset-0 opacity-5">
+                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-slate-500 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-slate-600 rounded-full blur-3xl"></div>
+                </div>
+
+                <div className="inner-wrapper relative z-10">
+                    <div className="text-center mb-8">
+                        <div className="inline-flex items-center gap-2 px-4 py-2 bg-slate-600/20 backdrop-blur-sm rounded-xl border border-slate-500 mb-4">
+                            <History className="w-4 h-4 text-slate-400" aria-hidden="true" />
+                            <span className="small-text text-slate-300 font-bold">
+                                Past Events
+                            </span>
+                        </div>
+                        <h1 className="massive-text font-bold text-white mb-4">
+                            Events History
+                        </h1>
+                        <p className="big-text-5 text-slate-200 max-w-2xl mx-auto">
+                            Browse through our archive of past events. Relive the memories and see what you missed!
+                        </p>
+                    </div>
+
+                    {/* Search Bar */}
+                    <div className="max-w-3xl mx-auto mb-8">
+                        <input
+                            type="text"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            placeholder="Search past events..."
+                            className="w-full h-16 px-6 bg-primary-100 border-2 border-accent text-white placeholder:text-slate-400 rounded-2xl big-text-5 focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-300"
+                            aria-label="Search past events"
+                        />
+                    </div>
+
+                    {/* Stats */}
+                    <div className="flex items-center justify-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-slate-600/20 flex items-center justify-center border border-slate-500">
+                            <Archive className="w-6 h-6 text-slate-400" aria-hidden="true" />
+                        </div>
+                        <div>
+                            <p className="big-text-4 font-bold text-white">
+                                {pastEvents.length}
+                            </p>
+                            <p className="small-text text-slate-300">
+                                Past Events
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             {/* Category Tabs */}
             <EventsCategoryTabs
                 selectedCategory={selectedCategory}
-                onCategorySelect={handleCategoryChange}
+                onCategorySelect={setSelectedCategory}
             />
 
             {/* Main Content */}
             <section className="relative py-8 sm:py-12 bg-primary">
                 <div className="inner-wrapper">
-                    {/* Filters & Sort Bar */}
+                    {/* Sort Bar */}
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-                        <div className="flex flex-wrap items-center gap-3">
-                            <EventsFilter
-                                filters={filters}
-                                onFilterChange={handleFilterChange}
-                                onClearFilters={handleClearAllFilters}
-                                activeFiltersCount={activeFilters.length}
-                            />
+                        <div className="flex items-center gap-3">
                             <EventsSortTab
                                 selectedSort={sortBy}
-                                onSortChange={handleSortChange}
+                                onSortChange={setSortBy}
                             />
                         </div>
                     </div>
 
-                    {/* Active Filters Display */}
+                    {/* Active Filters */}
                     {hasActiveFilters && (
                         <div className="mb-6">
                             <ActiveFiltersDisplay
@@ -274,7 +235,7 @@ const EventsPage = () => {
                     {/* Results Header */}
                     {filteredAndSortedEvents.length > 0 && (
                         <EventsResultsHeader
-                            totalCount={events.length}
+                            totalCount={pastEvents.length}
                             currentCount={filteredAndSortedEvents.length}
                             isFiltered={hasActiveFilters}
                         />
@@ -300,4 +261,4 @@ const EventsPage = () => {
     );
 };
 
-export default EventsPage;
+export default EventsHistoryPage;
