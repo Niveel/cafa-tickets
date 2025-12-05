@@ -64,10 +64,10 @@ const AppButton = ({
         `,
         outline: `
             bg-transparent
-            text-purple-600
-            border-2 border-purple-600
-            hover:bg-purple-50
-            focus:ring-purple-500
+            text-white
+            border-2 border-accent
+            hover:bg-primary-100
+            focus:ring-accent
             disabled:border-slate-300 disabled:text-slate-400
         `,
         ghost: `

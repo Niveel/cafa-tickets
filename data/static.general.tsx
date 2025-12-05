@@ -3,7 +3,10 @@ import {
     FaCalendarAlt,
     FaSignOutAlt, 
     FaTicketAlt,
-    FaHistory
+    FaHistory,
+    FaHome, 
+    FaCogs, 
+    FaUser
 } from "react-icons/fa";
 import {
     FaFacebookF,
@@ -11,7 +14,7 @@ import {
 } from 'react-icons/fa6';
 import { MdDashboard, MdCalendarMonth } from "react-icons/md";
 
-import { NavLink, ProfileMenuItem } from "@/types/general.types";
+import { NavLink, ProfileMenuItem, DashboardSideLink } from "@/types/general.types";
 
 export const navLinks: NavLink[] = [
     {
@@ -89,3 +92,36 @@ export const profileMenuItems: ProfileMenuItem[] = [
 ];
 
 export const cities = ["Accra", "Kumasi", "Tamale", "Takoradi", "Cape Coast", "Tema", "Ashaiman", "Obuasi"];
+
+export const dashboardSideLinks: DashboardSideLink[] = [
+    {
+        id: 0,
+        title: "Home",
+        icon: <FaHome />,
+        link: "/"
+    },
+    {
+        id: 10,
+        title: "Dashboard",
+        icon: <MdDashboard />,
+        link: "/dashboard"
+    },
+    {
+        id: 1,
+        title: "Profile",
+        icon: <FaUser />,
+        link: "/dashboard/profile"
+    },
+    {
+        id: 2,
+        title: "Events",
+        icon: <MdCalendarMonth />,
+        link: "/dashboard/events"
+    },
+    {
+        id: 4,
+        title: "Settings",
+        icon: <FaCogs />,
+        link: "/dashboard/settings"
+    },
+]

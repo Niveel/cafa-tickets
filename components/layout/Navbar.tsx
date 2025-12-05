@@ -240,13 +240,13 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                                     <AppButton
                                         title="Login"
                                         url="/login"
-                                        variant="ghost"
+                                        variant="outline"
                                         size="md"
                                         className="hidden sm:inline-flex"
                                     />
                                     <AppButton
                                         title="Sign Up"
-                                        url="/register"
+                                        url="/signup"
                                         variant="primary"
                                         size="md"
                                     />

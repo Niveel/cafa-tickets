@@ -50,3 +50,10 @@ export interface ProfileMenuItem {
     link: string | null;
     isLogout?: boolean;
 }
+
+export type DashboardSideLink = {
+    id: number;
+    title: string;
+    link: string;
+    icon: ReactElement;
+}
