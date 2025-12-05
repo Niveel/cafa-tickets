@@ -32,6 +32,7 @@ export {default as EventsResultsHeader} from './events/EventsResultsHeader';
 export {default as EventsGrid} from './events/EventsGrid';
 export {default as EventsEmptyState} from './events/EventsEmptyState';
 export {default as EventsHistoryContent} from './events/EventsHistoryContent';
+export {default as EventsPageContent} from './events/EventsPageContent';
 // forms
 export {default as AppForm} from './form/AppForm';
 export {default as AppFormField} from './form/AppFormField';
