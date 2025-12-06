@@ -10,11 +10,14 @@ export {default as Landing} from './home/Landing';
 export {default as HomeCategoryBar} from './home/HomeCategoryBar';
 export {default as SoonEvents} from './home/SoonEvents';
 export {default as HomeEvents} from './home/HomeEvents';
-// cards
+// cards / dashboard-cards
 export {default as SoonEventCard} from './cards/SoonEventCard';
 export {default as EventCard} from './cards/EventCard';
 export {default as TicketCard} from './cards/TicketCard';
 export {default as SimilarEventCard} from './cards/SimilarEventCard';
+export {default as DashboardMetricCard} from './cards/dashboard-cards/DashboardMetricCard';
+export {default as PayoutStatusCard} from './cards/dashboard-cards/PayoutStatusCard';
+export {default as PaymentDetailsCard} from './cards/dashboard-cards/PaymentDetailsCard';
 // events
 export {default as EventHero} from './events/EventHero';
 export {default as TicketsSection} from './events/TicketsSection';
@@ -50,3 +53,24 @@ export {default as DashboardTopBar} from './dashboard/DashboardTopBar';
 export {default as DashboardSideBar} from './dashboard/DashboardSideBar';
 export {default as DashboardNav} from './dashboard/DashboardNav';
 export {default as ProfileCard} from './dashboard/ProfileCard';
+export {default as DashboardOverview} from './dashboard/DashboardOverview';
+export {default as DashboardQuickActions} from './dashboard/DashboardQuickActions';
+export {default as DashboardTicketsByCategory} from './dashboard/DashboardTicketsByCategory';
+export {default as DashboardRecentActivity} from './dashboard/DashboardRecentActivity';
+export {default as DashboardBestSellingEvent} from './dashboard/DashboardBestSellingEvent';
+export {default as DashboardRevenueChart} from './dashboard/DashboardRevenueChart';
+// dashboard/profile
+export {default as ProfileHeader} from './dashboard/profile/ProfileHeader';
+export {default as ProfileNotificationSettings} from './dashboard/profile/ProfileNotificationSettings';
+export {default as ProfileAccountDetails} from './dashboard/profile/ProfileAccountDetails';
+export {default as ProfileQuickActions} from './dashboard/profile/ProfileQuickActions';
+// dashboard/payments
+export {default as RevenueByMonthChart} from './dashboard/payments/RevenueByMonthChart';
+export {default as RevenueByEventTable} from './dashboard/payments/RevenueByEventTable';
+export {default as PaymentHistoryList} from './dashboard/payments/PaymentHistoryList';
+export {default as PaymentHistorySummary} from './dashboard/payments/PaymentHistorySummary';
+export {default as PaymentHistoryFilters} from './dashboard/payments/PaymentHistoryFilters';
+export {default as PaymentProfilesList} from './dashboard/payments/PaymentProfilesList';
+export {default as CreatePaymentProfileForm} from './dashboard/payments/CreatePaymentProfileForm';
+export {default as PaymentHistoryContent} from './dashboard/payments/PaymentHistoryContent';
+export {default as PaymentProfilesContent} from './dashboard/payments/PaymentProfilesContent';

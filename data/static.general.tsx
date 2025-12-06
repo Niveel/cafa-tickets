@@ -6,7 +6,9 @@ import {
     FaHistory,
     FaHome, 
     FaCogs, 
-    FaUser
+    FaUser,
+    FaCreditCard,
+    FaClipboardCheck,
 } from "react-icons/fa";
 import {
     FaFacebookF,
@@ -120,6 +122,18 @@ export const dashboardSideLinks: DashboardSideLink[] = [
     },
     {
         id: 4,
+        title: "Payments",
+        icon: <FaCreditCard />,
+        link: "/dashboard/payments"
+    },
+    {
+        id: 7,
+        title: "Check in",
+        icon: <FaClipboardCheck />,
+        link: "/dashboard/check-in"
+    },
+    {
+        id: 5,
         title: "Settings",
         icon: <FaCogs />,
         link: "/dashboard/settings"

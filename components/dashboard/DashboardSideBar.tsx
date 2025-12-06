@@ -29,26 +29,16 @@ const DashboardSideBar: React.FC = () => {
                 {/* Logo/Brand */}
                 <Link
                     href="/"
-                    className="rounded-xl mb-2 flex gap-3 items-center p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent hover:bg-primary-200 transition-all duration-300 group border border-transparent hover:border-accent/30"
+                    className="rounded-xl mb-1 relative w-20 h-20 overflow-hidden ring-2 ring-accent/30 group-hover:ring-accent transition-all duration-300 shrink-0 block mx-auto"
                     aria-label="Go to Cafa Tickets homepage"
                 >
-                    <div className="relative w-12 h-12 rounded-xl overflow-hidden ring-2 ring-accent/30 group-hover:ring-accent transition-all duration-300 shrink-0">
-                        <Image
-                            src="/assets/images/logo.png"
-                            width={48}
-                            height={48}
-                            alt="Cafa Tickets logo"
-                            className="w-full h-full object-cover"
-                        />
-                    </div>
-                    <div>
-                        <h1 className="big-text-5 font-bold text-white">
-                            Cafa Tickets
-                        </h1>
-                        <p className="small-text-2 text-slate-300">
-                            Dashboard
-                        </p>
-                    </div>
+                    <Image
+                        src="https://images.unsplash.com/photo-1550482781-48d477e61c72?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                        width={48}
+                        height={48}
+                        alt="Cafa Tickets logo"
+                        className="w-full h-full object-cover"
+                    />
                 </Link>
 
                 {/* Navigation Links */}
@@ -60,7 +50,7 @@ const DashboardSideBar: React.FC = () => {
                             <Link
                                 key={index}
                                 href={link.link}
-                                className={`flex items-center rounded-xl gap-3 px-3 py-3 transition-all duration-300 relative group ${
+                                className={`flex items-center rounded-xl gap-3 px-3 py-2 transition-all duration-300 relative group ${
                                     isActive
                                         ? "bg-accent text-white shadow-lg border-2 border-accent"
                                         : "text-slate-200 hover:bg-primary-200 hover:pl-5 border-2 border-transparent hover:border-accent/30"
