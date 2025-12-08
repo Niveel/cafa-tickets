@@ -5,6 +5,7 @@ export {default as Navbar} from './layout/Navbar';
 export {default as Modal} from './ui/Modal';
 export {default as AppButton} from './ui/AppButton';
 export {default as ProfileDropdown} from './ui/ProfileDropdown';
+export {default as CategorySelect} from './ui/CategorySelect';
 // home
 export {default as Landing} from './home/Landing';
 export {default as HomeCategoryBar} from './home/HomeCategoryBar';
@@ -18,6 +19,8 @@ export {default as SimilarEventCard} from './cards/SimilarEventCard';
 export {default as DashboardMetricCard} from './cards/dashboard-cards/DashboardMetricCard';
 export {default as PayoutStatusCard} from './cards/dashboard-cards/PayoutStatusCard';
 export {default as PaymentDetailsCard} from './cards/dashboard-cards/PaymentDetailsCard';
+export {default as MyEventCard} from './cards/dashboard-cards/MyEventCard';
+export {default as AttendedEventCard} from './cards/dashboard-cards/AttendedEventCard';
 // events
 export {default as EventHero} from './events/EventHero';
 export {default as TicketsSection} from './events/TicketsSection';
@@ -74,3 +77,17 @@ export {default as PaymentProfilesList} from './dashboard/payments/PaymentProfil
 export {default as CreatePaymentProfileForm} from './dashboard/payments/CreatePaymentProfileForm';
 export {default as PaymentHistoryContent} from './dashboard/payments/PaymentHistoryContent';
 export {default as PaymentProfilesContent} from './dashboard/payments/PaymentProfilesContent';
+// dashboard/events
+export {default as MyEventsFilters} from './dashboard/events/MyEventsFilters';
+export {default as MyEventsList} from './dashboard/events/MyEventsList';
+export {default as MyEventsContent} from './dashboard/events/MyEventsContent';
+export {default as AttendedEventsList} from './dashboard/events/AttendedEventsList';
+export {default as EventAnalyticsOverview} from './dashboard/events/EventAnalyticsOverview';
+export {default as EventSalesByTicketType} from './dashboard/events/EventSalesByTicketType';
+export {default as EventTrafficStats} from './dashboard/events/EventTrafficStats';
+export {default as EventRecentSales} from './dashboard/events/EventRecentSales';
+export {default as EventAttendeesTable} from './dashboard/events/EventAttendeesTable';
+export {default as EventAttendeesFilters} from './dashboard/events/EventAttendeesFilters';
+export {default as EventAttendeesSummary} from './dashboard/events/EventAttendeesSummary';
+export {default as EventDetailsHeader} from './dashboard/events/EventDetailsHeader';
+export {default as EventAttendeesContent} from './dashboard/events/EventAttendeesContent';

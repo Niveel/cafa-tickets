@@ -121,6 +121,12 @@ export const dashboardSideLinks: DashboardSideLink[] = [
         link: "/dashboard/events"
     },
     {
+        id: 20,
+        title: "Tickets",
+        icon: <FaTicketAlt />,
+        link: "/dashboard/tickets"
+    },
+    {
         id: 4,
         title: "Payments",
         icon: <FaCreditCard />,
