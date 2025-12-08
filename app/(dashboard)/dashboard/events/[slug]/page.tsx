@@ -1,9 +1,11 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Loader2 } from 'lucide-react';
-import { myEvents, myEventAnalytics } from '@/data/dummy.dash-events';
+import { ArrowLeft, Loader2, Edit } from 'lucide-react';
+import { myEvents, myEventAnalytics, myEventDetails } from '@/data/dummy.dash-events';
 import { 
     EventDetailsHeader,
+    EventInfoSection,
+    EventTicketTypesManagement,
     EventAnalyticsOverview,
     EventSalesByTicketType,
     EventTrafficStats,
@@ -16,10 +18,11 @@ type Props = {
 
 const EventDetailsPage = async ({ params }: Props) => {
     const { slug } = await params;
-    // Find event by slug
-    const event = myEvents.results.find(e => e.slug === slug);
+    
+    // Find event in myEvents (for header with analytics)
+    const eventListItem = myEvents.results.find(e => e.slug === slug);
 
-    if (!event) {
+    if (!eventListItem) {
         return (
             <main className='dash-page'>
                 <div className="text-center py-12">
@@ -41,19 +44,60 @@ const EventDetailsPage = async ({ params }: Props) => {
         );
     }
 
+    // Use myEventDetails for full event information
+    // In production, you'd fetch this from API based on slug
+    const eventDetails = myEventDetails;
+
     return (
         <main className='dash-page space-y-8'>
-            {/* Back Button */}
-            <Link
-                href="/dashboard/events"
-                className="inline-flex items-center gap-2 text-accent-50 hover:text-accent-100 transition-colors normal-text-2 font-semibold"
-            >
-                <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-                Back to My Events
-            </Link>
+            {/* Header with Back & Edit */}
+            <div className="flex items-center justify-between">
+                <Link
+                    href="/dashboard/events"
+                    className="inline-flex items-center gap-2 text-accent-50 hover:text-accent-100 transition-colors normal-text-2 font-semibold"
+                >
+                    <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                    Back to My Events
+                </Link>
 
-            {/* Event Header */}
-            <EventDetailsHeader event={event} />
+                <Link
+                    href={`/dashboard/events/${slug}/edit`}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold normal-text-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                    <Edit className="w-4 h-4" aria-hidden="true" />
+                    Edit Event
+                </Link>
+            </div>
+
+            {/* Event Header - uses eventListItem (has analytics) */}
+            <EventDetailsHeader event={eventListItem} />
+
+            {/* Event Information Section - uses eventDetails (full data) */}
+            <Suspense fallback={
+                <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 text-accent animate-spin" />
+                </div>
+            }>
+                <EventInfoSection event={eventDetails} />
+            </Suspense>
+
+            {/* Divider */}
+            <div className="border-t border-accent/30"></div>
+
+            {/* Ticket Types Management - uses eventDetails (has ticket_types) */}
+            <Suspense fallback={
+                <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-8 h-8 text-accent animate-spin" />
+                </div>
+            }>
+                <EventTicketTypesManagement 
+                    ticketTypes={eventDetails.ticket_types} 
+                    eventSlug={slug}
+                />
+            </Suspense>
+
+            {/* Divider */}
+            <div className="border-t border-accent/30"></div>
 
             {/* Analytics Section */}
             <div>

@@ -1,4 +1,4 @@
-import { MyEventsResponse, MyEventAnalytics, EventAttendees, AttendedEventsResponse } from "@/types/dash-events.types"
+import { MyEventsResponse, MyEventAnalytics, EventAttendees, AttendedEventsResponse, MyEventDetailsResponse } from "@/types/dash-events.types"
 
 export const myEvents: MyEventsResponse = {
     "count": 25,
@@ -1572,6 +1572,102 @@ export const attendedEvents: AttendedEventsResponse = {
             "ticket_type": "Regular",
             "attended_date": "2025-06-15T20:15:00Z",
             "amount_paid": "50.00"
+        }
+    ]
+}
+
+export const myEventDetails: MyEventDetailsResponse = {
+    "id": 1,
+    "title": "Afrobeats Night",
+    "slug": "afrobeats-night",
+    "featured_image": "https://images.unsplash.com/photo-1628336707631-68131ca720c3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "additional_images": [
+        "https://images.unsplash.com/photo-1628336707631-68131ca720c3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "https://images.unsplash.com/photo-1628336707631-68131ca720c3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    ],
+    "category": {
+        "id": 1,
+        "name": "Music",
+        "slug": "music"
+    },
+    "short_description": "The biggest Afrobeats party in Accra",
+    "description": "# Afrobeats Night\n\nJoin us for an unforgettable night of music, dance, and celebration...",
+    "venue_name": "National Theatre",
+    "venue_address": "Liberation Road",
+    "venue_city": "Accra",
+    "venue_country": "Ghana",
+    "venue_location": {
+        "latitude": "5.5600",
+        "longitude": "-0.2057"
+    },
+    "start_date": "2025-07-15",
+    "start_time": "20:00:00",
+    "end_date": "2025-07-15",
+    "end_time": "02:00:00",
+    "status": "upcoming",
+    "is_published": true,
+    "is_recurring": false,
+    "recurrence_pattern": null,
+    "check_in_policy": "single_entry",
+    "max_attendees": 500,
+    "created_at": "2025-06-01T10:00:00Z",
+    "updated_at": "2025-06-05T14:30:00Z",
+    "organizer": {
+        "id": 5,
+        "username": "eventmaster",
+        "full_name": "Event Master",
+        "email": "eventmaster@example.com",
+        "phone": "+233241234567",
+        "profile_image": "https://images.unsplash.com/photo-1628336707631-68131ca720c3?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    },
+    "ticket_types": [
+        {
+            "id": 1,
+            "name": "Regular",
+            "description": "Standard admission",
+            "price": "50.00",
+            "quantity": 300,
+            "tickets_sold": 100,
+            "tickets_remaining": 200,
+            "revenue": "5000.00",
+            "sales_percentage": 33.33,
+            "min_purchase": 1,
+            "max_purchase": 10,
+            "available_from": null,
+            "available_until": null,
+            "status": "active"
+        },
+        {
+            "id": 2,
+            "name": "VIP",
+            "description": "VIP access with premium seating",
+            "price": "150.00",
+            "quantity": 100,
+            "tickets_sold": 50,
+            "tickets_remaining": 50,
+            "revenue": "7500.00",
+            "sales_percentage": 50.0,
+            "min_purchase": 1,
+            "max_purchase": 5,
+            "available_from": null,
+            "available_until": null,
+            "status": "active"
+        },
+        {
+            "id": 3,
+            "name": "Early Bird",
+            "description": "Limited early bird special",
+            "price": "35.00",
+            "quantity": 100,
+            "tickets_sold": 0,
+            "tickets_remaining": 100,
+            "revenue": "0.00",
+            "sales_percentage": 0.0,
+            "min_purchase": 1,
+            "max_purchase": 5,
+            "available_from": "2025-06-01T00:00:00Z",
+            "available_until": "2025-06-15T23:59:59Z",
+            "status": "expired"
         }
     ]
 }

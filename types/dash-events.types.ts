@@ -313,3 +313,113 @@ export interface AttendedEventsResponse {
     previous: string | null;
     results: AttendedEvent[];
 }
+
+/* =======================
+   Shared / Enums
+======================= */
+
+export type CheckInPolicy = "single_entry" | "multiple_entry";
+
+/* =======================
+   Category
+======================= */
+
+export interface EventCategory {
+    id: number;
+    name: string;
+    slug: string;
+}
+
+/* =======================
+   Venue
+======================= */
+
+export interface VenueLocation {
+    latitude: string;
+    longitude: string;
+}
+
+/* =======================
+   Organizer
+======================= */
+
+export interface EventOrganizer {
+    id: number;
+    username: string;
+    full_name: string;
+    email: string;
+    phone: string;
+    profile_image: string;
+}
+
+/* =======================
+   Ticket Types
+======================= */
+
+export interface EventTicketType {
+    id: number;
+    name: string;
+    description: string;
+    price: string;
+    quantity: number;
+    tickets_sold: number;
+    tickets_remaining: number;
+    revenue: string;
+    sales_percentage: number;
+    min_purchase: number;
+    max_purchase: number;
+    available_from: string | null;
+    available_until: string | null;
+    status: TicketStatus;
+}
+
+/* =======================
+   Event Details (Main)
+======================= */
+
+export type EventInfo = {
+    short_description: string;
+    description: string;
+
+    venue_name: string;
+    venue_address: string;
+    venue_city: string;
+    venue_country: string;
+
+    start_date: string;
+    start_time: string;
+    end_date: string;
+    end_time: string;
+
+    max_attendees: number;
+
+    is_published: boolean;
+    is_recurring: boolean;
+    recurrence_pattern: string | null;
+
+    check_in_policy: CheckInPolicy;
+};
+
+
+export interface MyEventDetailsResponse extends EventInfo {
+    id: number;
+    title: string;
+    slug: string;
+
+    featured_image: string;
+    additional_images: string[];
+
+    category: EventCategory;
+
+    venue_location: VenueLocation;
+
+    status: EventStatus;
+
+    created_at: string;
+    updated_at: string;
+
+    organizer: EventOrganizer;
+
+    ticket_types: EventTicketType[];
+}
+

@@ -79,7 +79,7 @@ const MyEventCard = ({ event, onDelete }: Props) => {
                 </div>
 
                 {/* Action Buttons - Show on hover (desktop) or always (mobile/tablet) */}
-                <div className="absolute top-3 right-3 flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity duration-300">
+                <div className="absolute top-3 right-3 flex items-center gap-2 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity duration-300 z-10">
                     <Link
                         href={`/dashboard/events/${event.slug}/edit`}
                         className="w-10 h-10 rounded-lg bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
