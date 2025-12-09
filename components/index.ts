@@ -25,6 +25,7 @@ export {default as PaymentDetailsCard} from './cards/dashboard-cards/PaymentDeta
 export {default as MyEventCard} from './cards/dashboard-cards/MyEventCard';
 export {default as AttendedEventCard} from './cards/dashboard-cards/AttendedEventCard';
 export {default as TicketTypeCard} from './cards/dashboard-cards/TicketTypeCard';
+export {default as MyTicketCard} from './cards/dashboard-cards/MyTicketCard';
 // events
 export {default as EventHero} from './events/EventHero';
 export {default as TicketsSection} from './events/TicketsSection';
@@ -113,3 +114,16 @@ export {default as EventTicketTypesManagement} from './dashboard/events/event-de
 // dashboard/tickets
 export {default as CreateTicketForm} from './dashboard/tickets/CreateTicketForm';
 export {default as EditTicketForm} from './dashboard/tickets/EditTicketForm';
+export {default as MyTicketsContent} from './dashboard/tickets/MyTicketsContent';
+export {default as MyTicketsFilters} from './dashboard/tickets/MyTicketsFilters';
+export {default as MyTicketsHeader} from './dashboard/tickets/MyTicketsHeader';
+export {default as MyTicketsGrid} from './dashboard/tickets/MyTicketsGrid';
+export {default as MyTicketsEmptyState} from './dashboard/tickets/MyTicketsEmptyState';
+export {default as MyTicketsPagination} from './dashboard/tickets/MyTicketsPagination';
+export {default as TicketDetailsHeader} from './dashboard/tickets/TicketDetailsHeader';
+export {default as TicketAttendeeInfo} from './dashboard/tickets/TicketAttendeeInfo';
+export {default as TicketEventDetails} from './dashboard/tickets/TicketEventDetails';
+export {default as TicketPurchaseInfo} from './dashboard/tickets/TicketPurchaseInfo';
+export {default as TicketQRSection} from './dashboard/tickets/TicketQRSection';
+export {default as TicketActions} from './dashboard/tickets/TicketActions';
+export {default as TicketDetailsContent} from './dashboard/tickets/TicketDetailsContent';

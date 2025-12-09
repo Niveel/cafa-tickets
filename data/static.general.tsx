@@ -83,7 +83,7 @@ export const profileMenuItems: ProfileMenuItem[] = [
     {
         label: "My tickets",
         icon: <FaTicketAlt />,
-        link: "/dashboard/my-tickets",
+        link: "/dashboard/tickets",
     },
     {
         label: "Logout",
