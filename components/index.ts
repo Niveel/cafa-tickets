@@ -127,3 +127,13 @@ export {default as TicketPurchaseInfo} from './dashboard/tickets/TicketPurchaseI
 export {default as TicketQRSection} from './dashboard/tickets/TicketQRSection';
 export {default as TicketActions} from './dashboard/tickets/TicketActions';
 export {default as TicketDetailsContent} from './dashboard/tickets/TicketDetailsContent';
+// dashboard/check-in
+export {default as CheckInHeader} from './dashboard/check-in/CheckInHeader';
+export {default as CheckInContent} from './dashboard/check-in/CheckInContent';
+export {default as EventSelector} from './dashboard/check-in/EventSelector';
+export {default as CheckInScanner} from './dashboard/check-in/CheckInScanner';
+export {default as CheckInHistory} from './dashboard/check-in/CheckInHistory';
+export {default as CheckInStats} from './dashboard/check-in/CheckInStats';
+export {default as QRScanner} from './dashboard/check-in/QRScanner';
+export {default as ManualEntry} from './dashboard/check-in/ManualEntry';
+export {default as CheckInResult} from './dashboard/check-in/CheckInResult';
