@@ -21,25 +21,11 @@ const DashboardSideBar: React.FC = () => {
 
     return (
         <nav
-            className="w-56 fixed h-[calc(100vh-2rem)] bg-primary-100 rounded-xl hidden p-4 overflow-hidden md:flex flex-col justify-between shadow-2xl border-2 border-accent"
+            className="w-56 fixed h-[calc(100vh-2rem)] bg-primary-100 rounded-xl hidden p-2 overflow-hidden md:flex flex-col justify-between shadow-2xl border-2 border-accent"
             role="navigation"
             aria-label="Dashboard sidebar"
         >
             <div className="flex flex-col gap-2">
-                {/* Logo/Brand */}
-                <Link
-                    href="/"
-                    className="rounded-xl mb-1 relative w-20 h-20 overflow-hidden ring-2 ring-accent/30 group-hover:ring-accent transition-all duration-300 shrink-0 block mx-auto"
-                    aria-label="Go to Cafa Tickets homepage"
-                >
-                    <Image
-                        src="https://images.unsplash.com/photo-1550482781-48d477e61c72?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                        width={48}
-                        height={48}
-                        alt="Cafa Tickets logo"
-                        className="w-full h-full object-cover"
-                    />
-                </Link>
 
                 {/* Navigation Links */}
                 <div className="space-y-1">

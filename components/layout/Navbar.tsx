@@ -218,7 +218,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                                     <div className="hidden sm:block">
                                         <AppButton
                                             title="Create Event"
-                                            url="/events/create"
+                                            url="/dashboard/events/create"
                                             variant="primary"
                                             size="md"
                                             icon={<Plus className="w-4 h-4" />}

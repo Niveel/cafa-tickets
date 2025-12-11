@@ -137,3 +137,25 @@ export {default as CheckInStats} from './dashboard/check-in/CheckInStats';
 export {default as QRScanner} from './dashboard/check-in/QRScanner';
 export {default as ManualEntry} from './dashboard/check-in/ManualEntry';
 export {default as CheckInResult} from './dashboard/check-in/CheckInResult';
+// dashboard/settings
+export {default as SettingsHeader} from './dashboard/settings/SettingsHeader';
+export {default as SettingsNavigationCards} from './dashboard/settings/SettingsNavigationCards';
+export {default as SettingsContent} from './dashboard/settings/SettingsContent';
+// dashboard/settings/security
+export {default as SecuritySettingsHeader} from './dashboard/settings/security/SecuritySettingsHeader';
+export {default as SecuritySettingsContent} from './dashboard/settings/security/SecuritySettingsContent';
+export {default as SecurityInfo} from './dashboard/settings/security/SecurityInfo';
+export {default as ChangePasswordForm} from './dashboard/settings/security/ChangePasswordForm';
+export {default as ChangeEmailForm} from './dashboard/settings/security/ChangeEmailForm';
+export {default as ChangeUsernameForm} from './dashboard/settings/security/ChangeUsernameForm';
+// dashboard/settings/notifications
+export {default as NotificationsSettingsHeader} from './dashboard/settings/notifications/NotificationsSettingsHeader';
+export {default as NotificationsSettingsContent} from './dashboard/settings/notifications/NotificationsSettingsContent';
+export {default as NotificationInfo} from './dashboard/settings/notifications/NotificationInfo';
+export {default as NotificationPreferencesForm} from './dashboard/settings/notifications/NotificationPreferencesForm';
+// dashboard/settings/privacy
+export {default as PrivacySettingsHeader} from './dashboard/settings/privacy/PrivacySettingsHeader';
+export {default as PrivacySettingsContent} from './dashboard/settings/privacy/PrivacySettingsContent';
+export {default as PrivacyInfo} from './dashboard/settings/privacy/PrivacyInfo';
+export {default as DeleteAccountSection} from './dashboard/settings/privacy/DeleteAccountSection';
+export {default as DataPrivacySection} from './dashboard/settings/privacy/DataPrivacySection';
