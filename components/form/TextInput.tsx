@@ -1,4 +1,5 @@
 import { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { Eye, EyeOff } from "lucide-react";
 import { TextInputProps } from "@/types/form.types";
 
 const TextInput = ({
@@ -17,6 +18,21 @@ const TextInput = ({
     ...otherProps
 }: TextInputProps) => {
     const inputId = `input-${name}`;
+
+    // Map icon names to Lucide components
+    const getIconComponent = () => {
+        if (!icon) return null;
+        
+        switch (icon) {
+            case 'eye':
+                return <Eye className="w-5 h-5" aria-hidden="true" />;
+            case 'eye-slash':
+                return <EyeOff className="w-5 h-5" aria-hidden="true" />;
+            default:
+                // Fallback to Font Awesome if not a known Lucide icon
+                return <i className={`fas fa-${icon}`} aria-hidden="true"></i>;
+        }
+    };
 
     return (
         <div className="w-full">
@@ -45,12 +61,12 @@ const TextInput = ({
                     {icon && (
                         <button
                             type="button"
-                            className='absolute right-0 top-0 h-12 w-12 text-slate-300 hover:text-accent-50 flex items-center justify-center text-xl transition-colors duration-300'
+                            className='absolute right-0 top-0 h-12 w-12 text-slate-300 hover:text-accent-50 flex items-center justify-center transition-colors duration-300'
                             aria-label={iconAria || 'Icon button'}
                             onClick={iconClick}
                             tabIndex={0}
                         >
-                            <i className={`fas fa-${icon}`} aria-hidden="true"></i>
+                            {getIconComponent()}
                         </button>
                     )}
                 </div>

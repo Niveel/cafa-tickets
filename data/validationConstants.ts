@@ -32,7 +32,6 @@ export const LoginValidationSchema = Yup.object().shape({
 export type LoginFormValues = InferType<typeof LoginValidationSchema>
 
 export const SignupValidationSchema = Yup.object().shape({
-    fullName: fullNameValidation(),
     username: Yup.string()
         .required("Username is required")
         .min(3, "Username must be at least 3 characters")
@@ -49,13 +48,6 @@ export const SignupValidationSchema = Yup.object().shape({
             "Please enter a valid email address"
         )
         .label("Email"),
-    phoneNumber: Yup.string()
-        .required("Phone number is required")
-        .matches(
-            /^[0-9]{10}$/,
-            "Phone number must be exactly 10 digits and contain only numbers"
-        )
-        .label("Phone"),
     password: passwordValidation(),
     confirmPassword: Yup.string()
         .required("Please confirm your password")

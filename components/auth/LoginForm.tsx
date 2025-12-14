@@ -1,42 +1,132 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle } from "lucide-react";
 
-import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader } from "@/components";
-import { LoginFormValues } from "@/data/validationConstants";
+import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader, ProfileUpdatePrompt } from "@/components";
+import { LoginValidationSchema, LoginFormValues } from "@/data/validationConstants";
+import { CurrentUser } from "@/types/general.types";
 
 const LoginForm = () => {
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [loginError, setLoginError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [showActivatedMessage, setShowActivatedMessage] = useState(false);
+    const [loggedInUser, setLoggedInUser] = useState<CurrentUser | null>(null);
+
+    // Check for activation success message
+    useEffect(() => {
+        const activated = searchParams.get('activated');
+        if (activated === 'true') {
+            setShowActivatedMessage(true);
+            // Hide message after 5 seconds
+            setTimeout(() => setShowActivatedMessage(false), 5000);
+        }
+    }, [searchParams]);
 
     const handleLogin = async (values: LoginFormValues) => {
         setLoading(true);
         setLoginError("");
 
-        try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
+        // Backend expects "email" field but accepts email or username
+        const payload = {
+            email: values.emailOrUsername,
+            password: values.password,
+        };
 
-            // Simulate validation
-            if (values.emailOrUsername === "admin" && values.password === "Klasique1") {
-                // Success - redirect to home
-                window.location.href = "/";
-            } else {
-                setLoginError("Invalid email/username or password");
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const data = await response.json();
+            console.log('Login response:', data);
+
+            if (!response.ok) {
+                // Handle specific error messages from backend
+                let errorMessage = 'Invalid email/username or password';
+
+                if (data.message) {
+                    errorMessage = data.message;
+                } else if (data.error) {
+                    errorMessage = data.error;
+                } else if (data.detail) {
+                    errorMessage = data.detail;
+                } else if (data.email) {
+                    errorMessage = Array.isArray(data.email) ? data.email[0] : data.email;
+                } else if (data.password) {
+                    errorMessage = Array.isArray(data.password) ? data.password[0] : data.password;
+                }
+
+                setLoginError(errorMessage);
+                return;
             }
-        } catch (error) {
+
+            // Success - Tokens are stored in HttpOnly cookies by the API route
+            if (data.user) {
+                console.log('Login successful, tokens stored in HttpOnly cookies');
+                
+                // Show profile update prompt
+                setLoggedInUser(data.user);
+            } else {
+                throw new Error('Invalid response: Missing user data');
+            }
+
+        } catch (error: any) {
             console.error("Login failed:", error);
-            setLoginError("Something went wrong. Please try again.");
+            setLoginError(error.message || "Something went wrong. Please try again.");
         } finally {
             setLoading(false);
         }
     };
 
+    const handleUpdateProfile = () => {
+        router.push('/dashboard/profile/edit');
+    };
+
+    const handleSkipProfile = () => {
+        router.push('/dashboard');
+    };
+
+
+    // Show profile update prompt after successful login
+    if (loggedInUser) {
+        return (
+            <ProfileUpdatePrompt
+                user={loggedInUser}
+                onUpdateProfile={handleUpdateProfile}
+                onSkip={handleSkipProfile}
+            />
+        );
+    }
+
     return (
         <div className="w-full max-w-md mx-auto">
+            {/* Activation Success Message */}
+            {showActivatedMessage && (
+                <div className="mb-6 p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20 animate-fade-in">
+                    <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" aria-hidden="true" />
+                        <div>
+                            <p className="normal-text-2 font-semibold text-emerald-400">
+                                Account Activated!
+                            </p>
+                            <p className="small-text text-emerald-300">
+                                You can now login to your account
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header Section */}
             <div className="mb-8">
                 {/* Logo/Brand */}
@@ -68,6 +158,7 @@ const LoginForm = () => {
                 <AppForm
                     initialValues={{ emailOrUsername: "", password: "" }}
                     onSubmit={handleLogin}
+                    validationSchema={LoginValidationSchema}
                 >
                     <FormLoader visible={loading} message="Signing you in..." />
 
@@ -85,8 +176,8 @@ const LoginForm = () => {
                             placeholder="Enter your password"
                             label="Password"
                             type={showPassword ? "text" : "password"}
-                            iconClick={() => setShowPassword((prev) => !prev)}
                             icon={showPassword ? "eye-slash" : "eye"}
+                            iconClick={() => setShowPassword((prev) => !prev)}
                             iconAria={showPassword ? "Hide Password" : "Show Password"}
                             required
                         />

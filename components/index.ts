@@ -56,6 +56,9 @@ export {default as SelectInput} from './form/SelectInput';
 // auth
 export {default as LoginForm} from './auth/LoginForm';
 export {default as SignupForm} from './auth/SignupForm';
+export {default as EmailVerificationPrompt} from './auth/EmailVerificationPrompt';
+export {default as ActivateAccountContent} from './auth/ActivateAccountContent';
+export {default as ProfileUpdatePrompt} from './auth/ProfileUpdatePrompt';
 // dashboard
 export {default as DashboardTopBar} from './dashboard/DashboardTopBar';
 export {default as DashboardSideBar} from './dashboard/DashboardSideBar';

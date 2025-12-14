@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
-import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader } from "@/components";
+import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader, EmailVerificationPrompt } from "@/components";
 import { SignupValidationSchema, SignupFormValues } from "@/data/validationConstants";
 
 const SignupForm = () => {
@@ -12,38 +12,46 @@ const SignupForm = () => {
     const [loading, setLoading] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+    const [registeredEmail, setRegisteredEmail] = useState("");
 
     const handleSignup = async (values: SignupFormValues) => {
         setLoading(true);
         setError("");
 
         const payload = {
-            full_name: values.fullName,
             username: values.username,
             email: values.email,
-            phone_number: values.phoneNumber,
             password: values.password,
-            password_confirm: values.confirmPassword,
         };
 
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2500));
+            const response = await fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
 
-            // Simulate validation
-            if (values.username === "admin") {
-                setError("Username already taken. Please choose another.");
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Handle specific error messages from backend
+                if (data.username) {
+                    setError(Array.isArray(data.username) ? data.username[0] : data.username);
+                } else if (data.email) {
+                    setError(Array.isArray(data.email) ? data.email[0] : data.email);
+                } else if (data.password) {
+                    setError(Array.isArray(data.password) ? data.password[0] : data.password);
+                } else {
+                    setError(data.error || data.detail || 'Registration failed. Please try again.');
+                }
                 return;
             }
 
-            if (values.email === "test@example.com") {
-                setError("Email already registered. Please login instead.");
-                return;
-            }
+            // Success - show email verification prompt
+            setRegisteredEmail(values.email);
 
-            // Success
-            console.log("Signup successful", payload);
-            window.location.href = "/login?registered=true";
         } catch (err: unknown) {
             if (err instanceof Error) {
                 console.error("Signup failed:", err.message);
@@ -56,6 +64,11 @@ const SignupForm = () => {
             setLoading(false);
         }
     };
+
+    // Show email verification prompt after successful signup
+    if (registeredEmail) {
+        return <EmailVerificationPrompt email={registeredEmail} />;
+    }
 
     return (
         <div className="w-full max-w-2xl mx-auto">
@@ -80,7 +93,7 @@ const SignupForm = () => {
                         </h2>
                     </div>
                     <p className="big-text-5 text-slate-200">
-                        Start your journey with Ghana's premier event ticketing platform. Access thousands of events!
+                        Start your journey with Ghana&apos;s premier event ticketing platform. Access thousands of events!
                     </p>
                 </div>
             </div>
@@ -91,10 +104,8 @@ const SignupForm = () => {
 
                 <AppForm
                     initialValues={{
-                        fullName: "",
                         username: "",
                         email: "",
-                        phoneNumber: "",
                         password: "",
                         confirmPassword: ""
                     }}
@@ -104,15 +115,6 @@ const SignupForm = () => {
                     <FormLoader visible={loading} message="Creating your account..." />
 
                     <div className="space-y-5">
-                        {/* Full Name */}
-                        <AppFormField
-                            name="fullName"
-                            placeholder="e.g. Kwame Mensah"
-                            label="Full Name"
-                            type="text"
-                            required
-                        />
-
                         {/* Username */}
                         <AppFormField
                             name="username"
@@ -122,24 +124,14 @@ const SignupForm = () => {
                             required
                         />
 
-                        {/* Email & Phone - Grid on larger screens */}
-                        <div className="grid md:grid-cols-2 gap-5">
-                            <AppFormField
-                                name="email"
-                                placeholder="you@example.com"
-                                label="Email Address"
-                                type="email"
-                                required
-                            />
-
-                            <AppFormField
-                                name="phoneNumber"
-                                placeholder="0244 123 456"
-                                label="Phone Number"
-                                type="tel"
-                                required
-                            />
-                        </div>
+                        {/* Email */}
+                        <AppFormField
+                            name="email"
+                            placeholder="you@example.com"
+                            label="Email Address"
+                            type="email"
+                            required
+                        />
 
                         {/* Password & Confirm Password - Grid */}
                         <div className="grid md:grid-cols-2 gap-5">
