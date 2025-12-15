@@ -33,6 +33,37 @@ export interface Event {
     created_at: string;
 }
 
+// Pagination Response from Backend
+export interface PaginatedEventsResponse {
+    count: number; // Total number of events
+    next: string | null; // URL to next page
+    previous: string | null; // URL to previous page
+    page_size?: number; // Items per page
+    total_pages?: number; // Total number of pages
+    current_page?: number; // Current page number
+    filters_applied?: {
+        category?: string | null;
+        search?: string | null;
+        city?: string | null;
+        status?: string | null;
+    };
+    results: Event[]; // Array of events
+}
+
+// Filter Options for API
+export interface EventFilters {
+    search?: string;
+    category?: string;
+    city?: string;
+    status?: 'upcoming' | 'ongoing' | 'past' | 'all';
+    date_from?: string;
+    date_to?: string;
+    price_min?: string;
+    price_max?: string;
+    ordering?: string;
+    page?: number;
+}
+
 export type CheckInPolicy = "single_entry" | "multi_entry" | "daily_entry";
 
 export interface Organizer {
@@ -40,7 +71,7 @@ export interface Organizer {
     username: string;
     email: string;
     full_name: string;
-    profile_image: string;
+    profile_image: string | null;
     bio: string;
     events_organized: number;
     total_tickets_sold: number;
@@ -108,7 +139,7 @@ export interface EventDetails {
     description: string;
     short_description: string;
     featured_image: string;
-    images: string[];
+    additional_images: string[];
 
     venue: Venue;
 
@@ -121,11 +152,14 @@ export interface EventDetails {
     max_attendees: number;
     tickets_sold: number;
     tickets_available: number;
+    lowest_price: number,
+    highest_price: number,
+
 
     status: "upcoming" | "ongoing" | "past";
 
-    is_recurring: false;
-    recurrence_info: null;
+    is_recurring: boolean;
+    recurrence_info: RecurrenceInfo | null;
 
     check_in_policy: CheckInPolicy;
 

@@ -1,34 +1,50 @@
+import {
+    EventHero,
+    EventDescription,
+    TicketsSection,
+    OrganizerSection,
+    VenueSection,
+    ShareSection,
+    SimilarEventsSection,
+    EventNotFound
+} from '@/components';
+import { getEventBySlug } from '@/app/lib/events';
 
-import { eventDetails, recurringEventDetails } from '@/data/dummy.events';
-import {EventHero, EventDescription, TicketsSection, OrganizerSection, VenueSection, ShareSection, SimilarEventsSection} from '@/components';
+type Props = {
+    params: Promise<{ slug: string }>;
+};
 
-const EventDetailsPage = () => {
-    // Toggle this to test recurring vs normal events
-    const isRecurring = false;
-    const event = isRecurring ? recurringEventDetails : eventDetails;
+const EventDetailsPage = async ({ params }: Props) => {
+    const { slug } = await params;
+    const eventDetails = await getEventBySlug(slug);
+
+    // ✅ Handle null case - show 404 if event not found
+    if (!eventDetails) {
+        return <EventNotFound />;
+    }
 
     return (
         <main className="min-h-screen bg-primary">
             {/* Hero Section with Image Gallery & Key Info */}
-            <EventHero event={event} />
+            <EventHero event={eventDetails} />
 
             {/* Event Description with Markdown Support */}
-            <EventDescription event={event} />
+            <EventDescription event={eventDetails} />
 
             {/* Tickets Section (Conditionally shown based on status) */}
-            <TicketsSection event={event} />
+            <TicketsSection event={eventDetails} />
 
             {/* Organizer Profile & Stats */}
-            <OrganizerSection event={event} />
+            <OrganizerSection event={eventDetails} />
 
             {/* Venue Location with Google Maps */}
-            <VenueSection event={event} />
+            <VenueSection event={eventDetails} />
 
             {/* Share Event on Social Media */}
-            <ShareSection event={event} />
+            <ShareSection event={eventDetails} />
 
             {/* Similar Events Recommendations */}
-            <SimilarEventsSection event={event} />
+            <SimilarEventsSection event={eventDetails} />
         </main>
     );
 };

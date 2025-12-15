@@ -1,31 +1,30 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { events } from '@/data/dummy.events';
 import { SoonEventCard } from "@/components";
+import { Event } from '@/types/events.types';
 
-const SoonEvents = () => {
+type Props = {
+    events: Event[];
+};
+
+const SoonEvents = ({ events }: Props) => {
     const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
     const [canScrollRight, setCanScrollRight] = useState<boolean>(true);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-    // Filter events for the next 7 days
-    const getUpcomingEvents = () => {
-        const today = new Date();
-        const sevenDaysLater = new Date();
-        sevenDaysLater.setDate(today.getDate() + 7);
-
-        return events
-            .filter(event => {
-                const eventDate = new Date(event.start_date);
-                return eventDate >= today && eventDate <= sevenDaysLater && event.status === 'upcoming';
-            })
-            .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
-            .slice(0, 7);
-    };
-
-    const upcomingEvents = getUpcomingEvents();
+    // ✨ Optimized: Filter events within next 7 days using timestamp comparison
+    const upcomingEvents = useMemo(() => {
+        const nowTimestamp = Date.now(); // More efficient than new Date().getTime()
+        const sevenDaysTimestamp = nowTimestamp + (7 * 24 * 60 * 60 * 1000); // 7 days in ms
+        
+        return events.filter(event => {
+            const eventTimestamp = new Date(event.start_date).getTime();
+            // Fast number comparison instead of Date object comparison
+            return eventTimestamp >= nowTimestamp && eventTimestamp <= sevenDaysTimestamp;
+        }).slice(0, 15); // Limit to 15 events inside useMemo for efficiency
+    }, [events]);
 
     // Check scroll position
     const checkScrollPosition = () => {
@@ -70,7 +69,7 @@ const SoonEvents = () => {
         }
     }, []);
 
-    // If no upcoming events, don't render the section
+    // Early return if no upcoming events
     if (upcomingEvents.length === 0) {
         return null;
     }

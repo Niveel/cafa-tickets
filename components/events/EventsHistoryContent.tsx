@@ -1,151 +1,156 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { events } from '@/data/dummy.events';
 import { Event } from '@/types/events.types';
 import { History, Archive } from 'lucide-react';
-import {EventsCategoryTabs, EventsSortTab, ActiveFiltersDisplay, EventsResultsHeader, EventsGrid, EventsEmptyState} from "@/components"
+import { useDebounce, useInfiniteScroll } from '@/hooks';
+import {
+    EventsSortTab,
+    ActiveFiltersDisplay,
+    EventsResultsHeader,
+    EventsGrid,
+    EventsEmptyState
+} from "@/components";
+
+interface FilterOptions {
+    city: string | null;
+}
 
 const EventsHistoryContent = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
 
-    // Get only past events
-    const pastEvents = useMemo(() => 
-        events.filter(event => event.status === 'past'),
-        []
-    );
-
     // State
     const [searchQuery, setSearchQuery] = useState<string>(searchParams.get('search') || '');
     const [selectedCategory, setSelectedCategory] = useState<string | null>(searchParams.get('category') || null);
-    const [selectedCity, setSelectedCity] = useState<string | null>(searchParams.get('city') || null);
+    const [filters, setFilters] = useState<FilterOptions>({
+        city: searchParams.get('city') || null,
+    });
     const [sortBy, setSortBy] = useState<string>(searchParams.get('ordering') || '-start_date');
-    const [displayedEvents, setDisplayedEvents] = useState<Event[]>([]);
-    const [page, setPage] = useState<number>(1);
-    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const pageSize = 20;
+    // Events state
+    const [events, setEvents] = useState<Event[]>([]);
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Debounce search query (only trigger API call 500ms after user stops typing)
+    const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
     // Update URL with current filters
     const updateURL = useCallback(() => {
         const params = new URLSearchParams();
 
-        if (searchQuery) params.set('search', searchQuery);
+        if (debouncedSearchQuery) params.set('search', debouncedSearchQuery);
         if (selectedCategory) params.set('category', selectedCategory);
-        if (selectedCity) params.set('city', selectedCity);
+        if (filters.city) params.set('city', filters.city);
         if (sortBy !== '-start_date') params.set('ordering', sortBy);
 
         const queryString = params.toString();
         router.push(`/events/history${queryString ? `?${queryString}` : ''}`, { scroll: false });
-    }, [searchQuery, selectedCategory, selectedCity, sortBy, router]);
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy, router]);
 
-    // Filter and sort events
-    const filteredAndSortedEvents = useMemo(() => {
-        let result = [...pastEvents];
-
-        // Filter by search query
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result = result.filter(event =>
-                event.title.toLowerCase().includes(query) ||
-                event.short_description.toLowerCase().includes(query) ||
-                event.venue_name.toLowerCase().includes(query) ||
-                event.venue_city.toLowerCase().includes(query)
-            );
-        }
-
-        // Filter by category
-        if (selectedCategory) {
-            result = result.filter(event => event.category.slug === selectedCategory);
-        }
-
-        // Filter by city
-        if (selectedCity) {
-            result = result.filter(event => event.venue_city === selectedCity);
-        }
-
-        // Sort events
-        result.sort((a, b) => {
-            switch (sortBy) {
-                case 'start_date':
-                    return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
-                case '-start_date':
-                    return new Date(b.start_date).getTime() - new Date(a.start_date).getTime();
-                case 'created_at':
-                    return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-                case '-created_at':
-                    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                case 'popularity':
-                    return b.tickets_sold - a.tickets_sold;
-                default:
-                    return 0;
-            }
-        });
-
-        return result;
-    }, [pastEvents, searchQuery, selectedCategory, selectedCity, sortBy]);
-
-    // Update displayed events when filters change
-    React.useEffect(() => {
-        setDisplayedEvents(filteredAndSortedEvents.slice(0, pageSize));
-        setPage(1);
-    }, [filteredAndSortedEvents]);
-
-    // Update URL when filters/sort change
-    React.useEffect(() => {
-        updateURL();
-    }, [updateURL]);
-
-    // Load more events (infinite scroll)
-    const handleLoadMore = useCallback(() => {
-        if (isLoading) return;
-
+    // Fetch past events from backend
+    const fetchPastEvents = useCallback(async (page: number, resetEvents: boolean = false) => {
         setIsLoading(true);
-        
-        setTimeout(() => {
-            const nextPage = page + 1;
-            const startIndex = page * pageSize;
-            const endIndex = startIndex + pageSize;
-            const moreEvents = filteredAndSortedEvents.slice(startIndex, endIndex);
-            
-            setDisplayedEvents(prev => [...prev, ...moreEvents]);
-            setPage(nextPage);
+        setError(null);
+
+        try {
+            const params = new URLSearchParams({
+                page: page.toString(),
+                ordering: sortBy,
+            });
+
+            if (debouncedSearchQuery) params.set('search', debouncedSearchQuery);
+            if (selectedCategory) params.set('category', selectedCategory);
+            if (filters.city) params.set('city', filters.city);
+
+            const response = await fetch(`/api/events/past?${params}`);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch past events');
+            }
+
+            const data = await response.json();
+
+            if (resetEvents) {
+                setEvents(data.results);
+            } else {
+                setEvents(prev => [...prev, ...data.results]);
+            }
+
+            setTotalCount(data.count);
+            setCurrentPage(data.current_page);
+            setTotalPages(data.total_pages);
+
+        } catch (err) {
+            console.error('Error fetching past events:', err);
+            setError('Failed to load past events. Please try again.');
+        } finally {
             setIsLoading(false);
-        }, 500);
-    }, [page, filteredAndSortedEvents, isLoading]);
+            setIsInitialLoad(false);
+        }
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy]);
+
+    // Load more events (for infinite scroll)
+    const handleLoadMore = useCallback(() => {
+        if (currentPage < totalPages && !isLoading) {
+            fetchPastEvents(currentPage + 1, false);
+        }
+    }, [currentPage, totalPages, isLoading, fetchPastEvents]);
+
+    // Set up infinite scroll
+    const scrollRef = useInfiniteScroll(handleLoadMore, {
+        threshold: 300,
+        hasMore: currentPage < totalPages,
+        isLoading,
+    });
+
+    // Reset and fetch when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+        fetchPastEvents(1, true);
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy]);
+
+    // Update URL when filters change
+    useEffect(() => {
+        if (!isInitialLoad) {
+            updateURL();
+        }
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy, updateURL, isInitialLoad]);
 
     // Clear all filters
     const handleClearAllFilters = () => {
         setSearchQuery('');
         setSelectedCategory(null);
-        setSelectedCity(null);
+        setFilters({
+            city: null,
+        });
         setSortBy('-start_date');
     };
 
-    // Get active filters
-    const activeFilters = useMemo(() => {
+    // Get active filters for display
+    const activeFilters = React.useMemo(() => {
         const active: Array<{ key: string; label: string; value: string }> = [];
 
-        if (searchQuery) active.push({ key: 'search', label: 'Search', value: searchQuery });
-        if (selectedCategory) {
-            const category = pastEvents.find(e => e.category.slug === selectedCategory)?.category;
-            if (category) active.push({ key: 'category', label: 'Category', value: category.name });
-        }
-        if (selectedCity) active.push({ key: 'city', label: 'City', value: selectedCity });
+        if (debouncedSearchQuery) active.push({ key: 'search', label: 'Search', value: debouncedSearchQuery });
+        if (selectedCategory) active.push({ key: 'category', label: 'Category', value: selectedCategory });
+        if (filters.city) active.push({ key: 'city', label: 'City', value: filters.city });
 
         return active;
-    }, [searchQuery, selectedCategory, selectedCity, pastEvents]);
+    }, [debouncedSearchQuery, selectedCategory, filters]);
 
     // Remove single filter
     const handleRemoveFilter = (key: string) => {
         if (key === 'search') setSearchQuery('');
         else if (key === 'category') setSelectedCategory(null);
-        else if (key === 'city') setSelectedCity(null);
+        else if (key === 'city') setFilters({ ...filters, city: null });
     };
 
-    const hasMore = displayedEvents.length < filteredAndSortedEvents.length;
     const hasActiveFilters = activeFilters.length > 0;
 
     return (
@@ -192,7 +197,7 @@ const EventsHistoryContent = () => {
                         </div>
                         <div>
                             <p className="big-text-4 font-bold text-white">
-                                {pastEvents.length}
+                                {totalCount.toLocaleString()}
                             </p>
                             <p className="small-text text-slate-300">
                                 Past Events
@@ -201,12 +206,6 @@ const EventsHistoryContent = () => {
                     </div>
                 </div>
             </section>
-
-            {/* Category Tabs */}
-            <EventsCategoryTabs
-                selectedCategory={selectedCategory}
-                onCategorySelect={setSelectedCategory}
-            />
 
             {/* Main Content */}
             <section className="relative py-8 sm:py-12 bg-primary">
@@ -232,23 +231,45 @@ const EventsHistoryContent = () => {
                         </div>
                     )}
 
+                    {/* Error State */}
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                            <p className="normal-text text-red-400">{error}</p>
+                            <button
+                                onClick={() => fetchPastEvents(1, true)}
+                                className="mt-2 text-accent-50 hover:text-accent-100 font-semibold small-text"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    )}
+
                     {/* Results Header */}
-                    {filteredAndSortedEvents.length > 0 && (
+                    {!isInitialLoad && events.length > 0 && (
                         <EventsResultsHeader
-                            totalCount={pastEvents.length}
-                            currentCount={filteredAndSortedEvents.length}
+                            totalCount={totalCount}
+                            currentCount={events.length}
                             isFiltered={hasActiveFilters}
                         />
                     )}
 
                     {/* Events Grid or Empty State */}
-                    {filteredAndSortedEvents.length > 0 ? (
-                        <EventsGrid
-                            events={displayedEvents}
-                            isLoading={isLoading}
-                            hasMore={hasMore}
-                            onLoadMore={handleLoadMore}
-                        />
+                    {isInitialLoad ? (
+                        <div className="text-center py-12">
+                            <div className="animate-spin w-8 h-8 border-4 border-accent border-t-transparent rounded-full mx-auto"></div>
+                            <p className="mt-4 normal-text text-slate-400">Loading past events...</p>
+                        </div>
+                    ) : events.length > 0 ? (
+                        <>
+                            <EventsGrid
+                                events={events}
+                                isLoading={isLoading}
+                                hasMore={currentPage < totalPages}
+                                onLoadMore={handleLoadMore}
+                            />
+                            {/* Infinite Scroll Sentinel */}
+                            <div ref={scrollRef} className="h-10" />
+                        </>
                     ) : (
                         <EventsEmptyState
                             hasFilters={hasActiveFilters}
@@ -261,4 +282,4 @@ const EventsHistoryContent = () => {
     );
 };
 
-export default EventsHistoryContent
+export default EventsHistoryContent;

@@ -3,11 +3,15 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { events } from '@/data/dummy.events';
 import { EventCard } from '@/components';
+import { Event } from '@/types/events.types';
 
-const HomeEvents = () => {
-    // Get first 20 events (both upcoming and ongoing)
+type HomeEventsProps = {
+    events: Event[];
+};
+
+const HomeEvents = ({ events }: HomeEventsProps) => {
+    // Get first 18 events (both upcoming and ongoing)
     const displayEvents = events.slice(0, 18);
 
     return (

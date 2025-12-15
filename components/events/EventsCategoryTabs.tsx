@@ -3,14 +3,16 @@
 import { useRef, useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as FaIcons from 'react-icons/fa';
-import { eventCategories as categories } from '@/data/dummy.general';
+
+import { EventCategory } from '@/types/general.types';
 
 interface EventsCategoryTabsProps {
     selectedCategory: string | null;
     onCategorySelect: (slug: string | null) => void;
+    categories: EventCategory[];
 }
 
-const EventsCategoryTabs = ({ selectedCategory, onCategorySelect }: EventsCategoryTabsProps) => {
+const EventsCategoryTabs = ({ selectedCategory, onCategorySelect, categories }: EventsCategoryTabsProps) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);

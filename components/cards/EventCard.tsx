@@ -3,7 +3,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, MapPin, TrendingUp } from 'lucide-react';
+
 import { Event } from '@/types/events.types';
+import { placeholderImage, placeholderPic } from '@/data/constants';
 
 interface EventCardProps {
     event: Event;
@@ -44,7 +46,7 @@ const EventCard = ({ event }: EventCardProps) => {
                 aria-label={`View ${event.title} event details`}
             >
                 <Image
-                    src={event.featured_image}
+                    src={event.featured_image || placeholderImage}
                     alt={`${event.title} - ${event.category.name} event in ${event.venue_city}`}
                     fill
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -139,10 +141,10 @@ const EventCard = ({ event }: EventCardProps) => {
                 <div className="flex items-center gap-3 pt-3 border-t border-accent">
                     <div className="relative w-8 h-8 rounded-full overflow-hidden ring-2 ring-accent shrink-0">
                         <Image
-                            src={event.organizer.profile_image}
+                            src={event.organizer.profile_image || placeholderPic}
                             alt={event.organizer.full_name}
                             fill
-                            className="object-cover"
+                            className="object-cover bg-white"
                         />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -150,7 +152,7 @@ const EventCard = ({ event }: EventCardProps) => {
                             Organized by
                         </p>
                         <p className="normal-text-2 text-white font-semibold truncate">
-                            {event.organizer.full_name}
+                            {event.organizer.full_name || "@" + event.organizer.username}
                         </p>
                     </div>
                 </div>
@@ -176,7 +178,7 @@ const EventCard = ({ event }: EventCardProps) => {
                     <div className="text-right">
                         <p className="small-text text-slate-300 mb-0.5">Available</p>
                         <p className="normal-text-2 font-bold text-accent-50">
-                            {event.total_tickets - event.tickets_sold} left
+                            {event.tickets_available} left
                         </p>
                     </div>
                 </div>

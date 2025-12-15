@@ -1,9 +1,12 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { events } from '@/data/dummy.events';
-import { Event } from '@/types/events.types';
+
+import { Event, EventFilters } from '@/types/events.types';
+import { useDebounce, useInfiniteScroll } from '@/hooks';
+import { EventCategory } from '@/types/general.types';
+
 import {
     EventsHero,
     EventsCategoryTabs,
@@ -15,6 +18,10 @@ import {
     EventsEmptyState
 } from "@/components";
 
+type Props = {
+    categories: EventCategory[];
+};
+
 interface FilterOptions {
     city: string | null;
     status: 'upcoming' | 'ongoing' | 'all';
@@ -24,15 +31,9 @@ interface FilterOptions {
     price_max: string;
 }
 
-const EventsPageContent = () => {
+const EventsPageContent = ({ categories }: Props) => {
     const router = useRouter();
     const searchParams = useSearchParams();
-
-    // Get only non-past events
-    const activeEvents = useMemo(() => 
-        events.filter(event => event.status !== 'past'),
-        []
-    );
 
     // State
     const [searchQuery, setSearchQuery] = useState<string>(searchParams.get('search') || '');
@@ -46,17 +47,24 @@ const EventsPageContent = () => {
         price_max: searchParams.get('price_max') || ''
     });
     const [sortBy, setSortBy] = useState<string>(searchParams.get('ordering') || '-start_date');
-    const [displayedEvents, setDisplayedEvents] = useState<Event[]>([]);
-    const [page, setPage] = useState<number>(1);
+    
+    // Events state
+    const [events, setEvents] = useState<Event[]>([]);
+    const [totalCount, setTotalCount] = useState<number>(0);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [isInitialLoad, setIsInitialLoad] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const pageSize = 20;
+    // Debounce search query (only trigger API call 500ms after user stops typing)
+    const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
     // Update URL with current filters
     const updateURL = useCallback(() => {
         const params = new URLSearchParams();
 
-        if (searchQuery) params.set('search', searchQuery);
+        if (debouncedSearchQuery) params.set('search', debouncedSearchQuery);
         if (selectedCategory) params.set('category', selectedCategory);
         if (filters.city) params.set('city', filters.city);
         if (filters.status !== 'all') params.set('status', filters.status);
@@ -68,107 +76,81 @@ const EventsPageContent = () => {
 
         const queryString = params.toString();
         router.push(`/events${queryString ? `?${queryString}` : ''}`, { scroll: false });
-    }, [searchQuery, selectedCategory, filters, sortBy, router]);
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy, router]);
 
-    // Filter and sort events
-    const filteredAndSortedEvents = useMemo(() => {
-        let result = [...activeEvents];
-
-        // Filter by search query
-        if (searchQuery) {
-            const query = searchQuery.toLowerCase();
-            result = result.filter(event =>
-                event.title.toLowerCase().includes(query) ||
-                event.short_description.toLowerCase().includes(query) ||
-                event.venue_name.toLowerCase().includes(query) ||
-                event.venue_city.toLowerCase().includes(query)
-            );
-        }
-
-        // Filter by category
-        if (selectedCategory) {
-            result = result.filter(event => event.category.slug === selectedCategory);
-        }
-
-        // Filter by city
-        if (filters.city) {
-            result = result.filter(event => event.venue_city === filters.city);
-        }
-
-        // Filter by status
-        if (filters.status !== 'all') {
-            result = result.filter(event => event.status === filters.status);
-        }
-
-        // Filter by date range
-        if (filters.date_from) {
-            result = result.filter(event => new Date(event.start_date) >= new Date(filters.date_from));
-        }
-        if (filters.date_to) {
-            result = result.filter(event => new Date(event.start_date) <= new Date(filters.date_to));
-        }
-
-        // Filter by price range
-        if (filters.price_min) {
-            result = result.filter(event => parseFloat(event.lowest_price) >= parseFloat(filters.price_min));
-        }
-        if (filters.price_max) {
-            result = result.filter(event => parseFloat(event.lowest_price) <= parseFloat(filters.price_max));
-        }
-
-        // Sort events
-        result.sort((a, b) => {
-            switch (sortBy) {
-                case 'start_date':
-                    return new Date(a.start_date).getTime() - new Date(b.start_date).getTime();
-                case '-start_date':
-                    return new Date(b.start_date).getTime() - new Date(a.start_date).getTime();
-                case 'created_at':
-                    return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-                case '-created_at':
-                    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-                case 'price':
-                    return parseFloat(a.lowest_price) - parseFloat(b.lowest_price);
-                case '-price':
-                    return parseFloat(b.lowest_price) - parseFloat(a.lowest_price);
-                case 'popularity':
-                    return b.tickets_sold - a.tickets_sold;
-                default:
-                    return 0;
-            }
-        });
-
-        return result;
-    }, [activeEvents, searchQuery, selectedCategory, filters, sortBy]);
-
-    // Update displayed events when filters change
-    React.useEffect(() => {
-        setDisplayedEvents(filteredAndSortedEvents.slice(0, pageSize));
-        setPage(1);
-    }, [filteredAndSortedEvents]);
-
-    // Update URL when filters/sort change
-    React.useEffect(() => {
-        updateURL();
-    }, [updateURL]);
-
-    // Load more events (infinite scroll)
-    const handleLoadMore = useCallback(() => {
-        if (isLoading) return;
-
+    // Fetch events from backend
+    const fetchEvents = useCallback(async (page: number, resetEvents: boolean = false) => {
         setIsLoading(true);
-        
-        setTimeout(() => {
-            const nextPage = page + 1;
-            const startIndex = page * pageSize;
-            const endIndex = startIndex + pageSize;
-            const moreEvents = filteredAndSortedEvents.slice(startIndex, endIndex);
+        setError(null);
+
+        try {
+            const filterParams: EventFilters = {
+                page,
+                ordering: sortBy,
+            };
+
+            if (debouncedSearchQuery) filterParams.search = debouncedSearchQuery;
+            if (selectedCategory) filterParams.category = selectedCategory;
+            if (filters.city) filterParams.city = filters.city;
+            if (filters.status !== 'all') filterParams.status = filters.status;
+            if (filters.date_from) filterParams.date_from = filters.date_from;
+            if (filters.date_to) filterParams.date_to = filters.date_to;
+            if (filters.price_min) filterParams.price_min = filters.price_min;
+            if (filters.price_max) filterParams.price_max = filters.price_max;
+
+            const response = await fetch(`/api/events?${new URLSearchParams(filterParams as Record<string, string>)}`);
             
-            setDisplayedEvents(prev => [...prev, ...moreEvents]);
-            setPage(nextPage);
+            if (!response.ok) {
+                throw new Error('Failed to fetch events');
+            }
+
+            const data = await response.json();
+
+            if (resetEvents) {
+                setEvents(data.results);
+            } else {
+                setEvents(prev => [...prev, ...data.results]);
+            }
+
+            setTotalCount(data.count);
+            setCurrentPage(data.current_page);
+            setTotalPages(data.total_pages);
+
+        } catch (err) {
+            console.error('Error fetching events:', err);
+            setError('Failed to load events. Please try again.');
+        } finally {
             setIsLoading(false);
-        }, 500);
-    }, [page, filteredAndSortedEvents, isLoading]);
+            setIsInitialLoad(false);
+        }
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy]);
+
+    // Load more events (for infinite scroll)
+    const handleLoadMore = useCallback(() => {
+        if (currentPage < totalPages && !isLoading) {
+            fetchEvents(currentPage + 1, false);
+        }
+    }, [currentPage, totalPages, isLoading, fetchEvents]);
+
+    // Set up infinite scroll
+    const scrollRef = useInfiniteScroll(handleLoadMore, {
+        threshold: 300,
+        hasMore: currentPage < totalPages,
+        isLoading,
+    });
+
+    // Reset and fetch when filters change
+    useEffect(() => {
+        setCurrentPage(1);
+        fetchEvents(1, true);
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy]);
+
+    // Update URL when filters change
+    useEffect(() => {
+        if (!isInitialLoad) {
+            updateURL();
+        }
+    }, [debouncedSearchQuery, selectedCategory, filters, sortBy, updateURL, isInitialLoad]);
 
     // Clear all filters
     const handleClearAllFilters = () => {
@@ -185,15 +167,12 @@ const EventsPageContent = () => {
         setSortBy('-start_date');
     };
 
-    // Get active filters
-    const activeFilters = useMemo(() => {
+    // Get active filters for display
+    const activeFilters = React.useMemo(() => {
         const active: Array<{ key: string; label: string; value: string }> = [];
 
-        if (searchQuery) active.push({ key: 'search', label: 'Search', value: searchQuery });
-        if (selectedCategory) {
-            const category = activeEvents.find(e => e.category.slug === selectedCategory)?.category;
-            if (category) active.push({ key: 'category', label: 'Category', value: category.name });
-        }
+        if (debouncedSearchQuery) active.push({ key: 'search', label: 'Search', value: debouncedSearchQuery });
+        if (selectedCategory) active.push({ key: 'category', label: 'Category', value: selectedCategory });
         if (filters.city) active.push({ key: 'city', label: 'City', value: filters.city });
         if (filters.status !== 'all') active.push({ key: 'status', label: 'Status', value: filters.status });
         if (filters.date_from) active.push({ key: 'date_from', label: 'From', value: filters.date_from });
@@ -202,7 +181,7 @@ const EventsPageContent = () => {
         if (filters.price_max) active.push({ key: 'price_max', label: 'Max Price', value: `GHS ${filters.price_max}` });
 
         return active;
-    }, [searchQuery, selectedCategory, filters, activeEvents]);
+    }, [debouncedSearchQuery, selectedCategory, filters]);
 
     // Remove single filter
     const handleRemoveFilter = (key: string) => {
@@ -216,14 +195,13 @@ const EventsPageContent = () => {
         else if (key === 'price_max') setFilters({ ...filters, price_max: '' });
     };
 
-    const hasMore = displayedEvents.length < filteredAndSortedEvents.length;
     const hasActiveFilters = activeFilters.length > 0;
 
     return (
         <main className="min-h-screen bg-primary">
             {/* Hero Section */}
             <EventsHero
-                totalEvents={activeEvents.length}
+                totalEvents={totalCount}
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
                 onSearchSubmit={updateURL}
@@ -233,6 +211,7 @@ const EventsPageContent = () => {
             <EventsCategoryTabs
                 selectedCategory={selectedCategory}
                 onCategorySelect={setSelectedCategory}
+                categories={categories}
             />
 
             {/* Main Content */}
@@ -265,23 +244,45 @@ const EventsPageContent = () => {
                         </div>
                     )}
 
+                    {/* Error State */}
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
+                            <p className="normal-text text-red-400">{error}</p>
+                            <button
+                                onClick={() => fetchEvents(1, true)}
+                                className="mt-2 text-accent-50 hover:text-accent-100 font-semibold small-text"
+                            >
+                                Try Again
+                            </button>
+                        </div>
+                    )}
+
                     {/* Results Header */}
-                    {filteredAndSortedEvents.length > 0 && (
+                    {!isInitialLoad && events.length > 0 && (
                         <EventsResultsHeader
-                            totalCount={activeEvents.length}
-                            currentCount={filteredAndSortedEvents.length}
+                            totalCount={totalCount}
+                            currentCount={events.length}
                             isFiltered={hasActiveFilters}
                         />
                     )}
 
                     {/* Events Grid or Empty State */}
-                    {filteredAndSortedEvents.length > 0 ? (
-                        <EventsGrid
-                            events={displayedEvents}
-                            isLoading={isLoading}
-                            hasMore={hasMore}
-                            onLoadMore={handleLoadMore}
-                        />
+                    {isInitialLoad ? (
+                        <div className="text-center py-12">
+                            <div className="animate-spin w-8 h-8 border-4 border-accent border-t-transparent rounded-full mx-auto"></div>
+                            <p className="mt-4 normal-text text-slate-400">Loading events...</p>
+                        </div>
+                    ) : events.length > 0 ? (
+                        <>
+                            <EventsGrid
+                                events={events}
+                                isLoading={isLoading}
+                                hasMore={currentPage < totalPages}
+                                onLoadMore={handleLoadMore}
+                            />
+                            {/* Infinite Scroll Sentinel */}
+                            <div ref={scrollRef} className="h-10" />
+                        </>
                     ) : (
                         <EventsEmptyState
                             hasFilters={hasActiveFilters}

@@ -3,8 +3,10 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+
 import { User, Calendar, Ticket, TrendingUp, Mail } from 'lucide-react';
 import { EventDetails, RecurringEventDetails } from '@/types/events.types';
+import { placeholderPic } from '@/data/constants';
 
 interface OrganizerSectionProps {
     event: EventDetails | RecurringEventDetails;
@@ -46,10 +48,10 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
                                 <div className="flex justify-center">
                                     <div className="relative w-32 h-32 rounded-full overflow-hidden ring-4 ring-accent shadow-2xl">
                                         <Image
-                                            src={organizer.profile_image}
+                                            src={organizer.profile_image || placeholderPic}
                                             alt={organizer.full_name}
                                             fill
-                                            className="object-cover"
+                                            className="object-cover bg-white"
                                         />
                                     </div>
                                 </div>

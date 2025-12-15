@@ -12,19 +12,24 @@ import {
     ChevronRight,
     X
 } from 'lucide-react';
-import { EventDetails, RecurringEventDetails } from '@/types/events.types';
+import { EventDetails } from '@/types/events.types';
 import { formatDate, formatTime } from '@/utils/format';
 
 interface EventHeroProps {
-    event: EventDetails | RecurringEventDetails;
+    event: EventDetails; 
 }
 
 const EventHero = ({ event }: EventHeroProps) => {
     const [selectedImage, setSelectedImage] = useState<number>(0);
     const [showLightbox, setShowLightbox] = useState<boolean>(false);
 
-    const allImages = [event.featured_image, ...event.images];
-    const isRecurring = 'recurrence_info' in event && event.recurrence_info !== null;
+    // ✅ Safely handle additional_images - it might be empty, undefined, or not an array
+    const additionalImages = Array.isArray(event.additional_images) ? event.additional_images : [];
+    const allImages = [event.featured_image, ...additionalImages];
+    const hasMultipleImages = allImages.length > 1;
+    
+    // ✅ Check if event is recurring by checking recurrence_info
+    const isRecurring = event.is_recurring && event.recurrence_info !== null;
 
     // Navigate images
     const nextImage = () => {
@@ -50,20 +55,20 @@ const EventHero = ({ event }: EventHeroProps) => {
             <section className="relative bg-primary pt-24 sm:pt-28 pb-8">
                 <div className="inner-wrapper">
                     {/* Breadcrumb */}
-                    <nav className="flex items-center gap-2 text-slate-300 mb-6" aria-label="Breadcrumb">
-                        <Link href="/" className="hover:text-accent-50 transition-colors">
+                    <nav className="flex items-center gap-2 text-slate-300 mb-6 flex-wrap" aria-label="Breadcrumb">
+                        <Link href="/" className="hover:text-accent-50 transition-colors small-text">
                             Home
                         </Link>
-                        <span>/</span>
-                        <Link href="/events" className="hover:text-accent-50 transition-colors">
+                        <span className="small-text">/</span>
+                        <Link href="/events" className="hover:text-accent-50 transition-colors small-text">
                             Events
                         </Link>
-                        <span>/</span>
-                        <Link href={`/events?category=${event.category.slug}`} className="hover:text-accent-50 transition-colors">
+                        <span className="small-text">/</span>
+                        <Link href={`/events?category=${event.category.slug}`} className="hover:text-accent-50 transition-colors small-text">
                             {event.category.name}
                         </Link>
-                        <span>/</span>
-                        <span className="text-white font-medium truncate">{event.title}</span>
+                        <span className="small-text">/</span>
+                        <span className="text-white font-medium truncate small-text">{event.title}</span>
                     </nav>
 
                     <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
@@ -89,8 +94,8 @@ const EventHero = ({ event }: EventHeroProps) => {
                                     </span>
                                 </div>
 
-                                {/* Navigation Arrows */}
-                                {allImages.length > 1 && (
+                                {/* Navigation Arrows - Only show if multiple images */}
+                                {hasMultipleImages && (
                                     <>
                                         <button
                                             onClick={(e) => {
@@ -117,12 +122,14 @@ const EventHero = ({ event }: EventHeroProps) => {
                                     </>
                                 )}
 
-                                {/* Image Counter */}
-                                <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-primary/90 backdrop-blur-sm rounded-lg border border-accent">
-                                    <span className="small-text text-white font-bold">
-                                        {selectedImage + 1} / {allImages.length}
-                                    </span>
-                                </div>
+                                {/* Image Counter - Only show if multiple images */}
+                                {hasMultipleImages && (
+                                    <div className="absolute bottom-4 right-4 px-3 py-1.5 bg-primary/90 backdrop-blur-sm rounded-lg border border-accent">
+                                        <span className="small-text text-white font-bold">
+                                            {selectedImage + 1} / {allImages.length}
+                                        </span>
+                                    </div>
+                                )}
 
                                 {/* Status Badge */}
                                 <div className="absolute top-4 left-4">
@@ -145,8 +152,8 @@ const EventHero = ({ event }: EventHeroProps) => {
                                 </div>
                             </div>
 
-                            {/* Thumbnail Gallery */}
-                            {allImages.length > 1 && (
+                            {/* Thumbnail Gallery - Only show if multiple images */}
+                            {hasMultipleImages && (
                                 <div className="grid grid-cols-4 gap-3">
                                     {allImages.map((image, index) => (
                                         <button
@@ -243,7 +250,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                                     <div className="flex-1">
                                         <p className="small-text text-slate-300 mb-1">Availability</p>
                                         <p className="normal-text font-bold text-white">
-                                            {event.tickets_available} tickets remaining
+                                            {event.tickets_available.toLocaleString()} tickets remaining
                                         </p>
                                         <div className="mt-2 h-2 bg-primary-200 rounded-full overflow-hidden">
                                             <div 
@@ -254,7 +261,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                                             ></div>
                                         </div>
                                         <p className="small-text text-slate-300 mt-1">
-                                            {event.tickets_sold} sold • {Math.round((event.tickets_sold / event.max_attendees) * 100)}% capacity
+                                            {event.tickets_sold.toLocaleString()} sold • {Math.round((event.tickets_sold / event.max_attendees) * 100)}% capacity
                                         </p>
                                     </div>
                                 </div>
@@ -284,7 +291,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                 >
                     <button
                         onClick={() => setShowLightbox(false)}
-                        className="absolute top-4 right-4 w-12 h-12 rounded-full bg-accent text-white hover:bg-accent-100 transition-all duration-300 flex items-center justify-center"
+                        className="absolute top-4 right-4 w-12 h-12 rounded-full bg-accent text-white hover:bg-accent-100 transition-all duration-300 flex items-center justify-center z-10001"
                         aria-label="Close lightbox"
                         type="button"
                     >
@@ -299,8 +306,8 @@ const EventHero = ({ event }: EventHeroProps) => {
                             className="object-contain"
                         />
 
-                        {/* Lightbox Navigation */}
-                        {allImages.length > 1 && (
+                        {/* Lightbox Navigation - Only show if multiple images */}
+                        {hasMultipleImages && (
                             <>
                                 <button
                                     onClick={(e) => {

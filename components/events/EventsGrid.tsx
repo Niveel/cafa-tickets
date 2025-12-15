@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Loader2 } from 'lucide-react';
+
 import { Event } from '@/types/events.types';
 import { EventCard } from '@/components';
 

@@ -4,7 +4,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import * as FaIcons from 'react-icons/fa';
-import { eventCategories } from '@/data/dummy.general';
+import { EventCategory } from '@/types/general.types';
+
+type Props = {
+    eventCategories: EventCategory[];
+};
 
 // Dynamic icon resolver - safely gets any Fa icon
 const getIconComponent = (iconName: string): React.ComponentType<{ className?: string }> => {
@@ -15,7 +19,7 @@ const getIconComponent = (iconName: string): React.ComponentType<{ className?: s
     return Icon || FaIcons.FaCalendarAlt;
 };
 
-const HomeCategoryBar = () => {
+const HomeCategoryBar = ({ eventCategories }: Props) => {
     const [scrollPosition, setScrollPosition] = useState<number>(0);
     const [canScrollLeft, setCanScrollLeft] = useState<boolean>(false);
     const [canScrollRight, setCanScrollRight] = useState<boolean>(true);

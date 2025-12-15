@@ -3,7 +3,9 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, MapPin, Users, Clock, TrendingUp } from 'lucide-react';
+import {  MapPin, Users, Clock, TrendingUp } from 'lucide-react';
+
+import { placeholderImage } from '@/data/constants';
 
 interface SoonEventCardProps {
     event: {
@@ -60,7 +62,7 @@ const SoonEventCard = ({ event }: SoonEventCardProps) => {
                 {/* Background Image */}
                 <div className="absolute inset-0">
                     <Image
-                        src={event.featured_image}
+                        src={event.featured_image || placeholderImage}
                         alt={`${event.title} - ${event.category.name} event`}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-110"
