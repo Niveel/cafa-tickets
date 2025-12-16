@@ -6,17 +6,7 @@ import { Formik, Form } from 'formik';
 import { eventCreationSchema, EventFormValues } from '@/data/eventsSchema';
 import { SubmitButton, FormLoader } from '@/components';
 import { CheckCircle, AlertCircle } from 'lucide-react';
-
-// Import all section components
-import EventBasicInfoSection from './EventBasicInfoSection';
-import EventVenueSection from './EventVenueSection';
-import EventDateTimeSection from './EventDateTimeSection';
-import EventTypeSection from './EventTypeSection';
-import EventCapacitySection from './EventCapacitySection';
-import EventPaymentProfileSection from './EventPaymentProfileSection';
-import EventImagesSection from './EventImagesSection';
-import EventTicketTypesSection from './EventTicketTypesSection';
-import EventPublishSection from './EventPublishSection';
+import {EventBasicInfoSection, EventVenueSection, EventDateTimeSection, EventTypeSection, EventCapacitySection, EventPaymentProfileSection, EventImagesSection, EventTicketTypesSection, EventPublishSection} from "@/components"
 
 const CreateEventForm = () => {
     const router = useRouter();

@@ -16,15 +16,27 @@ const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showActivatedMessage, setShowActivatedMessage] = useState(false);
+    const [showSessionExpiredMessage, setShowSessionExpiredMessage] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState<CurrentUser | null>(null);
+
+    // Get redirect URL from query params (set by middleware)
+    const redirectUrl = searchParams.get('redirect') || '/dashboard';
 
     // Check for activation success message
     useEffect(() => {
         const activated = searchParams.get('activated');
+        const sessionExpired = searchParams.get('session_expired');
+        
         if (activated === 'true') {
             setShowActivatedMessage(true);
             // Hide message after 5 seconds
             setTimeout(() => setShowActivatedMessage(false), 5000);
+        }
+
+        if (sessionExpired === 'true') {
+            setShowSessionExpiredMessage(true);
+            // Hide message after 5 seconds
+            setTimeout(() => setShowSessionExpiredMessage(false), 5000);
         }
     }, [searchParams]);
 
@@ -74,30 +86,49 @@ const LoginForm = () => {
             if (data.user) {
                 console.log('Login successful, tokens stored in HttpOnly cookies');
                 
-                // Show profile update prompt
-                setLoggedInUser(data.user);
+                // Check if profile needs updating (missing required fields)
+                const needsProfileUpdate = !data.user.full_name || !data.user.phone_number;
+
+                if (needsProfileUpdate) {
+                    // Show profile update prompt
+                    setLoggedInUser(data.user);
+                } else {
+                    // Profile is complete, redirect immediately
+                    console.log('Profile complete, redirecting to:', redirectUrl);
+                    router.push(redirectUrl);
+                }
             } else {
                 throw new Error('Invalid response: Missing user data');
             }
 
-        } catch (error: any) {
-            console.error("Login failed:", error);
-            setLoginError(error.message || "Something went wrong. Please try again.");
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error("Login failed:", error.message);
+                setLoginError(error.message || "Something went wrong. Please try again.");
+            } else {
+                console.error("Login failed:", error);
+                setLoginError("Something went wrong. Please try again.");
+            }
         } finally {
             setLoading(false);
         }
     };
 
     const handleUpdateProfile = () => {
+        // Save redirect URL in sessionStorage so we can return after profile update
+        if (redirectUrl !== '/dashboard') {
+            sessionStorage.setItem('post_profile_redirect', redirectUrl);
+        }
         router.push('/dashboard/profile/edit');
     };
 
     const handleSkipProfile = () => {
-        router.push('/dashboard');
+        // Skip profile update and go to original destination
+        console.log('Skipping profile update, redirecting to:', redirectUrl);
+        router.push(redirectUrl);
     };
 
-
-    // Show profile update prompt after successful login
+    // Show profile update prompt after successful login (only if profile incomplete)
     if (loggedInUser) {
         return (
             <ProfileUpdatePrompt
@@ -110,6 +141,25 @@ const LoginForm = () => {
 
     return (
         <div className="w-full max-w-md mx-auto">
+            {/* Session Expired Message */}
+            {showSessionExpiredMessage && (
+                <div className="mb-6 p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20 animate-fade-in">
+                    <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 rounded-full bg-yellow-400/20 flex items-center justify-center shrink-0">
+                            <span className="text-yellow-400 text-xs">⏱️</span>
+                        </div>
+                        <div>
+                            <p className="normal-text-2 font-semibold text-yellow-400">
+                                Session Expired
+                            </p>
+                            <p className="small-text text-yellow-300">
+                                Please login again to continue
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Activation Success Message */}
             {showActivatedMessage && (
                 <div className="mb-6 p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20 animate-fade-in">
@@ -124,6 +174,15 @@ const LoginForm = () => {
                             </p>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Redirect Notice */}
+            {redirectUrl !== '/dashboard' && (
+                <div className="mb-6 p-4 bg-primary-100 rounded-xl border border-accent/30">
+                    <p className="small-text text-slate-300 text-center">
+                        Please login to access <span className="text-accent-50 font-semibold">{redirectUrl}</span>
+                    </p>
                 </div>
             )}
 

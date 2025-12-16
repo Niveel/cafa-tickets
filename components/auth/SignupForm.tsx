@@ -36,16 +36,50 @@ const SignupForm = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                // Handle specific error messages from backend
+                console.log("Signup error response:", data);
+                
+                // ✅ PRIORITY 1: Check for backend validation errors in 'details' object
+                if (data.details) {
+                    // Backend returns errors like: { details: { password: ["Error message"] } }
+                    const details = data.details;
+                    
+                    // Check each field in priority order
+                    if (details.password) {
+                        setError(Array.isArray(details.password) ? details.password[0] : details.password);
+                    } else if (details.username) {
+                        setError(Array.isArray(details.username) ? details.username[0] : details.username);
+                    } else if (details.email) {
+                        setError(Array.isArray(details.email) ? details.email[0] : details.email);
+                    } else {
+                        // If there are other fields in details, show first error
+                        const firstError = Object.values(details)[0];
+                        setError(Array.isArray(firstError) ? firstError[0] : String(firstError));
+                    }
+                    return;
+                }
+                
+                // ✅ PRIORITY 2: Check for top-level field errors (old format)
                 if (data.username) {
                     setError(Array.isArray(data.username) ? data.username[0] : data.username);
-                } else if (data.email) {
-                    setError(Array.isArray(data.email) ? data.email[0] : data.email);
-                } else if (data.password) {
-                    setError(Array.isArray(data.password) ? data.password[0] : data.password);
-                } else {
-                    setError(data.error || data.detail || 'Registration failed. Please try again.');
+                    return;
                 }
+                if (data.email) {
+                    setError(Array.isArray(data.email) ? data.email[0] : data.email);
+                    return;
+                }
+                if (data.password) {
+                    setError(Array.isArray(data.password) ? data.password[0] : data.password);
+                    return;
+                }
+                
+                // ✅ PRIORITY 3: Check for general error messages
+                if (data.message && data.message !== 'The data provided is invalid') {
+                    setError(data.message);
+                    return;
+                }
+                
+                // ✅ FALLBACK: Generic error messages
+                setError(data.error || 'Registration failed. Please try again.');
                 return;
             }
 

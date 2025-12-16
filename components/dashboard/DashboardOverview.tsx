@@ -1,5 +1,5 @@
 import { Ticket, Calendar, TrendingUp, Wallet, Users, Award } from 'lucide-react';
-import {DashboardMetricCard} from '@/components';
+import { DashboardMetricCard } from '@/components';
 import { UserStats } from '@/types/dashboard.types';
 
 type Props = {
@@ -8,6 +8,13 @@ type Props = {
 
 const DashboardOverview = ({ stats }: Props) => {
     const { overview } = stats;
+
+    const getAccountAge = (days: number, display: string) => {
+        if (days === 0) return display; // "5h" or "Just now"
+        if (days < 30) return `${days} day${days > 1 ? 's' : ''}`;
+        if (days < 365) return `${Math.floor(days / 30)} month${Math.floor(days / 30) > 1 ? 's' : ''}`;
+        return `${Math.floor(days / 365)} year${Math.floor(days / 365) > 1 ? 's' : ''}`;
+    };
 
     return (
         <div role='region' className="space-y-2 p-2">
@@ -70,9 +77,9 @@ const DashboardOverview = ({ stats }: Props) => {
 
                 <DashboardMetricCard
                     title="Account Age"
-                    value={`${Math.floor(overview.account_age_days / 30)} months`}
+                    value={getAccountAge(overview.account_age_days, overview.account_age_display)}
                     icon={Award}
-                    subtitle={`${overview.account_age_days} days`}
+                    subtitle={`${overview.account_age_days} days total`}
                     iconBgColor="bg-amber-500/20"
                     iconColor="text-amber-400"
                 />

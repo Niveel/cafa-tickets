@@ -10,7 +10,7 @@ const HomePage = async () => {
 
   return (
     <main>
-      <Landing />
+      <Landing events={events.results} />
       <HomeCategoryBar eventCategories={categories} />
       <SoonEvents events={events.results} />
       <HomeEvents events={events.results} />

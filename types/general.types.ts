@@ -21,14 +21,14 @@ export interface CurrentUser {
     username: string;
     email: string;
     full_name: string;
-    phone_number: string;
+    phone_number: string | null;
     profile_image: string | null;
     bio: string | null;
     city: string | null;
     country: string | null;
     is_email_verified: boolean;
-    date_joined: string;       // ISO date
-    last_login: string | null; // ISO date
+    date_joined: string;
+    last_login: string | null;
 
     settings: {
         marketing_emails: boolean;
@@ -38,11 +38,14 @@ export interface CurrentUser {
     };
 
     stats: {
-        tickets_purchased: number;
-        events_created: number;
-        total_spent: string; // keeping as string because backend gives it as string
+        total_tickets_purchased: number;
+        total_events_attended: number;
+        events_organized: number;
+        total_spent: number;
+        account_age_days: number;
     };
 }
+
 
 export interface ProfileMenuItem {
     label: string;

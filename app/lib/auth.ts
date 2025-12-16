@@ -1,9 +1,3 @@
-/**
- * Authentication Utilities
- * 
- * These functions check authentication status and handle token refresh
- */
-
 import { cookies } from "next/headers";
 import { BASE_URL } from "@/data/constants";
 import { CurrentUser } from "@/types/general.types";
@@ -15,10 +9,9 @@ import { CurrentUser } from "@/types/general.types";
  */
 export async function isAuthenticated(): Promise<boolean> {
     const cookieStore = await cookies();
+    
     const refreshToken = cookieStore.get('refresh_token')?.value;
-
-    // User is authenticated if they have a refresh token
-    // Even if access token is expired, it can be refreshed
+    
     return !!refreshToken;
 }
 
@@ -31,22 +24,27 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
     const accessToken = cookieStore.get('access_token')?.value;
 
     if (!accessToken) {
+        console.log('❌ No access token found in cookies');
         return null;
     }
 
     try {
+        const url = `${BASE_URL}/auth/profile/`;
+
         // Fetch user profile from Django backend
-        const response = await fetch(`${BASE_URL}/users/me/`, {
+        const response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
             },
-            cache: 'no-store', // Don't cache user data
+            cache: 'no-store',
         });
 
         if (!response.ok) {
-            console.error('Failed to fetch user:', response.status);
+            const errorText = await response.text();
+            console.error('❌ Failed to fetch user:', response.status);
+            console.error('❌ Error body:', errorText);
             return null;
         }
 
@@ -54,7 +52,7 @@ export async function getCurrentUser(): Promise<CurrentUser | null> {
         return user as CurrentUser;
 
     } catch (error) {
-        console.error('Error fetching current user:', error);
+        console.error('💥 Error fetching current user:', error);
         return null;
     }
 }

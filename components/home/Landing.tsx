@@ -1,18 +1,25 @@
 "use client";
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Search, Calendar, MapPin, TrendingUp, Users, Sparkles } from 'lucide-react';
+
 import { AppButton } from '@/components';
 import { cities } from '@/data/static.general';
-import { events } from '@/data/dummy.events';
+import { Event } from '@/types/events.types';
 
-const Landing = () => {
+type Props = {
+    events: Event[];
+};
+
+const Landing = ({ events }: Props) => {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [selectedCity, setSelectedCity] = useState<string>('');
 
-    // Get live or upcoming event for hero card
+    // ✅ Memoize hero event calculation - only recalculates when events array changes
     const heroEvent = useMemo(() => {
+        if (!events || events.length === 0) return null;
+        
         const now = new Date();
         
         // Check for live events (current date/time between start and end)
@@ -29,24 +36,27 @@ const Landing = () => {
         // Get first upcoming event
         const upcomingEvent = events.find(event => event.status === 'upcoming');
         return upcomingEvent ? { event: upcomingEvent, isLive: false } : null;
-    }, []);
+    }, [events]); // ✅ Only depends on events array
 
-    // Get 2 additional upcoming events (excluding hero event)
+    // ✅ Memoize side events calculation
     const sideEvents = useMemo(() => {
+        if (!events || events.length === 0) return [];
+        
         const heroEventId = heroEvent?.event.id;
         return events
             .filter(event => event.status === 'upcoming' && event.id !== heroEventId)
             .slice(0, 2);
-    }, [heroEvent]);
+    }, [events, heroEvent]); // ✅ Only depends on events and heroEvent
 
-    const handleSearch = (e: React.FormEvent) => {
+    // ✅ Memoize search handler
+    const handleSearch = useCallback((e: React.FormEvent) => {
         e.preventDefault();
         const params = new URLSearchParams();
-        if (searchQuery) params.append('q', searchQuery);
+        if (searchQuery) params.append('search', searchQuery);
         if (selectedCity) params.append('city', selectedCity);
         
         window.location.href = `/events?${params.toString()}`;
-    };
+    }, [searchQuery, selectedCity]); // ✅ Only recreates when search params change
 
     return (
         <div className="relative min-h-screen bg-primary overflow-hidden">
@@ -65,7 +75,7 @@ const Landing = () => {
                     backgroundSize: '40px 40px'
                 }}
                 aria-hidden="true"
-            ></div>
+            />
 
             {/* Content Container */}
             <div className="relative z-10 pt-24 sm:pt-32 pb-16 px-4 sm:px-6 lg:px-8">
@@ -175,171 +185,217 @@ const Landing = () => {
                         </div>
 
                         {/* Right Content - Event Cards Grid */}
-                        <div className="relative hidden lg:block">
-                            {/* Background Glow */}
-                            <div className="absolute inset-0 bg-accent/20 blur-3xl rounded-full" aria-hidden="true"></div>
-                            
-                            {/* Floating Event Cards */}
-                            <div className="relative grid grid-cols-2 gap-4">
-                                {heroEvent ? (
-                                    <>
-                                        {/* Hero Event Card - Large */}
-                                        <Link
-                                            href={`/events/${heroEvent.event.slug}`}
-                                            className="col-span-2 group cursor-pointer"
-                                            aria-label={`View ${heroEvent.event.title} event details in ${heroEvent.event.venue_city}`}
-                                        >
-                                            <article className="relative h-64 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-2xl transform transition-all duration-500 hover:scale-105 hover:border-accent">
-                                                <Image
-                                                    src={heroEvent.event.featured_image}
-                                                    alt={`${heroEvent.event.title} - ${heroEvent.event.category.name} event at ${heroEvent.event.venue_name}`}
-                                                    fill
-                                                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                                />
-                                                <div className="absolute inset-0 bg-linear-to-t from-primary via-primary/60 to-transparent"></div>
-                                                <div className="absolute bottom-0 left-0 right-0 p-6">
-                                                    <div 
-                                                        className="inline-flex items-center gap-2 px-3 py-1 bg-accent rounded-full mb-3"
-                                                        role="status"
-                                                        aria-live="polite"
-                                                    >
-                                                        <span className="w-2 h-2 bg-white rounded-full animate-pulse" aria-hidden="true"></span>
-                                                        <span className="small-text font-bold text-white">
-                                                            {heroEvent.isLive ? 'LIVE NOW' : 'COMING SOON'}
-                                                        </span>
-                                                    </div>
-                                                    <h2 className="big-text-4 font-bold text-white mb-2">
-                                                        {heroEvent.event.title}
-                                                    </h2>
-                                                    <div className="flex items-center gap-4 text-slate-200">
-                                                        <time 
-                                                            className="flex items-center gap-1 normal-text-2"
-                                                            dateTime={heroEvent.event.start_date}
-                                                        >
-                                                            <Calendar className="w-4 h-4" aria-hidden="true" />
-                                                            {new Date(heroEvent.event.start_date).toLocaleDateString('en-GB', { 
-                                                                month: 'short', 
-                                                                day: 'numeric' 
-                                                            })}
-                                                        </time>
-                                                        <span className="flex items-center gap-1 normal-text-2">
-                                                            <MapPin className="w-4 h-4" aria-hidden="true" />
-                                                            {heroEvent.event.venue_city}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </article>
-                                        </Link>
-
-                                        {/* Side Event Cards - Small */}
-                                        {sideEvents.length > 0 ? sideEvents.map((event) => (
-                                            <Link
-                                                key={event.id}
-                                                href={`/events/${event.slug}`}
-                                                className="group cursor-pointer"
-                                                aria-label={`View ${event.title} - Starting at ${event.lowest_price} Ghana Cedis`}
-                                            >
-                                                <article className="relative h-48 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-xl transform transition-all duration-500 hover:scale-105 hover:border-accent">
-                                                    <Image
-                                                        src={event.featured_image}
-                                                        alt={`${event.title} - ${event.category.name} event in ${event.venue_city}`}
-                                                        fill
-                                                        className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                                    />
-                                                    <div className="absolute inset-0 bg-linear-to-t from-primary via-primary/60 to-transparent"></div>
-                                                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                                                        <span 
-                                                            className="inline-block px-2 py-1 bg-accent/80 rounded-lg normal-text-2 font-bold text-white mb-2"
-                                                            aria-label={`Starting price: ${event.lowest_price} Ghana Cedis`}
-                                                        >
-                                                            GHS {event.lowest_price}
-                                                        </span>
-                                                        <h3 className="normal-text font-bold text-white line-clamp-2">
-                                                            {event.title}
-                                                        </h3>
-                                                    </div>
-                                                </article>
-                                            </Link>
-                                        )) : (
-                                            <>
-                                                {/* Fallback Card 1 - More Events Coming */}
-                                                <div 
-                                                    className="group"
-                                                    role="status"
-                                                    aria-label="More events coming soon"
-                                                >
-                                                    <div className="relative h-48 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-xl bg-primary-100">
-                                                        <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                                                            <Sparkles className="w-12 h-12 text-accent-50 mb-3" aria-hidden="true" />
-                                                            <h3 className="normal-text font-bold text-white mb-1">
-                                                                More Events Coming
-                                                            </h3>
-                                                            <p className="small-text text-slate-300">
-                                                                Check back soon for amazing experiences
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                {/* Fallback Card 2 - Create Event CTA */}
-                                                <div className="group">
-                                                    <Link
-                                                        href="/events/create"
-                                                        className="block relative h-48 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-xl bg-primary-100 hover:border-accent transition-all duration-300"
-                                                        aria-label="Create your own event on Cafa Tickets"
-                                                    >
-                                                        <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
-                                                            <Calendar className="w-12 h-12 text-accent-50 mb-3" aria-hidden="true" />
-                                                            <h3 className="normal-text font-bold text-white mb-1">
-                                                                Create Your Event
-                                                            </h3>
-                                                            <span className="small-text text-accent-50 hover:text-accent-100 underline">
-                                                                Get Started →
-                                                            </span>
-                                                        </div>
-                                                    </Link>
-                                                </div>
-                                            </>
-                                        )}
-                                    </>
-                                ) : (
-                                    /* No events at all - Full fallback */
-                                    <div 
-                                        className="col-span-2"
-                                        role="status"
-                                        aria-live="polite"
-                                        aria-label="No events currently available"
-                                    >
-                                        <div className="relative h-64 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-2xl bg-primary-100">
-                                            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                                                <Sparkles className="w-16 h-16 text-accent-50 mb-4 animate-pulse" aria-hidden="true" />
-                                                <h2 className="big-text-4 font-bold text-white mb-3">
-                                                    Events Loading Soon
-                                                </h2>
-                                                <p className="normal-text text-slate-200 mb-4 max-w-md">
-                                                    Ghana&apos;s biggest events are coming. Be the first to know!
-                                                </p>
-                                                <Link 
-                                                    href="/events"
-                                                    className="px-6 py-3 bg-accent text-white rounded-xl hover:bg-accent-100 transition-colors font-semibold normal-text"
-                                                    aria-label="Explore all events on Cafa Tickets"
-                                                >
-                                                    Explore Events
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        <EventCardsGrid 
+                            heroEvent={heroEvent}
+                            sideEvents={sideEvents}
+                        />
                     </div>
                 </div>
             </div>
 
             {/* Bottom Gradient Fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-primary-200 to-transparent" aria-hidden="true"></div>
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-primary-200 to-transparent" aria-hidden="true" />
         </div>
     );
 };
+
+// ✅ Extract event cards grid to separate memoized component
+const EventCardsGrid = React.memo(({ 
+    heroEvent, 
+    sideEvents 
+}: { 
+    heroEvent: { event: Event; isLive: boolean } | null; 
+    sideEvents: Event[] 
+}) => {
+    return (
+        <div className="relative hidden lg:block">
+            {/* Background Glow */}
+            <div className="absolute inset-0 bg-accent/20 blur-3xl rounded-full" aria-hidden="true" />
+            
+            {/* Floating Event Cards */}
+            <div className="relative grid grid-cols-2 gap-4">
+                {heroEvent ? (
+                    <>
+                        {/* Hero Event Card - Large */}
+                        <HeroEventCard heroEvent={heroEvent} />
+
+                        {/* Side Event Cards - Small */}
+                        {sideEvents.length > 0 ? (
+                            sideEvents.map((event) => (
+                                <SideEventCard key={event.id} event={event} />
+                            ))
+                        ) : (
+                            <FallbackCards />
+                        )}
+                    </>
+                ) : (
+                    <NoEventsCard />
+                )}
+            </div>
+        </div>
+    );
+});
+
+EventCardsGrid.displayName = 'EventCardsGrid';
+
+// ✅ Memoized hero event card
+const HeroEventCard = React.memo(({ heroEvent }: { heroEvent: { event: Event; isLive: boolean } }) => (
+    <Link
+        href={`/events/${heroEvent.event.slug}`}
+        className="col-span-2 group cursor-pointer"
+        aria-label={`View ${heroEvent.event.title} event details in ${heroEvent.event.venue_city}`}
+    >
+        <article className="relative h-64 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-2xl transform transition-all duration-500 hover:scale-105 hover:border-accent">
+            <Image
+                src={heroEvent.event.featured_image}
+                alt={`${heroEvent.event.title} - ${heroEvent.event.category.name} event at ${heroEvent.event.venue_name}`}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-primary via-primary/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-6">
+                <div 
+                    className="inline-flex items-center gap-2 px-3 py-1 bg-accent rounded-full mb-3"
+                    role="status"
+                    aria-live="polite"
+                >
+                    <span className="w-2 h-2 bg-white rounded-full animate-pulse" aria-hidden="true" />
+                    <span className="small-text font-bold text-white">
+                        {heroEvent.isLive ? 'LIVE NOW' : 'COMING SOON'}
+                    </span>
+                </div>
+                <h2 className="big-text-4 font-bold text-white mb-2">
+                    {heroEvent.event.title}
+                </h2>
+                <div className="flex items-center gap-4 text-slate-200">
+                    <time 
+                        className="flex items-center gap-1 normal-text-2"
+                        dateTime={heroEvent.event.start_date}
+                    >
+                        <Calendar className="w-4 h-4" aria-hidden="true" />
+                        {new Date(heroEvent.event.start_date).toLocaleDateString('en-GB', { 
+                            month: 'short', 
+                            day: 'numeric' 
+                        })}
+                    </time>
+                    <span className="flex items-center gap-1 normal-text-2">
+                        <MapPin className="w-4 h-4" aria-hidden="true" />
+                        {heroEvent.event.venue_city}
+                    </span>
+                </div>
+            </div>
+        </article>
+    </Link>
+));
+
+HeroEventCard.displayName = 'HeroEventCard';
+
+// ✅ Memoized side event card
+const SideEventCard = React.memo(({ event }: { event: Event }) => (
+    <Link
+        href={`/events/${event.slug}`}
+        className="group cursor-pointer"
+        aria-label={`View ${event.title} - Starting at ${event.lowest_price} Ghana Cedis`}
+    >
+        <article className="relative h-48 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-xl transform transition-all duration-500 hover:scale-105 hover:border-accent">
+            <Image
+                src={event.featured_image}
+                alt={`${event.title} - ${event.category.name} event in ${event.venue_city}`}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-linear-to-t from-primary via-primary/60 to-transparent" />
+            <div className="absolute bottom-0 left-0 right-0 p-4">
+                <span 
+                    className="inline-block px-2 py-1 bg-accent/80 rounded-lg normal-text-2 font-bold text-white mb-2"
+                    aria-label={`Starting price: ${event.lowest_price} Ghana Cedis`}
+                >
+                    GHS {event.lowest_price}
+                </span>
+                <h3 className="normal-text font-bold text-white line-clamp-2">
+                    {event.title}
+                </h3>
+            </div>
+        </article>
+    </Link>
+));
+
+SideEventCard.displayName = 'SideEventCard';
+
+// ✅ Memoized fallback cards (static content)
+const FallbackCards = React.memo(() => (
+    <>
+        {/* Fallback Card 1 - More Events Coming */}
+        <div 
+            className="group"
+            role="status"
+            aria-label="More events coming soon"
+        >
+            <div className="relative h-48 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-xl bg-primary-100">
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                    <Sparkles className="w-12 h-12 text-accent-50 mb-3" aria-hidden="true" />
+                    <h3 className="normal-text font-bold text-white mb-1">
+                        More Events Coming
+                    </h3>
+                    <p className="small-text text-slate-300">
+                        Check back soon for amazing experiences
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {/* Fallback Card 2 - Create Event CTA */}
+        <div className="group">
+            <Link
+                href="/events/create"
+                className="block relative h-48 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-xl bg-primary-100 hover:border-accent transition-all duration-300"
+                aria-label="Create your own event on Cafa Tickets"
+            >
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
+                    <Calendar className="w-12 h-12 text-accent-50 mb-3" aria-hidden="true" />
+                    <h3 className="normal-text font-bold text-white mb-1">
+                        Create Your Event
+                    </h3>
+                    <span className="small-text text-accent-50 hover:text-accent-100 underline">
+                        Get Started →
+                    </span>
+                </div>
+            </Link>
+        </div>
+    </>
+));
+
+FallbackCards.displayName = 'FallbackCards';
+
+// ✅ Memoized no events card (static content)
+const NoEventsCard = React.memo(() => (
+    <div 
+        className="col-span-2"
+        role="status"
+        aria-live="polite"
+        aria-label="No events currently available"
+    >
+        <div className="relative h-64 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-2xl bg-primary-100">
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                <Sparkles className="w-16 h-16 text-accent-50 mb-4 animate-pulse" aria-hidden="true" />
+                <h2 className="big-text-4 font-bold text-white mb-3">
+                    Events Loading Soon
+                </h2>
+                <p className="normal-text text-slate-200 mb-4 max-w-md">
+                    Ghana&apos;s biggest events are coming. Be the first to know!
+                </p>
+                <Link 
+                    href="/events"
+                    className="px-6 py-3 bg-accent text-white rounded-xl hover:bg-accent-100 transition-colors font-semibold normal-text"
+                    aria-label="Explore all events on Cafa Tickets"
+                >
+                    Explore Events
+                </Link>
+            </div>
+        </div>
+    </div>
+));
+
+NoEventsCard.displayName = 'NoEventsCard';
 
 export default Landing;

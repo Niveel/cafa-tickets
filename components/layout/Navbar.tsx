@@ -322,7 +322,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                                         width={56}
                                         height={56}
                                         alt="Profile"
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-cover bg-white"
                                     />
                                 </div>
                                 <div>

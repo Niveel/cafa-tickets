@@ -30,11 +30,4 @@ export const dashboardActions: Action[] = [
             href: '/dashboard/events',
             color: 'from-purple-500 to-purple-600'
         },
-        {
-            title: 'View Analytics',
-            description: 'Check your event performance',
-            icon: BarChart3,
-            href: '/dashboard/analytics',
-            color: 'from-emerald-500 to-emerald-600'
-        }
 ];

@@ -87,8 +87,10 @@ export const currentUser: CurrentUser = {
         "sms_notifications": false
     },
     "stats": {
-        "tickets_purchased": 12,
-        "events_created": 0,
-        "total_spent": "2500.00"
+        "total_tickets_purchased": 12,
+        "events_organized": 0,
+        "total_spent": 2500.00,
+        "total_events_attended": 10,
+        "account_age_days": 45
     }
 }

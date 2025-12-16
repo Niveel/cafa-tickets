@@ -1,10 +1,14 @@
 import { Navbar, Footer } from "@/components"
-import { currentUser } from "@/data/dummy.general"
-import { isAuthenticated } from "@/app/lib/auth"
+import { isAuthenticated, getCurrentUser } from "@/app/lib/auth"
 
 const RootLayout = async ({children}: {children: React.ReactNode}) => {
-  const isLoggedIn = await isAuthenticated()
-  // const user = await getCurrentUser()
+  const [isLoggedIn, currentUser] = await Promise.all([
+    isAuthenticated(),
+    getCurrentUser()
+  ]) 
+  
+  // console.log('RootLayout - currentUser:', currentUser);
+  // console.log('RootLayout - isLoggedIn:', isLoggedIn);
 
   return (
     <div>

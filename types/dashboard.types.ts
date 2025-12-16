@@ -16,6 +16,7 @@ export interface UserOverviewStats {
     total_spent: string;         // keeping as string since you're using currency as string
     total_revenue: string;
     account_age_days: number;
+    account_age_display: string; // optional formatted string like "6 months"
 }
 
 /* -------------------- PURCHASING STATS -------------------- */

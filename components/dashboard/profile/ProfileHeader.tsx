@@ -40,7 +40,7 @@ const ProfileHeader = ({ user }: Props) => {
                 {/* Avatar Section */}
                 <div className="flex flex-col items-center lg:items-start gap-4">
                     <div className="relative group">
-                        <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden ring-4 ring-accent/30 group-hover:ring-accent transition-all duration-300">
+                        <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-2xl overflow-hidden ring-4 ring-accent group-hover:ring-accent transition-all duration-300 bg-white">
                             <Image
                                 src={user.profile_image || placeholderPic}
                                 alt={`${user.full_name}'s profile picture`}

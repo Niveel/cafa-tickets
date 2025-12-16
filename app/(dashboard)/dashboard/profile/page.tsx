@@ -1,12 +1,21 @@
-import { currentUser } from "@/data/dummy.general";
+import { redirect } from "next/navigation";
+
 import { 
     ProfileHeader,
     ProfileNotificationSettings,
     ProfileAccountDetails,
     ProfileQuickActions,
 } from "@/components";
+import { getCurrentUser } from "@/app/lib/auth";
 
-const DashboardProfilePage = () => {
+const DashboardProfilePage = async () => {
+    const currentUser = await getCurrentUser();
+
+    // Redirect if not logged in
+    if (!currentUser) {
+        redirect("/login");
+    }
+
     return (
         <main className='dash-page space-y-8'>
             {/* Profile Header */}

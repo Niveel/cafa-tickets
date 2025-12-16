@@ -100,7 +100,7 @@ const ProfileDropdown = ({
             <button
                 ref={buttonRef}
                 onClick={toggleDropdown}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-full bg-linear-to-br from-primary to-primary-100 hover:from-primary-100 hover:to-primary-200 border border-accent/30 transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 group"
+                className="flex items-center gap-2 px-2 py-1.5 rounded-full bg-linear-to-br from-primary to-primary-100 hover:from-primary-100 hover:to-primary-200 border border-accent transition-all duration-300 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 group"
                 aria-haspopup="true"
                 aria-expanded={open}
                 aria-label="Open user menu"
@@ -113,7 +113,7 @@ const ProfileDropdown = ({
                             width={40}
                             height={40}
                             src={image}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover bg-white"
                             alt="User avatar"
                         />
                     </div>

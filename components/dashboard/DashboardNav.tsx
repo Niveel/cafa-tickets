@@ -3,7 +3,7 @@ import { CurrentUser } from "@/types/general.types"
 
 type Props = {
     children: React.ReactNode,
-    user: CurrentUser | null,
+    user: CurrentUser | null, 
 }
 
 const DashboardNav = ({ children, user }: Props) => {

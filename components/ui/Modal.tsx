@@ -127,7 +127,7 @@ const Modal = ({
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-9998 ${overlayClassName}`}
+                        className={`fixed inset-0 bg-primary/90 backdrop-blur-sm z-9998 ${overlayClassName}`}
                         onClick={handleBackdropClick}
                         aria-hidden="true"
                     />
@@ -144,7 +144,7 @@ const Modal = ({
                             exit={{ opacity: 0, scale: 0.95, y: 20 }}
                             transition={{ duration: 0.2, ease: 'easeOut' }}
                             className={`
-                                relative bg-white rounded-2xl shadow-2xl w-full
+                                relative bg-primary-100 rounded-2xl shadow-2xl w-full border-2 border-accent
                                 ${sizeClasses[size]}
                                 ${className}
                             `}
@@ -156,12 +156,12 @@ const Modal = ({
                         >
                             {/* Header */}
                             {(title || showCloseButton) && (
-                                <div className="flex items-start justify-between p-6 pb-4 border-b border-slate-200">
+                                <div className="flex items-start justify-between p-6 pb-4 border-b border-accent/30">
                                     <div className="flex-1 pr-4">
                                         {title && (
                                             <h2
                                                 id="modal-title"
-                                                className="big-text-4 font-bold text-slate-900"
+                                                className="big-text-4 font-bold text-white"
                                             >
                                                 {title}
                                             </h2>
@@ -169,7 +169,7 @@ const Modal = ({
                                         {description && (
                                             <p
                                                 id="modal-description"
-                                                className="normal-text text-slate-600 mt-1"
+                                                className="normal-text text-slate-200 mt-1"
                                             >
                                                 {description}
                                             </p>
@@ -179,7 +179,7 @@ const Modal = ({
                                     {showCloseButton && (
                                         <button
                                             onClick={onClose}
-                                            className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                                            className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-slate-300 hover:text-white hover:bg-accent transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-primary-100"
                                             aria-label="Close modal"
                                             type="button"
                                         >
@@ -190,13 +190,13 @@ const Modal = ({
                             )}
 
                             {/* Body */}
-                            <div className="p-6">
+                            <div className="p-6 text-white">
                                 {children}
                             </div>
 
                             {/* Footer */}
                             {footer && (
-                                <div className="flex items-center justify-end gap-3 p-6 pt-4 border-t border-slate-200 bg-slate-50 rounded-b-2xl">
+                                <div className="flex items-center justify-end gap-3 p-6 pt-4 border-t border-accent/30 bg-primary rounded-b-2xl">
                                     {footer}
                                 </div>
                             )}

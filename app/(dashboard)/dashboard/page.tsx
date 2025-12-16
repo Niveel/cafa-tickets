@@ -1,4 +1,3 @@
-import { userStats } from "@/data/dummy.dashboard";
 import { 
     DashboardOverview, 
     DashboardQuickActions,
@@ -7,8 +6,11 @@ import {
     DashboardBestSellingEvent,
     DashboardRevenueChart 
 } from "@/components";
+import { getUserStats } from "@/app/lib/dashboard";
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+    const userStats = await getUserStats();
+
     return (
         <main className='dash-page space-y-6'>
             {/* Overview Section */}

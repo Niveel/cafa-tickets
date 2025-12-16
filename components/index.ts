@@ -76,6 +76,7 @@ export {default as ProfileHeader} from './dashboard/profile/ProfileHeader';
 export {default as ProfileNotificationSettings} from './dashboard/profile/ProfileNotificationSettings';
 export {default as ProfileAccountDetails} from './dashboard/profile/ProfileAccountDetails';
 export {default as ProfileQuickActions} from './dashboard/profile/ProfileQuickActions';
+export {default as EditProfileForm} from './dashboard/profile/EditProfileForm';
 // dashboard/payments
 export {default as RevenueByMonthChart} from './dashboard/payments/RevenueByMonthChart';
 export {default as RevenueByEventTable} from './dashboard/payments/RevenueByEventTable';
