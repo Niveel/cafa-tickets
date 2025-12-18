@@ -7,6 +7,7 @@ import { Search, Calendar, MapPin, TrendingUp, Users, Sparkles } from 'lucide-re
 import { AppButton } from '@/components';
 import { cities } from '@/data/static.general';
 import { Event } from '@/types/events.types';
+import { placeholderImage } from '@/data/constants';
 
 type Props = {
     events: Event[];
@@ -247,7 +248,7 @@ const HeroEventCard = React.memo(({ heroEvent }: { heroEvent: { event: Event; is
     >
         <article className="relative h-64 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-2xl transform transition-all duration-500 hover:scale-105 hover:border-accent">
             <Image
-                src={heroEvent.event.featured_image}
+                src={heroEvent.event.featured_image || placeholderImage}
                 alt={`${heroEvent.event.title} - ${heroEvent.event.category.name} event at ${heroEvent.event.venue_name}`}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-110"

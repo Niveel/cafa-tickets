@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { TicketDetails } from '@/types/tickets.types';
 import { QrCode, Info } from 'lucide-react';
+import { placeholderImage } from '@/data/constants';
 
 type Props = {
     ticket: TicketDetails;
@@ -27,7 +28,7 @@ const TicketQRSection = ({ ticket }: Props) => {
             {/* QR Code */}
             <div className="relative aspect-square w-full bg-white rounded-xl p-4 mb-4">
                 <Image
-                    src={ticket.qr_code}
+                    src={ticket.qr_code || placeholderImage}
                     alt={`QR Code for ticket ${ticket.ticket_id}`}
                     fill
                     className="object-contain p-2"

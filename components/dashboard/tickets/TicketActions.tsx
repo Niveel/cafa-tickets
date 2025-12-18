@@ -18,16 +18,33 @@ const TicketActions = ({ ticket }: Props) => {
         setDownloadSuccess(false);
 
         try {
-            // Simulate API call
-            console.log('Downloading ticket:', ticket.ticket_id);
-            // In production: await fetch(`/api/v1/tickets/${ticket.ticket_id}/download/`)
-            
-            await new Promise(resolve => setTimeout(resolve, 1500));
-            
+            const response = await fetch(`/api/dashboard/tickets/download?ticketId=${ticket.ticket_id}`);
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Failed to download ticket');
+            }
+
+            // Create blob from response
+            const blob = await response.blob();
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ticket-${ticket.ticket_id}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+
+            // Cleanup
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
             setDownloadSuccess(true);
             setTimeout(() => setDownloadSuccess(false), 3000);
         } catch (error) {
             console.error('Download failed:', error);
+            alert(error instanceof Error ? error.message : 'Failed to download ticket');
         } finally {
             setIsDownloading(false);
         }

@@ -37,7 +37,7 @@ const TicketTypeCard = ({ ticket, index, onEdit, onDelete }: Props) => {
     };
 
     return (
-        <div className="bg-primary-200 rounded-xl p-5 border-2 border-accent/20 hover:border-accent transition-all duration-300">
+        <div className="bg-primary-100 rounded-xl p-4 border-2 border-accent/20 hover:border-accent transition-all duration-300">
             {/* Header */}
             <div className="flex items-start justify-between mb-4">
                 <div className="flex items-start gap-3 flex-1">

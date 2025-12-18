@@ -2,8 +2,9 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { myEventDetails } from '@/data/dummy.dash-events';
+
 import { CreateTicketForm } from '@/components';
+import { getMyCreatedEventDetails } from '@/app/lib/dashboard';
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -19,33 +20,33 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const CreateTicketPage = async ({ params }: Props) => {
     const { slug } = await params;
+    const eventDetails = await getMyCreatedEventDetails(slug);
     
-    // In production, fetch from API
-    const event = myEventDetails;
+    const event = eventDetails;
 
-    // if (!event || event.slug !== slug) {
-    //     return (
-    //         <main className="min-h-screen bg-primary-100 dash-page">
-    //             <div className="inner-wrapper">
-    //                 <div className="text-center py-12">
-    //                     <h1 className="big-text-2 font-bold text-white mb-3">
-    //                         Event Not Found
-    //                     </h1>
-    //                     <p className="normal-text text-slate-300 mb-6">
-    //                         The event you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.
-    //                     </p>
-    //                     <Link
-    //                         href="/dashboard/events"
-    //                         className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300"
-    //                     >
-    //                         <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-    //                         Back to My Events
-    //                     </Link>
-    //                 </div>
-    //             </div>
-    //         </main>
-    //     );
-    // }
+    if (!event || event.slug !== slug) {
+        return (
+            <main className="min-h-screen bg-primary-100 dash-page">
+                <div className="inner-wrapper">
+                    <div className="text-center py-12">
+                        <h1 className="big-text-2 font-bold text-white mb-3">
+                            Event Not Found
+                        </h1>
+                        <p className="normal-text text-slate-300 mb-6">
+                            The event you&apos;re looking for doesn&apos;t exist or you don&apos;t have access to it.
+                        </p>
+                        <Link
+                            href="/dashboard/events"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300"
+                        >
+                            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                            Back to My Events
+                        </Link>
+                    </div>
+                </div>
+            </main>
+        );
+    }
 
     return (
         <main className="min-h-screen bg-primary-100 dash-page">

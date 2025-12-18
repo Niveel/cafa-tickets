@@ -18,7 +18,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
     const [submitError, setSubmitError] = useState<string | null>(null);
     const [submitSuccess, setSubmitSuccess] = useState(false);
 
-    // Transform ticket data to form initial values
     const initialValues: TicketTypeFormValues = {
         name: ticket.name,
         description: ticket.description,
@@ -35,32 +34,66 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
             setSubmitError(null);
             setSubmitSuccess(false);
 
-            // Simulate API call (replace with actual API call)
             console.log('Updating ticket type:', values);
 
-            // Transform data for API
             const ticketData = {
-                ...values,
-                price: parseFloat(values.price),
+                name: values.name,
+                description: values.description,
+                price: values.price,
                 quantity: parseInt(values.quantity),
                 min_purchase: parseInt(values.min_purchase),
-                max_purchase: parseInt(values.max_purchase)
+                max_purchase: parseInt(values.max_purchase),
+                available_from: values.available_from || undefined,
+                available_until: values.available_until || undefined
             };
 
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            const response = await fetch(`/api/dashboard/events/${eventSlug}/tickets/edit?ticketId=${ticket.id}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ticketData),
+            });
 
-            // Mock success
+            const data = await response.json();
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to update ticket type. Please try again.';
+
+                if (data.detail) {
+                    errorMessage = data.detail;
+                } else if (data.error) {
+                    errorMessage = data.error;
+                } else if (data.message) {
+                    errorMessage = data.message;
+                }
+
+                if (data.name) {
+                    errorMessage = `Name: ${Array.isArray(data.name) ? data.name[0] : data.name}`;
+                } else if (data.price) {
+                    errorMessage = `Price: ${Array.isArray(data.price) ? data.price[0] : data.price}`;
+                } else if (data.quantity) {
+                    errorMessage = `Quantity: ${Array.isArray(data.quantity) ? data.quantity[0] : data.quantity}`;
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            console.log('Ticket updated successfully:', data);
             setSubmitSuccess(true);
 
-            // Redirect after 2 seconds
             setTimeout(() => {
                 router.push(`/dashboard/events/${eventSlug}`);
             }, 2000);
 
-        } catch (error: any) {
-            console.error('Error updating ticket type:', error);
-            setSubmitError(error.message || 'Failed to update ticket type. Please try again.');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Error updating ticket type:', error.message);
+                setSubmitError(error.message);
+            } else {
+                console.error('Error updating ticket type:', error);
+                setSubmitError('Failed to update ticket type. Please try again.');
+            }
             setSubmitting(false);
         }
     };
@@ -69,7 +102,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
 
     return (
         <div className="bg-primary rounded-xl border-2 border-accent/30 p-6 sm:p-8">
-            {/* Warning if has sales */}
             {hasSales && (
                 <div className="mb-6 p-4 bg-amber-500/10 rounded-lg border border-amber-500/20">
                     <div className="flex items-start gap-3">
@@ -87,7 +119,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                 </div>
             )}
 
-            {/* Sales Stats */}
             <div className="mb-6 grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <div className="p-3 bg-primary-200 rounded-lg">
                     <p className="small-text text-slate-400 mb-1">Price</p>
@@ -130,7 +161,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                     <Form className="space-y-6">
                         <FormLoader visible={isSubmitting} message="Updating ticket type..." />
 
-                        {/* Section Header */}
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
                                 <Ticket className="w-5 h-5 text-purple-400" aria-hidden="true" />
@@ -145,7 +175,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                             </div>
                         </div>
 
-                        {/* Basic Info */}
                         <div className="space-y-4">
                             <h3 className="big-text-4 font-bold text-white">
                                 Basic Information
@@ -168,7 +197,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                             />
                         </div>
 
-                        {/* Pricing & Quantity */}
                         <div className="space-y-4">
                             <h3 className="big-text-4 font-bold text-white">
                                 Pricing & Quantity
@@ -191,19 +219,18 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                                     type="number"
                                     placeholder="100"
                                     min={ticket.tickets_sold.toString()}
-                                    max="10000"
+                                    max="1000000"
                                     required
                                 />
                             </div>
                             <p className="small-text text-slate-400">
                                 {hasSales 
-                                    ? `Minimum quantity: ${ticket.tickets_sold} (already sold) • Maximum: 10,000`
-                                    : 'Minimum price: GH₵ 10.00 • Maximum quantity: 10,000'
+                                    ? `Minimum quantity: ${ticket.tickets_sold} (already sold) • Maximum: 1,000,000`
+                                    : 'Minimum price: GH₵ 10.00 • Maximum quantity: 1,000,000'
                                 }
                             </p>
                         </div>
 
-                        {/* Purchase Limits */}
                         <div className="space-y-4">
                             <h3 className="big-text-4 font-bold text-white">
                                 Purchase Limits
@@ -234,7 +261,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                             </p>
                         </div>
 
-                        {/* Availability Period (Optional) */}
                         <div className="space-y-4">
                             <div>
                                 <h3 className="big-text-4 font-bold text-white mb-2">
@@ -260,7 +286,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                             </div>
                         </div>
 
-                        {/* Submit Error */}
                         {submitError && (
                             <div className="p-4 bg-red-500/10 rounded-lg border border-red-500/20">
                                 <div className="flex items-start gap-3">
@@ -277,7 +302,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                             </div>
                         )}
 
-                        {/* Submit Success */}
                         {submitSuccess && (
                             <div className="p-4 bg-emerald-500/10 rounded-lg border border-emerald-500/20 animate-fade-in">
                                 <div className="flex items-start gap-3">
@@ -294,7 +318,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                             </div>
                         )}
 
-                        {/* Action Buttons */}
                         <div className="flex items-center gap-4 pt-6 border-t border-accent/30">
                             <button
                                 type="button"
@@ -309,7 +332,6 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                             </div>
                         </div>
 
-                        {/* Helper Text */}
                         <p className="text-center small-text text-slate-400">
                             Changes will be applied immediately after saving
                         </p>

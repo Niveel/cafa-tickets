@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Ticket, Plus, Info, AlertCircle } from 'lucide-react';
 import { useFormikContext } from 'formik';
+
 import { TicketTypeFormValues } from '@/data/eventsSchema';
 import {TicketTypeCard} from '@/components';
 import AddTicketTypeModal from './AddTicketTypeModal';

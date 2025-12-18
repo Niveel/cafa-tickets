@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { EventDetails } from '@/types/events.types';
 import { formatDate, formatTime } from '@/utils/format';
+import { placeholderImage } from '@/data/constants';
 
 interface EventHeroProps {
     event: EventDetails; 
@@ -80,7 +81,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                                 onClick={() => setShowLightbox(true)}
                             >
                                 <Image
-                                    src={allImages[selectedImage]}
+                                    src={allImages[selectedImage] || placeholderImage}
                                     alt={`${event.title} - Image ${selectedImage + 1}`}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -168,7 +169,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                                             aria-label={`View image ${index + 1}`}
                                         >
                                             <Image
-                                                src={image}
+                                                src={image || placeholderImage}
                                                 alt={`${event.title} thumbnail ${index + 1}`}
                                                 fill
                                                 className="object-cover"
@@ -300,7 +301,7 @@ const EventHero = ({ event }: EventHeroProps) => {
 
                     <div className="relative max-w-6xl w-full aspect-video" onClick={(e) => e.stopPropagation()}>
                         <Image
-                            src={allImages[selectedImage]}
+                            src={allImages[selectedImage] || placeholderImage}
                             alt={`${event.title} - Full size`}
                             fill
                             className="object-contain"

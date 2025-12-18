@@ -9,6 +9,7 @@ import {
     EventNotFound
 } from '@/components';
 import { getEventBySlug } from '@/app/lib/events';
+import { getCurrentUser } from '@/app/lib/auth';
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -16,9 +17,11 @@ type Props = {
 
 const EventDetailsPage = async ({ params }: Props) => {
     const { slug } = await params;
-    const eventDetails = await getEventBySlug(slug);
+    const [eventDetails, currentUser] = await Promise.all([
+        getEventBySlug(slug),
+        getCurrentUser()
+    ]) 
 
-    // ✅ Handle null case - show 404 if event not found
     if (!eventDetails) {
         return <EventNotFound />;
     }
@@ -32,7 +35,7 @@ const EventDetailsPage = async ({ params }: Props) => {
             <EventDescription event={eventDetails} />
 
             {/* Tickets Section (Conditionally shown based on status) */}
-            <TicketsSection event={eventDetails} />
+            <TicketsSection event={eventDetails} currentUser={currentUser} />
 
             {/* Organizer Profile & Stats */}
             <OrganizerSection event={eventDetails} />

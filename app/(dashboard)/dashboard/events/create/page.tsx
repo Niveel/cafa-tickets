@@ -2,7 +2,9 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
 import {CreateEventForm} from '@/components';
+import { getMyPaymentProfiles } from '@/app/lib/dashboard';
 
 export const metadata: Metadata = {
     title: 'Create Event | Cafa Tickets',
@@ -10,7 +12,9 @@ export const metadata: Metadata = {
     keywords: ['create event Ghana', 'sell tickets online', 'event management', 'Ghana events'],
 };
 
-const CreateEventPage = () => {
+const CreateEventPage = async () => {
+    const paymentProfiles = await getMyPaymentProfiles();
+
     return (
         <main className="min-h-screen bg-primary-100 dash-page">
             <div className="inner-wrapper space-y-6">
@@ -34,7 +38,7 @@ const CreateEventPage = () => {
                 </div>
 
                 {/* Form */}
-                <CreateEventForm />
+                <CreateEventForm paymentProfiles={paymentProfiles?.results || []} />
             </div>
         </main>
     );

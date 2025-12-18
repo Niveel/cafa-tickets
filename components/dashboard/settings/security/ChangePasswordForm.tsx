@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { Lock, CheckCircle } from 'lucide-react';
+
 import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader } from '@/components';
 import { passwordValidation } from '@/utils/validationUtils';
 
@@ -35,21 +36,25 @@ const ChangePasswordForm = () => {
         setSuccess(false);
 
         try {
-            // Simulate API call: POST /api/v1/auth/change-password/
-            const payload = {
-                current_password: values.currentPassword,
-                new_password: values.newPassword,
-                confirm_password: values.confirmPassword
-            };
+            const response = await fetch('/api/auth/change-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    current_password: values.currentPassword,
+                    new_password: values.newPassword,
+                    confirm_password: values.confirmPassword
+                }),
+            });
 
-            console.log('Changing password:', payload);
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const data = await response.json();
 
-            // Simulate success
+            if (!response.ok) {
+                const errorMessage = data.message || data.error || 'Failed to change password';
+                throw new Error(errorMessage);
+            }
+
             setSuccess(true);
             resetForm();
-
-            // Hide success message after 3 seconds
             setTimeout(() => setSuccess(false), 3000);
 
         } catch (err: any) {

@@ -9,7 +9,7 @@ type Props = {
 
 const RevenueByEventTable = ({ revenueByEvent }: Props) => {
     return (
-        <div role="region" aria-label="Revenue by event" className="bg-primary rounded-xl p-6 border-2 border-accent/30">
+        <div role="region" aria-label="Revenue by event" className="bg-primary rounded-xl p-4 border-2 border-accent">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-3">
@@ -26,7 +26,7 @@ const RevenueByEventTable = ({ revenueByEvent }: Props) => {
             <div className="overflow-x-auto">
                 <table className="w-full">
                     <thead>
-                        <tr className="border-b border-accent/20">
+                        <tr className="border-b border-accent">
                             <th className="text-left py-3 px-2 small-text text-slate-400 font-semibold">
                                 Event
                             </th>
@@ -51,7 +51,7 @@ const RevenueByEventTable = ({ revenueByEvent }: Props) => {
                         {revenueByEvent.map((event, index) => (
                             <tr 
                                 key={index}
-                                className="border-b border-accent/10 hover:bg-primary-200 transition-colors duration-200"
+                                className="border-b border-accent hover:bg-primary-200 transition-colors duration-200"
                             >
                                 <td className="py-4 px-2">
                                     <p className="normal-text-2 font-semibold text-white">
@@ -94,7 +94,7 @@ const RevenueByEventTable = ({ revenueByEvent }: Props) => {
             </div>
 
             {revenueByEvent.length === 0 && (
-                <div className="text-center py-12">
+                <div className="text-center py-10">
                     <p className="normal-text text-slate-400">No revenue data yet</p>
                     <Link
                         href="/dashboard/events/create"

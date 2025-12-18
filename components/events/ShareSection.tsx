@@ -58,7 +58,7 @@ const ShareSection = ({ event }: ShareSectionProps) => {
     ];
 
     return (
-        <section className="relative py-12 sm:py-16 bg-primary-100">
+        <section className="relative py-8 sm:y-12 bg-primary-100">
             <div className="inner-wrapper">
                 <div className="max-w-4xl mx-auto">
                     {/* Section Header */}

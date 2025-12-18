@@ -1,8 +1,10 @@
 "use client";
 
 import React, { Suspense } from 'react';
-import { MyTicketsResponse } from '@/types/tickets.types';
 import { Loader2 } from 'lucide-react';
+
+import { EventCategory } from '@/types/general.types';
+import { MyTicketsResponse } from '@/types/tickets.types';
 import {
     MyTicketsHeader,
     MyTicketsFilters,
@@ -19,9 +21,10 @@ type Props = {
         category?: string;
         page?: string;
     };
+    eventCategories: EventCategory[];
 };
 
-const MyTicketsContent = ({ tickets, searchParams }: Props) => {
+const MyTicketsContent = ({ tickets, searchParams, eventCategories }: Props) => {
     const status = searchParams.status || 'all';
     const search = searchParams.search || '';
     const category = searchParams.category || '';
@@ -44,6 +47,7 @@ const MyTicketsContent = ({ tickets, searchParams }: Props) => {
                     currentStatus={status}
                     currentCategory={category}
                     currentSearch={search}
+                    eventCategories={eventCategories}
                 />
             </Suspense>
 

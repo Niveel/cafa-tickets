@@ -223,3 +223,8 @@ export interface BankTransferPaymentProfile extends BasePaymentProfile {
 export type PaymentProfile =
     | MobileMoneyPaymentProfile
     | BankTransferPaymentProfile;
+
+export interface PaymentProfilesResponse {
+    count: number;
+    results: PaymentProfile[];
+}

@@ -1,16 +1,58 @@
-import React from 'react';
+"use client";
+
 import Link from 'next/link';
 import Image from 'next/image';
-import { Calendar, MapPin, Edit, Users, Eye } from 'lucide-react';
-import { MyEventsResponse } from '@/types/dash-events.types';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { Calendar, MapPin, Edit, Users, Eye, ArrowLeft, Trash2, AlertCircle } from 'lucide-react';
 
-type Event = MyEventsResponse['results'][0];
+import { placeholderImage } from '@/data/constants';
+import { MyEventDetailsResponse } from '@/types/dash-events.types';
 
 type Props = {
-    event: Event;
+    event: MyEventDetailsResponse;
 };
 
 const EventDetailsHeader = ({ event }: Props) => {
+    const router = useRouter();
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
+
+    const handleDeleteEvent = async () => {
+        try {
+            setDeleting(true);
+            setDeleteError(null);
+
+            console.log('Deleting event:', event.slug);
+
+            const response = await fetch(`/api/dashboard/events/${event.slug}/delete`, {
+                method: 'DELETE',
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                const errorMessage = data.message || data.error || 'Failed to delete event';
+                throw new Error(errorMessage);
+            }
+
+            console.log('Event deleted successfully');
+            router.push('/dashboard/events');
+
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Error deleting event:', error.message);
+                setDeleteError(error.message);
+            } else {
+                console.error('Error deleting event:', error);
+                setDeleteError('Failed to delete event. Please try again.');
+            }
+        } finally {
+            setDeleting(false);
+        }
+    };
+
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'upcoming':
@@ -35,15 +77,47 @@ const EventDetailsHeader = ({ event }: Props) => {
 
     return (
         <div role="region" aria-label="Event header" className="bg-primary rounded-xl border-2 border-accent/30 overflow-hidden">
+            {/* Header with Back & Edit */}
+            <div className="flex items-center justify-between p-2">
+                <Link
+                    href="/dashboard/events"
+                    className="inline-flex items-center gap-2 text-accent-50 hover:text-accent-100 transition-colors normal-text-2 font-semibold"
+                >
+                    <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                    Back to My Events
+                </Link>
+
+                <div className="flex flex-wrap gap-3">
+                    <Link
+                        href={`/dashboard/events/${event.slug}/edit`}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold normal-text-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        aria-label="Edit event details"
+                    >
+                        <Edit className="w-4 h-4" aria-hidden="true" />
+                        Edit Event
+                    </Link>
+
+                    <button
+                        onClick={() => setDeleteConfirm(true)}
+                        disabled={deleting}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold normal-text-2 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-red-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Delete event"
+                    >
+                        <Trash2 className="w-4 h-4" aria-hidden="true" />
+                        Delete Event
+                    </button>
+                </div>
+            </div>
+
             {/* Event Image */}
             <div className="relative h-64 md:h-96 overflow-hidden">
                 <Image
-                    src={event.featured_image}
+                    src={event.featured_image || placeholderImage}
                     alt={event.title}
                     fill
                     className="object-cover"
                 />
-                
+
                 {/* Status & Published Badges */}
                 <div className="absolute top-4 left-4 flex items-center gap-2">
                     <span className={`px-3 py-1 rounded-lg font-semibold small-text border capitalize ${getStatusBadge(event.status)}`}>
@@ -95,7 +169,8 @@ const EventDetailsHeader = ({ event }: Props) => {
                 <div className="flex flex-wrap gap-3">
                     <Link
                         href={`/dashboard/events/${event.slug}/edit`}
-                        className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold normal-text-2 hover:bg-blue-600 transition-all duration-300"
+                        className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold normal-text-2 hover:bg-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        aria-label="Edit event details"
                     >
                         <Edit className="w-4 h-4" aria-hidden="true" />
                         Edit Event
@@ -103,23 +178,90 @@ const EventDetailsHeader = ({ event }: Props) => {
 
                     <Link
                         href={`/dashboard/events/${event.slug}/attendees`}
-                        className="flex items-center gap-2 px-6 py-3 bg-purple-500 text-white rounded-xl font-semibold normal-text-2 hover:bg-purple-600 transition-all duration-300"
+                        className="flex items-center gap-2 px-6 py-3 bg-purple-500 text-white rounded-xl font-semibold normal-text-2 hover:bg-purple-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                        aria-label="View event attendees"
                     >
                         <Users className="w-4 h-4" aria-hidden="true" />
-                        View Attendees ({event.analytics.tickets_sold})
+                        View Attendees
                     </Link>
 
                     <Link
                         href={`/events/${event.slug}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-6 py-3 bg-primary-200 text-white rounded-xl font-semibold normal-text-2 hover:bg-primary transition-all duration-300 border-2 border-accent/30 hover:border-accent"
+                        className="flex items-center gap-2 px-6 py-3 bg-primary-200 text-white rounded-xl font-semibold normal-text-2 hover:bg-primary transition-all duration-300 border-2 border-accent/30 hover:border-accent focus:outline-none focus:ring-2 focus:ring-accent"
+                        aria-label="View public event page in new tab"
                     >
                         <Eye className="w-4 h-4" aria-hidden="true" />
                         View Public Page
                     </Link>
                 </div>
             </div>
+
+            {/* Delete Confirmation Modal */}
+            {deleteConfirm && (
+                <div 
+                    className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="delete-event-title"
+                    onClick={(e) => {
+                        if (e.target === e.currentTarget && !deleting) {
+                            setDeleteConfirm(false);
+                            setDeleteError(null);
+                        }
+                    }}
+                >
+                    <div className="bg-primary rounded-xl border-2 border-accent/30 p-6 max-w-md w-full animate-fade-in">
+                        <div className="flex items-start gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
+                                <AlertCircle className="w-5 h-5 text-red-400" aria-hidden="true" />
+                            </div>
+                            <div className="flex-1">
+                                <h2 id="delete-event-title" className="big-text-4 font-bold text-red-400 mb-2">
+                                    Delete Event?
+                                </h2>
+                                <p className="normal-text text-slate-300 mb-1">
+                                    Are you sure you want to delete <strong className="text-white">&quot;{event.title}&quot;</strong>?
+                                </p>
+                                <p className="small-text text-slate-400">
+                                    This action cannot be undone. All tickets, attendees, and analytics data will be permanently deleted.
+                                </p>
+                            </div>
+                        </div>
+
+                        {deleteError && (
+                            <div className="mb-4 p-3 bg-red-500/10 rounded-lg border border-red-500/20" role="alert">
+                                <p className="small-text text-red-400">
+                                    {deleteError}
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={handleDeleteEvent}
+                                disabled={deleting}
+                                className="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl font-semibold normal-text-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-red-400"
+                                aria-label="Confirm delete event"
+                            >
+                                {deleting ? 'Deleting...' : 'Yes, Delete Event'}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setDeleteConfirm(false);
+                                    setDeleteError(null);
+                                }}
+                                disabled={deleting}
+                                className="flex-1 px-4 py-3 bg-primary-200 hover:bg-primary-100 text-white rounded-xl font-semibold normal-text-2 transition-colors disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-accent"
+                                aria-label="Cancel delete"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

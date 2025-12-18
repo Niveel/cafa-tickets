@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Formik, Form } from 'formik';
+
 import { ticketTypeSchema, TicketTypeFormValues } from '@/data/eventsSchema';
 import { AppFormField, SubmitButton, FormLoader } from '@/components';
 import { CheckCircle, AlertCircle, Ticket, } from 'lucide-react';
@@ -24,8 +25,8 @@ const CreateTicketForm = ({ eventSlug }: Props) => {
         quantity: '',
         min_purchase: '1',
         max_purchase: '10',
-        available_from: null,
-        available_until: null
+        available_from: '',
+        available_until: ''
     };
 
     const handleSubmit = async (values: TicketTypeFormValues, { setSubmitting, resetForm }: any) => {
@@ -33,22 +34,56 @@ const CreateTicketForm = ({ eventSlug }: Props) => {
             setSubmitError(null);
             setSubmitSuccess(false);
 
-            // Simulate API call (replace with actual API call)
-            console.log('Creating ticket type:', values);
-
             // Transform data for API
             const ticketData = {
-                ...values,
-                price: parseFloat(values.price),
+                name: values.name,
+                description: values.description,
+                price: values.price,
                 quantity: parseInt(values.quantity),
                 min_purchase: parseInt(values.min_purchase),
-                max_purchase: parseInt(values.max_purchase)
+                max_purchase: parseInt(values.max_purchase),
+                available_from: values.available_from || undefined,
+                available_until: values.available_until || undefined,
             };
 
-            // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const response = await fetch(`/api/dashboard/events/${eventSlug}/tickets/create`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ticketData),
+            });
 
-            // Mock success
+            const data = await response.json();
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to create ticket type. Please try again.';
+
+                // ✅ Priority: Show backend message first
+                if (data.message) {
+                    errorMessage = data.message;
+                } else if (data.error) {
+                    errorMessage = data.error;
+                } else if (data.detail) {
+                    errorMessage = data.detail;
+                }
+
+                // Field-specific errors (only if no general message)
+                if (!data.message && !data.error && !data.detail) {
+                    if (data.name) {
+                        errorMessage = `Name: ${Array.isArray(data.name) ? data.name[0] : data.name}`;
+                    } else if (data.price) {
+                        errorMessage = `Price: ${Array.isArray(data.price) ? data.price[0] : data.price}`;
+                    } else if (data.quantity) {
+                        errorMessage = `Quantity: ${Array.isArray(data.quantity) ? data.quantity[0] : data.quantity}`;
+                    }
+                }
+
+                throw new Error(errorMessage);
+            }
+
+            // ✅ Success
+            // console.log('Ticket type created successfully:', data);
             setSubmitSuccess(true);
             setCreatedTicketsCount(prev => prev + 1);
 
@@ -58,9 +93,14 @@ const CreateTicketForm = ({ eventSlug }: Props) => {
                 resetForm();
             }, 2000);
 
-        } catch (error: any) {
-            console.error('Error creating ticket type:', error);
-            setSubmitError(error.message || 'Failed to create ticket type. Please try again.');
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Error creating ticket type:', error.message);
+                setSubmitError(error.message);
+            } else {
+                console.error('Error creating ticket type:', error);
+                setSubmitError('Failed to create ticket type. Please try again.');
+            }
         } finally {
             setSubmitting(false);
         }
@@ -167,12 +207,12 @@ const CreateTicketForm = ({ eventSlug }: Props) => {
                                     type="number"
                                     placeholder="100"
                                     min="1"
-                                    max="10000"
+                                    max="1000000"
                                     required
                                 />
                             </div>
                             <p className="small-text text-slate-400">
-                                Minimum price: GH₵ 10.00 • Maximum quantity: 10,000
+                                Minimum price: GH₵ 10.00 • Maximum quantity: 1,000,000
                             </p>
                         </div>
 

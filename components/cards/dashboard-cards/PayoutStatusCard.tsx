@@ -6,12 +6,31 @@ import { RevenueSummary } from '@/types/payments.types';
 type Props = {
     payoutStatus: RevenueSummary['payout_status'];
     summary?: RevenueSummary['summary'];
+    revenueByMonth?: RevenueSummary['revenue_by_month'];
 };
 
-const PayoutStatusCard = ({ payoutStatus, summary }: Props) => {
-    // Calculate growth percentage (mock)
-    const monthlyGrowth = 23.5; // This would be calculated from actual data
-    const topPerformingCategory = 'Music Events'; // Mock data
+const PayoutStatusCard = ({ payoutStatus, summary, revenueByMonth }: Props) => {
+    // Calculate actual monthly growth
+    const calculateMonthlyGrowth = () => {
+        if (!revenueByMonth || revenueByMonth.length < 2) {
+            return 0;
+        }
+
+        // revenueByMonth is sorted desc (most recent first)
+        const thisMonth = parseFloat(revenueByMonth[0].gross_revenue);
+        const lastMonth = parseFloat(revenueByMonth[1].gross_revenue);
+
+        if (lastMonth === 0) {
+            return thisMonth > 0 ? 100 : 0;
+        }
+
+        return ((thisMonth - lastMonth) / lastMonth) * 100;
+    };
+
+    const monthlyGrowth = calculateMonthlyGrowth();
+    const isPositiveGrowth = monthlyGrowth >= 0;
+    
+    const topPerformingCategory = 'Music Events'; // Mock data - would come from backend
     const averageTicketPrice = summary ? parseFloat(summary.average_ticket_price) : 0;
     const totalEvents = summary?.total_events || 0;
     const totalTicketsSold = summary?.total_tickets_sold || 0;
@@ -58,12 +77,17 @@ const PayoutStatusCard = ({ payoutStatus, summary }: Props) => {
                     <p className="big-text-3 font-bold text-blue-400">
                         GH₵ {parseFloat(payoutStatus.available_balance).toLocaleString('en-GH', { minimumFractionDigits: 2 })}
                     </p>
-                    <div className="flex items-center gap-1 mt-1">
-                        <TrendingUp className="w-3 h-3 text-emerald-400" aria-hidden="true" />
-                        <p className="small-text-2 text-emerald-400 font-semibold">
-                            +{monthlyGrowth}% growth
-                        </p>
-                    </div>
+                    {revenueByMonth && revenueByMonth.length >= 2 && (
+                        <div className="flex items-center gap-1 mt-1">
+                            <TrendingUp 
+                                className={`w-3 h-3 ${isPositiveGrowth ? 'text-emerald-400' : 'text-red-400 rotate-180'}`} 
+                                aria-hidden="true" 
+                            />
+                            <p className={`small-text-2 font-semibold ${isPositiveGrowth ? 'text-emerald-400' : 'text-red-400'}`}>
+                                {isPositiveGrowth ? '+' : ''}{Math.abs(monthlyGrowth).toFixed(1)}% growth
+                            </p>
+                        </div>
+                    )}
                 </div>
 
                 <div className="p-4 bg-primary-200 rounded-xl border border-purple-500/30">

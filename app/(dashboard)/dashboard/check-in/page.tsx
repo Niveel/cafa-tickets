@@ -1,6 +1,8 @@
 import { Metadata } from 'next';
-import { myEvents } from '@/data/dummy.dash-events';
+
 import { CheckInContent } from '@/components';
+import { getMyCreatedEvents } from '@/app/lib/dashboard';
+
 
 export const metadata: Metadata = {
     title: 'Event Check-in | Cafa Tickets',
@@ -9,15 +11,32 @@ export const metadata: Metadata = {
 };
 
 const CheckInPage = async () => {
-    // In production, fetch only user's upcoming/ongoing events
-    // const response = await fetchMyUpcomingEvents({ page: 1, page_size: 10 });
-    const upcomingEvents = myEvents.results.filter(
-        e => e.status === 'upcoming' || e.status === 'ongoing'
-    );
+    // Fetch upcoming and ongoing events from backend using filters
+    const [upcomingData, ongoingData] = await Promise.all([
+        getMyCreatedEvents(1, 20, { status: 'upcoming' }),
+        getMyCreatedEvents(1, 20, { status: 'ongoing' })
+    ]);
 
-    // In production, check if there's a next page
-    // const hasMore = !!response.next;
-    const hasMore = false; // Set to true if you have pagination in backend
+    if (!upcomingData && !ongoingData) {
+        return (
+            <main className="dash-page">
+                <div className="inner-wrapper">
+                    <div className="bg-primary rounded-xl p-12 border-2 border-accent/30 text-center">
+                        <p className="big-text-3 text-white">Unable to load events</p>
+                    </div>
+                </div>
+            </main>
+        );
+    }
+
+    // Combine results from both queries
+    const upcomingEvents = [
+        ...(upcomingData?.results || []),
+        ...(ongoingData?.results || [])
+    ];
+
+    // Check if there are more events to load (either query has next page)
+    const hasMore = !!(upcomingData?.next || ongoingData?.next);
 
     return (
         <main className="dash-page">

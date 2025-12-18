@@ -1,11 +1,7 @@
 import React from 'react';
 import { ScanLine, Info } from 'lucide-react';
 
-type Props = {
-    totalEvents: number;
-};
-
-const CheckInHeader = ({ totalEvents }: Props) => {
+const CheckInHeader = () => {
     return (
         <div className="space-y-4">
             <div className="flex items-center gap-3">

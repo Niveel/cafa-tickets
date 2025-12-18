@@ -19,21 +19,38 @@ const PaymentProfilesContent = ({ initialProfiles }: Props) => {
             }))
         );
         
-        // Simulate API call
+        // TODO: Call set default API
         setTimeout(() => {
             alert('Default payment profile updated successfully!');
         }, 500);
     }, []);
 
-    const handleDelete = React.useCallback((profileId: string) => {
-        setProfiles(prevProfiles => 
-            prevProfiles.filter(profile => profile.id !== profileId)
-        );
-        
-        // Simulate API call
-        setTimeout(() => {
+    const handleDelete = React.useCallback(async (profileId: string) => {
+        try {
+            const response = await fetch('/api/dashboard/payment/delete-profile', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: profileId }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to delete payment profile');
+            }
+
+            // Success - update state
+            setProfiles(prevProfiles => 
+                prevProfiles.filter(profile => profile.id !== profileId)
+            );
+
             alert('Payment profile deleted successfully!');
-        }, 500);
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Failed to delete payment profile');
+            throw error; // Re-throw so the modal can handle it
+        }
     }, []);
 
     return (

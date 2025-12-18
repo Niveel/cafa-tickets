@@ -2,11 +2,12 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { myEventDetails } from '@/data/dummy.dash-events';
+
 import { EditTicketForm } from '@/components';
+import { getMyCreatedEventDetails } from '@/app/lib/dashboard';
 
 type Props = {
-    params: Promise<{ slug: string; ticketId: string }>;
+    params: Promise<{ slug: string; ticket_id: string }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -18,12 +19,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 const EditTicketPage = async ({ params }: Props) => {
-    const { slug, ticketId } = await params;
+    const { slug, ticket_id } = await params;
+    const myEventDetails = await getMyCreatedEventDetails(slug);
     
-    // In production, fetch from API
     const event = myEventDetails;
-    const ticket = event.ticket_types.find(t => t.id.toString() === ticketId);
-
+    
     if (!event || event.slug !== slug) {
         return (
             <main className="min-h-screen bg-primary-100 dash-page">
@@ -47,6 +47,7 @@ const EditTicketPage = async ({ params }: Props) => {
             </main>
         );
     }
+    const ticket = event.ticket_types.find(t => t.id.toString() === ticket_id);
 
     if (!ticket) {
         return (

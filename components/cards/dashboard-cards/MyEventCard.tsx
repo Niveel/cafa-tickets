@@ -1,20 +1,20 @@
 "use client";
 
-import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, MapPin, Edit, Trash2, Eye, Ticket, DollarSign } from 'lucide-react';
+
 import { MyEventsResponse } from '@/types/dash-events.types';
+import { placeholderImage } from '@/data/constants';
 
 type Event = MyEventsResponse['results'][0];
 
 type Props = {
     event: Event;
-    onDelete: (eventId: number, eventTitle: string) => void;
+    onDelete: (eventId: number, eventSlug: string, eventTitle: string,) => void;
 };
 
 const MyEventCard = ({ event, onDelete }: Props) => {
-    const [isDeleting, setIsDeleting] = React.useState(false);
 
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -39,12 +39,7 @@ const MyEventCard = ({ event, onDelete }: Props) => {
     };
 
     const handleDelete = () => {
-        if (confirm(`Are you sure you want to delete "${event.title}"? This action cannot be undone.`)) {
-            setIsDeleting(true);
-            setTimeout(() => {
-                onDelete(event.id, event.title);
-            }, 500);
-        }
+        onDelete(event.id, event.slug, event.title);
     };
 
     const salesPercentage = event.analytics.sales_percentage;
@@ -53,14 +48,12 @@ const MyEventCard = ({ event, onDelete }: Props) => {
 
     return (
         <div 
-            className={`group relative bg-primary rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 overflow-hidden ${
-                isDeleting ? 'opacity-50' : ''
-            }`}
+            className={`group relative bg-primary rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 overflow-hidden`}
         >
             {/* Image */}
             <div className="relative h-48 overflow-hidden">
                 <Image
-                    src={event.featured_image}
+                    src={event.featured_image || placeholderImage}
                     alt={event.title}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -90,7 +83,6 @@ const MyEventCard = ({ event, onDelete }: Props) => {
                     <button
                         type="button"
                         onClick={handleDelete}
-                        disabled={isDeleting}
                         className="w-10 h-10 rounded-lg bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-red-400"
                         aria-label="Delete event"
                     >
@@ -118,7 +110,7 @@ const MyEventCard = ({ event, onDelete }: Props) => {
                 </Link>
 
                 {/* Date & Location */}
-                <div className="space-y-2 mb-4">
+                <div className="space-y-1 mb-2">
                     <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-slate-400" aria-hidden="true" />
                         <p className="normal-text-2 text-slate-300">
@@ -135,7 +127,7 @@ const MyEventCard = ({ event, onDelete }: Props) => {
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="grid grid-cols-2 gap-3 mb-2">
                     <div className="p-3 bg-primary-200 rounded-lg border border-accent/20">
                         <div className="flex items-center gap-2 mb-1">
                             <Ticket className="w-4 h-4 text-blue-400" aria-hidden="true" />
@@ -158,7 +150,7 @@ const MyEventCard = ({ event, onDelete }: Props) => {
                 </div>
 
                 {/* Sales Progress */}
-                <div className="mb-4">
+                <div className="mb-2">
                     <div className="flex items-center justify-between mb-2">
                         <p className="small-text text-slate-400">Sales Progress</p>
                         <p className="small-text font-semibold text-accent-50">
@@ -176,7 +168,7 @@ const MyEventCard = ({ event, onDelete }: Props) => {
                 {/* View Details Button */}
                 <Link
                     href={`/dashboard/events/${event.slug}`}
-                    className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300 hover:scale-[1.02]"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300 hover:scale-[1.02]"
                 >
                     <Eye className="w-4 h-4" aria-hidden="true" />
                     View Details

@@ -5,41 +5,17 @@ import Link from 'next/link';
 import { Wallet, Info, AlertCircle, Plus, CheckCircle, Smartphone, Building2 } from 'lucide-react';
 import { useFormikContext } from 'formik';
 
-// Mock payment profiles (replace with real data from API)
-const mockPaymentProfiles = [
-    {
-        id: 'PP-001',
-        name: 'My MTN Mobile Money',
-        method: 'mobile_money',
-        network: 'MTN',
-        account_number: '0241234567',
-        is_verified: true,
-        is_default: true
-    },
-    {
-        id: 'PP-002',
-        name: 'Business Bank Account',
-        method: 'bank_transfer',
-        bank_name: 'GCB Bank',
-        account_number: '1234567890',
-        is_verified: true,
-        is_default: false
-    },
-    {
-        id: 'PP-003',
-        name: 'Vodafone Cash',
-        method: 'mobile_money',
-        network: 'Vodafone',
-        account_number: '0501234567',
-        is_verified: false,
-        is_default: false
-    }
-];
+import { PaymentProfile } from "@/types/payments.types";
 
-const EventPaymentProfileSection = () => {
+type Props = {
+    paymentProfiles: PaymentProfile[]; // Required, not optional
+}
+
+const EventPaymentProfileSection = ({ paymentProfiles }: Props) => { 
     const { values, setFieldValue, errors, touched } = useFormikContext<any>();
 
-    const verifiedProfiles = mockPaymentProfiles.filter(p => p.is_verified);
+    // Filter for verified profiles only
+    const verifiedProfiles = paymentProfiles.filter(p => p.is_verified);
     const hasVerifiedProfiles = verifiedProfiles.length > 0;
     const defaultProfile = verifiedProfiles.find(p => p.is_default);
 
@@ -108,83 +84,88 @@ const EventPaymentProfileSection = () => {
                     </div>
 
                     <div className="space-y-3">
-                        {verifiedProfiles.map((profile) => (
-                            <label
-                                key={profile.id}
-                                className={`
-                                    flex items-start gap-4 p-5 rounded-xl border-2 cursor-pointer transition-all duration-300
-                                    ${values.payment_profile_id === profile.id
-                                        ? 'bg-accent/20 border-accent'
-                                        : 'bg-primary-200 border-accent/30 hover:border-accent/50'
-                                    }
-                                `}
-                            >
-                                <input
-                                    type="radio"
-                                    name="payment_profile_id"
-                                    value={profile.id}
-                                    checked={values.payment_profile_id === profile.id}
-                                    onChange={(e) => setFieldValue('payment_profile_id', e.target.value)}
-                                    className="w-5 h-5 text-accent focus:ring-2 focus:ring-accent mt-0.5 cursor-pointer"
-                                />
+                        {verifiedProfiles.map((profile) => {
+                            // Extract account details based on method
+                            const accountDetails = profile.account_details as any;
+                            const isMobileMoney = profile.method === 'mobile_money';
+                            
+                            return (
+                                <label
+                                    key={profile.id}
+                                    className={`
+                                        flex items-start gap-4 p-5 rounded-xl border-2 cursor-pointer transition-all duration-300
+                                        ${values.payment_profile_id === profile.id
+                                            ? 'bg-accent/20 border-accent'
+                                            : 'bg-primary-200 border-accent/30 hover:border-accent/50'
+                                        }
+                                    `}
+                                >
+                                    <input
+                                        type="radio"
+                                        name="payment_profile_id"
+                                        value={profile.id}
+                                        checked={values.payment_profile_id === profile.id}
+                                        onChange={(e) => setFieldValue('payment_profile_id', e.target.value)}
+                                        className="w-5 h-5 text-accent focus:ring-2 focus:ring-accent mt-0.5 cursor-pointer"
+                                    />
 
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        {/* Method Icon */}
-                                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                                            profile.method === 'mobile_money' ? 'bg-blue-500/20' : 'bg-purple-500/20'
-                                        }`}>
-                                            {profile.method === 'mobile_money' ? (
-                                                <Smartphone className="w-4 h-4 text-blue-400" aria-hidden="true" />
-                                            ) : (
-                                                <Building2 className="w-4 h-4 text-purple-400" aria-hidden="true" />
+                                    <div className="flex-1">
+                                        <div className="flex items-center gap-2 mb-2">
+                                            {/* Method Icon */}
+                                            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                                                isMobileMoney ? 'bg-blue-500/20' : 'bg-purple-500/20'
+                                            }`}>
+                                                {isMobileMoney ? (
+                                                    <Smartphone className="w-4 h-4 text-blue-400" aria-hidden="true" />
+                                                ) : (
+                                                    <Building2 className="w-4 h-4 text-purple-400" aria-hidden="true" />
+                                                )}
+                                            </div>
+
+                                            {/* Profile Name */}
+                                            <p className="normal-text-2 font-bold text-white">
+                                                {profile.name}
+                                            </p>
+
+                                            {/* Default Badge */}
+                                            {profile.is_default && (
+                                                <span className="px-2 py-0.5 rounded-md bg-accent/20 text-accent-50 small-text-2 font-semibold">
+                                                    Default
+                                                </span>
+                                            )}
+
+                                            {/* Selected Indicator */}
+                                            {values.payment_profile_id === profile.id && (
+                                                <CheckCircle className="w-5 h-5 text-accent-50 ml-auto" aria-hidden="true" />
                                             )}
                                         </div>
 
-                                        {/* Profile Name */}
-                                        <p className="normal-text-2 font-bold text-white">
-                                            {profile.name}
-                                        </p>
-
-                                        {/* Default Badge */}
-                                        {profile.is_default && (
-                                            <span className="px-2 py-0.5 rounded-md bg-accent/20 text-accent-50 small-text-2 font-semibold">
-                                                Default
-                                            </span>
-                                        )}
-
-                                        {/* Selected Indicator */}
-                                        {values.payment_profile_id === profile.id && (
-                                            <CheckCircle className="w-5 h-5 text-accent-50 ml-auto" aria-hidden="true" />
-                                        )}
+                                        {/* Account Details */}
+                                        <div className="space-y-1">
+                                            {isMobileMoney ? (
+                                                <>
+                                                    <p className="small-text text-slate-400">
+                                                        Network: <span className="text-slate-300 font-semibold">{accountDetails?.network}</span>
+                                                    </p>
+                                                    <p className="small-text text-slate-400">
+                                                        Number: <span className="text-slate-300 font-mono">{accountDetails?.mobile_number}</span>
+                                                    </p>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <p className="small-text text-slate-400">
+                                                        Bank: <span className="text-slate-300 font-semibold">{accountDetails?.bank_name}</span>
+                                                    </p>
+                                                    <p className="small-text text-slate-400">
+                                                        Account: <span className="text-slate-300 font-mono">{accountDetails?.account_number}</span>
+                                                    </p>
+                                                </>
+                                            )}
+                                        </div>
                                     </div>
-
-                                    {/* Account Details */}
-                                    <div className="space-y-1">
-                                        {profile.method === 'mobile_money' && (
-                                            <>
-                                                <p className="small-text text-slate-400">
-                                                    Network: <span className="text-slate-300 font-semibold">{profile.network}</span>
-                                                </p>
-                                                <p className="small-text text-slate-400">
-                                                    Number: <span className="text-slate-300 font-mono">{profile.account_number}</span>
-                                                </p>
-                                            </>
-                                        )}
-                                        {profile.method === 'bank_transfer' && (
-                                            <>
-                                                <p className="small-text text-slate-400">
-                                                    Bank: <span className="text-slate-300 font-semibold">{profile.bank_name}</span>
-                                                </p>
-                                                <p className="small-text text-slate-400">
-                                                    Account: <span className="text-slate-300 font-mono">{profile.account_number}</span>
-                                                </p>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </label>
-                        ))}
+                                </label>
+                            );
+                        })}
                     </div>
 
                     {/* Error Message */}

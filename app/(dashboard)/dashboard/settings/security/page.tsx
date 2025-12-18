@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
+
 import { SecuritySettingsContent } from '@/components';
+import { getCurrentUser } from '@/app/lib/auth';
 
 export const metadata: Metadata = {
     title: 'Security Settings | Cafa Tickets',
@@ -8,14 +10,21 @@ export const metadata: Metadata = {
 };
 
 const SecuritySettingsPage = async () => {
-    // In production: Fetch user data
-    // const response = await fetch('/api/v1/users/profile/');
-    // const user = await response.json();
+    const user = await getCurrentUser();
+
+    if (!user) {
+        return (
+            <div className="bg-primary rounded-xl p-6 border-2 border-accent/30 text-center">
+                <p className="big-text-3 text-white mb-2">Authentication Required</p>
+                <p className="normal-text text-slate-300">Please log in to access security settings</p>
+            </div>
+        );
+    }
 
     return (
         <main className="dash-page">
             <div className="inner-wrapper">
-                <SecuritySettingsContent />
+                <SecuritySettingsContent currentUser={user} />
             </div>
         </main>
     );

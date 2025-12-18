@@ -1,8 +1,11 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Calendar, Clock, MapPin, Tag } from 'lucide-react';
+
 import { TicketEventDetails as EventDetailsType, TicketTypeDetails } from '@/types/tickets.types';
-import { Calendar, Clock, MapPin, User, Tag } from 'lucide-react';
+import { placeholderImage, placeholderPic } from '@/data/constants';
+import { sanitizeImgUrl } from '@/utils/functions';
 
 type Props = {
     event: EventDetailsType;
@@ -31,7 +34,7 @@ const TicketEventDetails = ({ event, ticketType }: Props) => {
             {/* Event Image */}
             <div className="relative h-64 bg-primary-200">
                 <Image
-                    src={event.featured_image}
+                    src={sanitizeImgUrl(event.featured_image) || placeholderImage}
                     alt={event.title}
                     fill
                     className="object-cover"
@@ -155,10 +158,10 @@ const TicketEventDetails = ({ event, ticketType }: Props) => {
                     <div className="flex items-center gap-3">
                         <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0">
                             <Image
-                                src={event.organizer.profile_image}
+                                src={event.organizer.profile_image || placeholderPic}
                                 alt={event.organizer.full_name}
                                 fill
-                                className="object-cover"
+                                className="object-cover bg-white"
                             />
                         </div>
                         <div className="flex-1">

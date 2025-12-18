@@ -1,9 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import * as Yup from 'yup';
-import { Trash2, AlertTriangle, Loader2 } from 'lucide-react';
-import { AppForm, AppFormField, AppErrorMessage, FormLoader } from '@/components';
+import { Trash2, AlertTriangle } from 'lucide-react';
+import { AppForm, AppFormField, AppErrorMessage, FormLoader, SubmitButton } from '@/components';
 import { passwordValidation } from '@/utils/validationUtils';
 
 const DeleteAccountValidationSchema = Yup.object().shape({
@@ -20,39 +21,38 @@ type DeleteAccountFormValues = {
 };
 
 const DeleteAccountSection = () => {
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showForm, setShowForm] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
-
-    // Mock active items - in production, fetch from API
-    const activeTickets = 0; // Change to > 0 to test restriction
-    const upcomingEvents = 0; // Change to > 0 to test restriction
 
     const handleDelete = async (values: DeleteAccountFormValues) => {
         setLoading(true);
         setError('');
 
         try {
-            // Check for active items
-            if (activeTickets > 0 || upcomingEvents > 0) {
-                throw new Error(
-                    `Cannot delete account. You have ${activeTickets} active tickets and ${upcomingEvents} upcoming events. Please cancel or transfer them first.`
-                );
+            const response = await fetch('/api/delete-account', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    password: values.password,
+                    confirmation: values.confirmation
+                }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Show backend error message
+                const errorMessage = data.message || data.error || 'Failed to delete account';
+                throw new Error(errorMessage);
             }
 
-            // Simulate API call: DELETE /api/v1/users/account/
-            const payload = {
-                password: values.password,
-                confirmation: values.confirmation
-            };
-
-            console.log('Deleting account:', payload);
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            // In production: Logout and redirect
-            console.log('Account deleted successfully');
-            // window.location.href = '/login?deleted=true';
+            // Account deleted successfully - redirect to home
+            router.push('/?deleted=true');
 
         } catch (err: any) {
             setError(err.message || 'Failed to delete account. Please try again.');
@@ -60,8 +60,6 @@ const DeleteAccountSection = () => {
             setLoading(false);
         }
     };
-
-    const hasActiveItems = activeTickets > 0 || upcomingEvents > 0;
 
     return (
         <div className="bg-primary rounded-xl border-2 border-red-500/30 p-6">
@@ -98,29 +96,11 @@ const DeleteAccountSection = () => {
                 </div>
             </div>
 
-            {/* Active Items Restriction */}
-            {hasActiveItems && (
-                <div className="mb-4 p-4 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                    <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
-                        <div>
-                            <p className="normal-text-2 font-semibold text-amber-300 mb-2">
-                                Cannot Delete Account
-                            </p>
-                            <p className="small-text text-amber-300">
-                                You have <strong>{activeTickets} active tickets</strong> and <strong>{upcomingEvents} upcoming events</strong>. Please cancel or transfer them before deleting your account.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             {!showForm ? (
                 <button
                     type="button"
                     onClick={() => setShowForm(true)}
-                    disabled={hasActiveItems}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-red-200 rounded-lg font-semibold normal-text-2 transition-all border border-red-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-500/20 hover:bg-red-500/30 text-red-300 hover:text-red-200 rounded-lg font-semibold normal-text-2 transition-all border border-red-500/30"
                 >
                     <Trash2 className="w-4 h-4" aria-hidden="true" />
                     Delete My Account
@@ -173,6 +153,7 @@ const DeleteAccountSection = () => {
                             </div>
 
                             {/* Buttons */}
+                            {/* Buttons */}
                             <div className="flex gap-3">
                                 <button
                                     type="button"
@@ -181,27 +162,15 @@ const DeleteAccountSection = () => {
                                         setError('');
                                     }}
                                     disabled={loading}
-                                    className="flex-1 h-11 bg-primary-100 hover:bg-primary-200 text-white rounded-lg font-semibold normal-text-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex-1 bg-primary-100 hover:bg-primary-200 text-white rounded-lg font-semibold normal-text-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     Cancel
                                 </button>
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="flex-1 h-11 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold normal-text-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                                >
-                                    {loading ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-                                            Deleting...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Trash2 className="w-4 h-4" aria-hidden="true" />
-                                            Delete Account
-                                        </>
-                                    )}
-                                </button>
+                                <div className="flex-2">
+                                    <SubmitButton
+                                        title={loading ? "Deleting..." : "Delete Account"}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </AppForm>

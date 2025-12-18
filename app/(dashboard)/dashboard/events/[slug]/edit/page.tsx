@@ -2,8 +2,9 @@ import React from 'react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { myEventDetails } from '@/data/dummy.dash-events';
+
 import { EditEventForm } from '@/components';
+import { getMyCreatedEventDetails, getMyPaymentProfiles } from '@/app/lib/dashboard';
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -19,10 +20,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const EditEventPage = async ({ params }: Props) => {
     const { slug } = await params;
+    const [myEventDetails, myPaymentProfiles] = await Promise.all([ 
+        getMyCreatedEventDetails(slug),
+        getMyPaymentProfiles()
+    ]);
 
-    console.log('Editing event with slug:', slug, "event details:", myEventDetails);
-    console.log("event slug from data:", myEventDetails.slug, "slug param:", slug);
-    // In production, fetch from API
     const event = myEventDetails;
 
     // !event || event.slug !== slug
@@ -57,35 +59,35 @@ const EditEventPage = async ({ params }: Props) => {
     const hasStarted = now >= startDate;
     const hasEnded = now > endDate;
 
-    // hasStarted || hasEnded
-    console.log(hasStarted || hasEnded)
+    if (hasStarted || hasEnded) {
+        return (
+            <main className="min-h-screen bg-primary-100 dash-page">
+                <div className="inner-wrapper">
+                    <div className="text-center py-12">
+                        <h1 className="big-text-2 font-bold text-white mb-3">
+                            Cannot Edit Event
+                        </h1>
+                        <p className="normal-text text-slate-300 mb-6">
+                            {hasEnded 
+                                ? 'This event has already ended and cannot be edited.'
+                                : 'This event has already started and cannot be edited.'
+                            }
+                        </p>
+                        <Link
+                            href={`/dashboard/events/${slug}`}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300"
+                        >
+                            <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                            Back to Event Details
+                        </Link>
+                    </div>
+                </div>
+            </main>
+        );
+    }
 
-    // if (hasStarted || hasEnded) {
-    //     return (
-    //         <main className="min-h-screen bg-primary-100 dash-page">
-    //             <div className="inner-wrapper">
-    //                 <div className="text-center py-12">
-    //                     <h1 className="big-text-2 font-bold text-white mb-3">
-    //                         Cannot Edit Event
-    //                     </h1>
-    //                     <p className="normal-text text-slate-300 mb-6">
-    //                         {hasEnded 
-    //                             ? 'This event has already ended and cannot be edited.'
-    //                             : 'This event has already started and cannot be edited.'
-    //                         }
-    //                     </p>
-    //                     <Link
-    //                         href={`/dashboard/events/${slug}`}
-    //                         className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300"
-    //                     >
-    //                         <ArrowLeft className="w-4 h-4" aria-hidden="true" />
-    //                         Back to Event Details
-    //                     </Link>
-    //                 </div>
-    //             </div>
-    //         </main>
-    //     );
-    // }
+    console.log('Editing event with slug:', slug, "event details:", myEventDetails);
+    console.log("event slug from data:", event.slug, "slug param:", slug);
 
     return (
         <main className="min-h-screen bg-primary-100 dash-page">
@@ -110,7 +112,7 @@ const EditEventPage = async ({ params }: Props) => {
                 </div>
 
                 {/* Edit Form */}
-                <EditEventForm event={event} />
+                <EditEventForm event={event} paymentProfiles={myPaymentProfiles?.results || []} />
             </div>
         </main>
     );

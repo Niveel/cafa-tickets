@@ -1,16 +1,21 @@
 "use client";
 
-import React from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Calendar, MapPin, Clock, CheckCircle, Download, Eye, Loader2 } from 'lucide-react';
+
+import { placeholderImage } from '@/data/constants';
 import { MyTicket } from '@/types/tickets.types';
-import { Calendar, MapPin, Clock, CheckCircle, Download, Eye } from 'lucide-react';
+import { sanitizeImageUrl } from '@/utils/sanitizeEventData';
 
 type Props = {
     ticket: MyTicket;
 };
 
 const MyTicketCard = ({ ticket }: Props) => {
+    const [isDownloading, setIsDownloading] = useState(false);
+
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('en-GH', {
             weekday: 'short',
@@ -55,9 +60,31 @@ const MyTicketCard = ({ ticket }: Props) => {
     };
 
     const handleDownload = async () => {
-        // Simulate API call
-        console.log('Downloading ticket:', ticket.ticket_id);
-        // In production: await fetch(`/api/v1/tickets/${ticket.ticket_id}/download/`)
+        setIsDownloading(true);
+
+        try {
+            const response = await fetch(`/api/dashboard/tickets/download?ticketId=${ticket.ticket_id}`);
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Failed to download ticket');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ticket-${ticket.ticket_id}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (error) {
+            console.error('Download failed:', error);
+            alert(error instanceof Error ? error.message : 'Failed to download ticket');
+        } finally {
+            setIsDownloading(false);
+        }
     };
 
     return (
@@ -65,13 +92,13 @@ const MyTicketCard = ({ ticket }: Props) => {
             {/* Event Image */}
             <div className="relative h-48 bg-primary-200">
                 <Image
-                    src={ticket.event.featured_image}
+                    src={sanitizeImageUrl(ticket.event.featured_image) || placeholderImage}
                     alt={ticket.event.title}
                     fill
                     className="object-cover"
                 />
                 <div className="absolute inset-0 bg-linear-to-t from-primary via-primary/50 to-transparent"></div>
-                
+
                 {/* Status Badges */}
                 <div className="absolute top-3 right-3 flex gap-2">
                     <span className={`px-3 py-1 rounded-lg font-semibold small-text border ${getEventStatusColor(ticket.event.status)}`}>
@@ -91,10 +118,10 @@ const MyTicketCard = ({ ticket }: Props) => {
             </div>
 
             {/* Content */}
-            <div className="p-5 space-y-4">
+            <div className="p-2 space-y-2">
                 {/* Event Title */}
                 <div>
-                    <Link 
+                    <Link
                         href={`/events/${ticket.event.slug}`}
                         className="big-text-3 font-bold text-white hover:text-accent-50 transition-colors"
                     >
@@ -103,7 +130,7 @@ const MyTicketCard = ({ ticket }: Props) => {
                 </div>
 
                 {/* Event Details */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2">
                     <div className="flex items-start gap-2">
                         <Calendar className="w-4 h-4 text-accent-50 shrink-0 mt-0.5" aria-hidden="true" />
                         <div>
@@ -136,7 +163,7 @@ const MyTicketCard = ({ ticket }: Props) => {
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-accent/30"></div>
+                <div className="border-t border-accent py-1"></div>
 
                 {/* Ticket Info */}
                 <div className="flex items-center justify-between">
@@ -193,10 +220,15 @@ const MyTicketCard = ({ ticket }: Props) => {
                     </Link>
                     <button
                         onClick={handleDownload}
-                        className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold normal-text-2 transition-colors"
+                        disabled={isDownloading}
+                        className="flex items-center justify-center gap-2 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-semibold normal-text-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         aria-label="Download ticket"
                     >
-                        <Download className="w-4 h-4" aria-hidden="true" />
+                        {isDownloading ? (
+                            <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                        ) : (
+                            <Download className="w-4 h-4" aria-hidden="true" />
+                        )}
                     </button>
                 </div>
             </div>

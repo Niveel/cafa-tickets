@@ -15,7 +15,7 @@ const SimilarEventsSection = ({ event }: SimilarEventsSectionProps) => {
     }
 
     return (
-        <section className="relative py-12 sm:py-16 bg-primary">
+        <section className="relative py-8 sm:y-12 bg-primary">
             <div className="inner-wrapper">
                 {/* Section Header */}
                 <div className="space-y-4 mb-10">

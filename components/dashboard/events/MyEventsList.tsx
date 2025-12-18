@@ -3,14 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import { Plus } from 'lucide-react';
-import { MyEventsResponse } from '@/types/dash-events.types';
 import { MyEventCard } from '@/components';
+import { MyEvent } from '@/types/dash-events.types';
 
-type Event = MyEventsResponse['results'][0];
 
 type Props = {
-    events: Event[];
-    onDelete: (eventId: number, eventTitle: string) => void;
+    events: MyEvent[];
+    onDelete: (eventId: number, eventSlug: string, eventTitle: string) => void;
 };
 
 const MyEventsList = ({ events, onDelete }: Props) => {

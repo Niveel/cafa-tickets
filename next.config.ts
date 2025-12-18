@@ -19,13 +19,23 @@ const nextConfig: NextConfig = {
         port: '8000',
         pathname: '/media/**',
       },
-    ]
+    ],
+    dangerouslyAllowSVG: true,
+    // Allow localhost in development
+    unoptimized: process.env.NODE_ENV === 'development', // Optional: disable optimization in dev
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ['*']
+      allowedOrigins: ['*'],
+      bodySizeLimit: '10mb',
     }
-  }
+  },
+  // This is the key part - allow private IPs in development
+  ...(process.env.NODE_ENV === 'development' && {
+    typescript: {
+      ignoreBuildErrors: false,
+    },
+  }),
 };
 
 export default nextConfig;

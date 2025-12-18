@@ -17,7 +17,7 @@ const VenueSection = ({ event }: VenueSectionProps) => {
     const staticMapUrl = `https://maps.google.com/maps?q=${venue.latitude},${venue.longitude}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
 
     return (
-        <section className="relative py-12 sm:py-16 bg-primary-100" id="venue">
+        <section className="relative py-8 sm:y-12 bg-primary-100" id="venue">
             <div className="inner-wrapper">
                 {/* Section Header */}
                 <div className="space-y-4 mb-8">

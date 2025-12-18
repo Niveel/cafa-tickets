@@ -50,3 +50,31 @@ export const getTicketTheme = (ticketName: string): {
         icon: 'text-purple-300'
     };
 };
+
+export const formatImageUrls = (arr: string[]) => arr.map(img => img.startsWith('http') ? img : `http://localhost:8000${img}`);
+
+export const sanitizeImgUrl = (url: string): string => {
+    if (!url) return '';
+    
+    // Check if it's a malformed media URL with embedded external URL
+    if (url.includes('/media/https%3A') || url.includes('/media/http%3A')) {
+        // Extract everything after '/media/'
+        const afterMedia = url.split('/media/')[1];
+        // Decode the URL-encoded string
+        const decoded = decodeURIComponent(afterMedia);
+        // Fix any malformed protocol (https%3A/ -> https://)
+        return decoded.replace(/^(https?):\/([^/])/, '$1://$2');
+    }
+    
+    // If it's already a valid external URL (Unsplash, Cloudinary, etc.)
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url;
+    }
+    
+    // If it's a relative media URL (uploaded images)
+    if (url.startsWith('/media/')) {
+        return `http://localhost:8000${url}`;
+    }
+    
+    return url;
+};

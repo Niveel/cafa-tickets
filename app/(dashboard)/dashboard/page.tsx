@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { 
     DashboardOverview, 
     DashboardQuickActions,
@@ -11,6 +12,12 @@ import { getUserStats } from "@/app/lib/dashboard";
 const DashboardPage = async () => {
     const userStats = await getUserStats();
 
+    // Redirect if no stats (no token)
+    if (!userStats) {
+        redirect('/login?redirect=/dashboard');
+    }
+
+
     return (
         <main className='dash-page space-y-6'>
             {/* Overview Section */}
@@ -23,8 +30,8 @@ const DashboardPage = async () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <DashboardRecentActivity activities={userStats.recent_activity} />
                 <DashboardTicketsByCategory 
-                    ticketsByCategory={userStats.purchasing_stats.tickets_by_category}
-                    totalSpent={userStats.purchasing_stats.total_spent}
+                    ticketsByCategory={userStats?.purchasing_stats.tickets_by_category}
+                    totalSpent={userStats?.purchasing_stats.total_spent}
                 />
             </div>
 

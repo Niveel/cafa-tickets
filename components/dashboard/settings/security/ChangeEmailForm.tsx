@@ -35,7 +35,7 @@ const ChangeEmailForm = () => {
         setVerificationSent(false);
 
         try {
-            // Simulate API call: POST /api/v1/users/update-email/
+            // Simulate API call: POST /auth/update-email/
             const payload = {
                 new_email: values.newEmail,
                 password: values.password

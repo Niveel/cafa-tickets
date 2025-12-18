@@ -1,13 +1,28 @@
-import { revenueSummary } from "@/data/dummy.payments";
 import Link from 'next/link';
 import { Receipt, Wallet } from 'lucide-react';
-import { 
+
+import {
     PayoutStatusCard,
     RevenueByEventTable,
     RevenueByMonthChart
 } from "@/components";
+import { getMyRevenueSummary } from '@/app/lib/dashboard';
 
-const PaymentsPage = () => {
+const PaymentsPage = async () => {
+    const revenueSummary = await getMyRevenueSummary();
+
+    console.log("Revenue Summary:", revenueSummary);
+
+    if (!revenueSummary) {
+        return (
+            <main className='dash-page space-y-8'>
+                <div className="bg-primary rounded-xl p-12 border-2 border-accent/30 text-center">
+                    <p className="big-text-3 text-white">Unable to load revenue data</p>
+                </div>
+            </main>
+        );
+    }
+
     return (
         <main className='dash-page space-y-8'>
             {/* Page Header */}
@@ -54,10 +69,14 @@ const PaymentsPage = () => {
             </div>
 
             {/* Payout Status */}
-            <PayoutStatusCard payoutStatus={revenueSummary.payout_status} summary={revenueSummary.summary} />
+            <PayoutStatusCard
+                payoutStatus={revenueSummary.payout_status}
+                summary={revenueSummary.summary}
+                revenueByMonth={revenueSummary.revenue_by_month}
+            />
 
             {/* Two Column Layout - Revenue by Event & Monthly Revenue */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <RevenueByEventTable revenueByEvent={revenueSummary.revenue_by_event} />
                 <RevenueByMonthChart revenueByMonth={revenueSummary.revenue_by_month} />
             </div>

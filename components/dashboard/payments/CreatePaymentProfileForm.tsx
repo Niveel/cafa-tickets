@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import * as Yup from 'yup';
 import { Smartphone, Building2, AlertCircle } from 'lucide-react';
+
 import { AppForm, AppFormField, SubmitButton, FormLoader } from '@/components';
+import { mobileMoneyValidation, bankTransferValidation } from '@/data/validationConstants';
+import { networkOptions, bankOptions, bankCodeOptions } from '@/data/static.dashboard';
 
 type PaymentMethod = 'mobile_money' | 'bank_transfer';
 
@@ -14,57 +16,14 @@ const CreatePaymentProfileForm = () => {
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
 
-    const mobileMoneyValidation = Yup.object().shape({
-        method: Yup.string().required(),
-        name: Yup.string()
-            .required('Profile name is required')
-            .min(3, 'Name must be at least 3 characters')
-            .max(100, 'Name must not exceed 100 characters'),
-        description: Yup.string()
-            .max(500, 'Description must not exceed 500 characters'),
-        mobile_number: Yup.string()
-            .required('Mobile number is required')
-            .matches(/^\+233[0-9]{9}$/, 'Invalid Ghanaian mobile number format (+233XXXXXXXXX)'),
-        network: Yup.string()
-            .required('Network is required')
-            .oneOf(['MTN', 'Vodafone', 'AirtelTigo'], 'Invalid network'),
-        account_name: Yup.string()
-            .required('Account name is required')
-            .min(3, 'Account name must be at least 3 characters')
-    });
-
-    const bankTransferValidation = Yup.object().shape({
-        method: Yup.string().required(),
-        name: Yup.string()
-            .required('Profile name is required')
-            .min(3, 'Name must be at least 3 characters')
-            .max(100, 'Name must not exceed 100 characters'),
-        description: Yup.string()
-            .max(500, 'Description must not exceed 500 characters'),
-        account_number: Yup.string()
-            .required('Account number is required')
-            .matches(/^[0-9]{10}$/, 'Account number must be exactly 10 digits'),
-        account_name: Yup.string()
-            .required('Account name is required')
-            .min(3, 'Account name must be at least 3 characters'),
-        bank_name: Yup.string()
-            .required('Bank name is required'),
-        bank_code: Yup.string()
-            .required('Bank code is required'),
-        branch: Yup.string()
-    });
-
     const handleSubmit = async (values: Record<string, string>) => {
         setIsSubmitting(true);
         setError(null);
 
         try {
-            // Simulate API call
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
             // Build request payload
-            const payload: Record<string, unknown> = {
-                method: values.method,
+            const payload = {
+                method: paymentMethod,
                 name: values.name,
                 description: values.description || '',
                 account_details: paymentMethod === 'mobile_money'
@@ -82,10 +41,22 @@ const CreatePaymentProfileForm = () => {
                     }
             };
 
-            console.log('Creating payment profile:', payload);
+            // Call API
+            const response = await fetch('/api/dashboard/payment/create-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
 
-            // Simulate success
-            alert('Payment profile created successfully! Verification in progress...');
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Failed to create payment profile');
+            }
+
+            // Success - redirect to profiles list
             router.push('/dashboard/payments/profiles');
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to create payment profile');
@@ -93,37 +64,6 @@ const CreatePaymentProfileForm = () => {
             setIsSubmitting(false);
         }
     };
-
-    const networkOptions = [
-        { value: '', label: 'Select Network' },
-        { value: 'MTN', label: 'MTN Mobile Money' },
-        { value: 'Vodafone', label: 'Vodafone Cash' },
-        { value: 'AirtelTigo', label: 'AirtelTigo Money' }
-    ];
-
-    const bankOptions = [
-        { value: '', label: 'Select Bank' },
-        { value: 'CAL Bank', label: 'CAL Bank' },
-        { value: 'GCB Bank', label: 'GCB Bank Limited' },
-        { value: 'Ecobank Ghana', label: 'Ecobank Ghana' },
-        { value: 'Standard Chartered', label: 'Standard Chartered Bank Ghana' },
-        { value: 'Fidelity Bank', label: 'Fidelity Bank Ghana' },
-        { value: 'Absa Bank', label: 'Absa Bank Ghana' },
-        { value: 'Zenith Bank', label: 'Zenith Bank Ghana' },
-        { value: 'Stanbic Bank', label: 'Stanbic Bank Ghana' }
-    ];
-
-    const bankCodeOptions = [
-        { value: '', label: 'Select Bank Code' },
-        { value: 'CAL', label: 'CAL' },
-        { value: 'GCB', label: 'GCB' },
-        { value: 'ECO', label: 'ECO' },
-        { value: 'SCB', label: 'SCB' },
-        { value: 'FID', label: 'FID' },
-        { value: 'ABS', label: 'ABS' },
-        { value: 'ZEN', label: 'ZEN' },
-        { value: 'SBG', label: 'SBG' }
-    ];
 
     return (
         <>
@@ -144,8 +84,8 @@ const CreatePaymentProfileForm = () => {
                             type="button"
                             onClick={() => setPaymentMethod('mobile_money')}
                             className={`p-6 rounded-xl border-2 transition-all duration-300 ${paymentMethod === 'mobile_money'
-                                    ? 'border-accent bg-accent/10'
-                                    : 'border-accent/30 hover:border-accent/50'
+                                ? 'border-accent bg-accent/10'
+                                : 'border-accent/30 hover:border-accent/50'
                                 }`}
                         >
                             <div className="flex items-center gap-4">
@@ -165,8 +105,8 @@ const CreatePaymentProfileForm = () => {
                             type="button"
                             onClick={() => setPaymentMethod('bank_transfer')}
                             className={`p-6 rounded-xl border-2 transition-all duration-300 ${paymentMethod === 'bank_transfer'
-                                    ? 'border-accent bg-accent/10'
-                                    : 'border-accent/30 hover:border-accent/50'
+                                ? 'border-accent bg-accent/10'
+                                : 'border-accent/30 hover:border-accent/50'
                                 }`}
                         >
                             <div className="flex items-center gap-4">

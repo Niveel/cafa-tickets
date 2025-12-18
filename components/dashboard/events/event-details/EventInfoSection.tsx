@@ -57,7 +57,7 @@ const EventInfoSection = ({ event }: Props) => {
             </div>
 
             {/* Short Description */}
-            <div className="p-5 bg-primary-200 rounded-xl border-2 border-accent/30">
+            <div className="p-5 bg-primary rounded-xl border-2 border-accent/30">
                 <div className="flex items-start gap-3">
                     <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
                         <FileText className="w-5 h-5 text-blue-400" aria-hidden="true" />
@@ -96,7 +96,7 @@ const EventInfoSection = ({ event }: Props) => {
             {/* Event Details Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Date & Time */}
-                <div className="p-5 bg-primary-200 rounded-xl border-2 border-accent/30">
+                <div className="p-5 bg-primary rounded-xl border-2 border-accent/30">
                     <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0">
                             <Calendar className="w-5 h-5 text-emerald-400" aria-hidden="true" />
@@ -124,7 +124,7 @@ const EventInfoSection = ({ event }: Props) => {
                 </div>
 
                 {/* Venue */}
-                <div className="p-5 bg-primary-200 rounded-xl border-2 border-accent/30">
+                <div className="p-5 bg-primary rounded-xl border-2 border-accent/30">
                     <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
                             <MapPin className="w-5 h-5 text-purple-400" aria-hidden="true" />
@@ -149,7 +149,7 @@ const EventInfoSection = ({ event }: Props) => {
                 </div>
 
                 {/* Capacity */}
-                <div className="p-5 bg-primary-200 rounded-xl border-2 border-accent/30">
+                <div className="p-5 bg-primary rounded-xl border-2 border-accent/30">
                     <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center shrink-0">
                             <Users className="w-5 h-5 text-pink-400" aria-hidden="true" />
@@ -169,7 +169,7 @@ const EventInfoSection = ({ event }: Props) => {
                 </div>
 
                 {/* Event Type & Policy */}
-                <div className="p-5 bg-primary-200 rounded-xl border-2 border-accent/30">
+                <div className="p-5 bg-primary rounded-xl border-2 border-accent/30">
                     <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0">
                             {event.is_recurring ? (

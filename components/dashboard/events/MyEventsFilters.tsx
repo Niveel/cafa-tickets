@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Filter, Search, X, ArrowUpDown } from 'lucide-react';
 import { CategorySelect } from '@/components';
@@ -18,6 +18,9 @@ type Props = {
 const MyEventsFilters = ({ onFilterChange }: Props) => {
     const router = useRouter();
     const searchParams = useSearchParams();
+    
+    // ✅ Use ref to store timeout ID for proper cleanup
+    const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const [status, setStatus] = React.useState(searchParams.get('status') || 'all');
     const [isPublished, setIsPublished] = React.useState(searchParams.get('is_published') || 'true');
@@ -67,14 +70,20 @@ const MyEventsFilters = ({ onFilterChange }: Props) => {
         updateURL(status, isPublished, newCategory, search, sortBy);
     };
 
+    // ✅ FIXED: Proper debounce with ref cleanup
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newSearch = e.target.value;
         setSearch(newSearch);
-        // Debounce search updates
-        const timeoutId = setTimeout(() => {
+        
+        // Clear existing timeout
+        if (searchTimeoutRef.current) {
+            clearTimeout(searchTimeoutRef.current);
+        }
+        
+        // Set new timeout
+        searchTimeoutRef.current = setTimeout(() => {
             updateURL(status, isPublished, category, newSearch, sortBy);
         }, 500);
-        return () => clearTimeout(timeoutId);
     };
 
     const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

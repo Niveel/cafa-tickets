@@ -1,17 +1,37 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
-import { myEvents, eventAttendees } from '@/data/dummy.dash-events';
+
 import { EventAttendeesSummary, EventAttendeesContent } from '@/components';
+import { getMyCreatedEventDetails, getMyEventAttendees } from '@/app/lib/dashboard';
 
 type Props = {
     params: Promise<{ slug: string }>;
+    searchParams: Promise<{
+        search?: string;
+        ticket_type_id?: string;
+        payment_status?: string;
+        check_in_status?: string;
+        sort_by?: string;
+    }>;
 };
 
-const EventAttendeesPage = async ({ params }: Props) => {
+const EventAttendeesPage = async ({ params, searchParams }: Props) => {
     const { slug } = await params;
-    // Find event by slug
-    const event = myEvents.results.find(e => e.slug === slug);
+    const filters = await searchParams;
+
+    const [event, eventAttendees] = await Promise.all([
+        getMyCreatedEventDetails(slug),
+        getMyEventAttendees(slug, 1, 20, {
+            search: filters.search,
+            ticket_type_id: filters.ticket_type_id,
+            payment_status: filters.payment_status,
+            check_in_status: filters.check_in_status,
+            sort_by: filters.sort_by,
+        })
+    ]);
+
+    console.log("Event Attendees", eventAttendees);
 
     if (!event) {
         return (
@@ -29,6 +49,28 @@ const EventAttendeesPage = async ({ params }: Props) => {
                     >
                         <ArrowLeft className="w-4 h-4" aria-hidden="true" />
                         Back to My Events
+                    </Link>
+                </div>
+            </main>
+        );
+    }
+
+    if (!eventAttendees) {
+        return (
+            <main className='dash-page'>
+                <div className="text-center py-12">
+                    <h1 className="big-text-2 font-bold text-white mb-3">
+                        Unable to Load Attendees
+                    </h1>
+                    <p className="normal-text text-slate-300 mb-6">
+                        Failed to fetch event attendees. Please try again.
+                    </p>
+                    <Link
+                        href={`/dashboard/events/${slug}`}
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300"
+                    >
+                        <ArrowLeft className="w-4 h-4" aria-hidden="true" />
+                        Back to Event Details
                     </Link>
                 </div>
             </main>
@@ -59,7 +101,7 @@ const EventAttendeesPage = async ({ params }: Props) => {
             {/* Summary Cards */}
             <EventAttendeesSummary summary={eventAttendees.summary} />
 
-            {/* Filters & Table */}
+            {/* Filters & Attendees List */}
             <Suspense fallback={
                 <div className="flex items-center justify-center py-12">
                     <Loader2 className="w-8 h-8 text-accent animate-spin" />
@@ -71,6 +113,7 @@ const EventAttendeesPage = async ({ params }: Props) => {
                         id: tt.id, 
                         name: tt.name 
                     }))}
+                    initialData={eventAttendees}
                 />
             </Suspense>
         </main>

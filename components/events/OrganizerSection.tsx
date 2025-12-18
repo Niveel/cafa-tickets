@@ -22,7 +22,7 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
     });
 
     return (
-        <section className="relative py-12 sm:py-16 bg-primary">
+        <section className="relative py-8 sm:y-12 bg-primary">
             <div className="inner-wrapper">
                 {/* Section Header */}
                 <div className="flex items-center gap-3 mb-8">

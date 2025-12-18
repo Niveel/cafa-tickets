@@ -3,15 +3,17 @@
 import React, { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, Filter, X } from 'lucide-react';
-import { eventCategories } from '@/data/dummy.general';
+
+import { EventCategory } from '@/types/general.types';
 
 type Props = {
     currentStatus: string;
     currentCategory: string;
     currentSearch: string;
+    eventCategories: EventCategory[];
 };
 
-const MyTicketsFilters = ({ currentStatus, currentCategory, currentSearch }: Props) => {
+const MyTicketsFilters = ({ currentStatus, currentCategory, currentSearch, eventCategories }: Props) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [searchInput, setSearchInput] = useState(currentSearch);

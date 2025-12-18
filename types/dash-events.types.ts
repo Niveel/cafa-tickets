@@ -4,7 +4,7 @@
 
 export type EventStatus = "upcoming" | "ongoing" | "past";
 
-export type TicketStatus = "active" | "expired" | "sold_out";
+export type TicketStatus = "active" | "inactive" | "expired";
 
 // =====================
 // Category
@@ -233,24 +233,25 @@ export interface AttendeeTicketType {
 // Attendee
 // =====================
 
+export interface CheckedInByUser {
+    id: number;
+    username: string;
+    full_name: string;
+}
+
 export interface EventAttendee {
     ticket_id: string;
-
     attendee_name: string;
     attendee_email: string;
     attendee_phone: string;
-
     ticket_type: AttendeeTicketType;
-
     purchase_date: string;
-
     payment_status: PaymentStatus;
     payment_reference: string;
     amount_paid: string;
-
     is_checked_in: boolean;
     checked_in_at: string | null;
-    checked_in_by: string | null;
+    checked_in_by: CheckedInByUser | null;
 }
 
 // =====================
@@ -318,7 +319,7 @@ export interface AttendedEventsResponse {
    Shared / Enums
 ======================= */
 
-export type CheckInPolicy = "single_entry" | "multiple_entry";
+export type CheckInPolicy = "single_entry" | "multiple_entry" | "daily_entry";
 
 /* =======================
    Category
@@ -377,6 +378,14 @@ export interface EventTicketType {
    Event Details (Main)
 ======================= */
 
+export interface RecurrencePattern {
+    frequency: "daily" | "weekly" | "monthly" | "yearly";
+    interval: number; // e.g., 1 = every, 2 = every other, etc.
+    end_date: string; // ISO date string
+    days_of_week?: number[]; // [0-6] for weekly recurrence (0 = Sunday)
+    day_of_month?: number; // 1-31 for monthly recurrence
+}
+
 export type EventInfo = {
     short_description: string;
     description: string;
@@ -395,7 +404,7 @@ export type EventInfo = {
 
     is_published: boolean;
     is_recurring: boolean;
-    recurrence_pattern: string | null;
+    recurrence_pattern: RecurrencePattern | null;
 
     check_in_policy: CheckInPolicy;
 };

@@ -2,9 +2,14 @@
 
 import React, { useState } from 'react';
 import * as Yup from 'yup';
-import { User, CheckCircle, AlertTriangle } from 'lucide-react';
+import { User, CheckCircle } from 'lucide-react';
 import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader } from '@/components';
 import { passwordValidation } from '@/utils/validationUtils';
+import { CurrentUser } from '@/types/general.types';
+
+type Props = {
+    currentUser: CurrentUser;
+};
 
 const ChangeUsernameValidationSchema = Yup.object().shape({
     newUsername: Yup.string()
@@ -24,13 +29,11 @@ type ChangeUsernameFormValues = {
     password: string;
 };
 
-const ChangeUsernameForm = () => {
+const ChangeUsernameForm = ({ currentUser }: Props) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
-    const currentUsername = 'johndoe123'; // Mock current username
-    const lastChanged = '2024-11-15'; // Mock last change date
 
     const handleSubmit = async (values: ChangeUsernameFormValues, { resetForm }: any) => {
         setLoading(true);
@@ -38,20 +41,24 @@ const ChangeUsernameForm = () => {
         setSuccess(false);
 
         try {
-            // Simulate API call: PATCH /api/v1/users/profile/
-            const payload = {
-                username: values.newUsername,
-                password: values.password
-            };
+            const response = await fetch('/api/auth/change-username', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: values.newUsername,
+                    password: values.password
+                }),
+            });
 
-            console.log('Changing username:', payload);
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const data = await response.json();
 
-            // Simulate success
+            if (!response.ok) {
+                const errorMessage = data.message || data.error || 'Failed to change username';
+                throw new Error(errorMessage);
+            }
+
             setSuccess(true);
             resetForm();
-
-            // Hide success message after 3 seconds
             setTimeout(() => setSuccess(false), 3000);
 
         } catch (err: any) {
@@ -60,23 +67,6 @@ const ChangeUsernameForm = () => {
             setLoading(false);
         }
     };
-
-    // Calculate if user can change username (30 days since last change)
-    const canChangeUsername = () => {
-        const lastChangeDate = new Date(lastChanged);
-        const today = new Date();
-        const daysSinceChange = Math.floor((today.getTime() - lastChangeDate.getTime()) / (1000 * 60 * 60 * 24));
-        return daysSinceChange >= 30;
-    };
-
-    const daysUntilChange = () => {
-        const lastChangeDate = new Date(lastChanged);
-        const today = new Date();
-        const daysSinceChange = Math.floor((today.getTime() - lastChangeDate.getTime()) / (1000 * 60 * 60 * 24));
-        return Math.max(0, 30 - daysSinceChange);
-    };
-
-    const isAllowed = canChangeUsername();
 
     return (
         <div className="bg-primary rounded-xl border-2 border-accent/30 p-6">
@@ -89,27 +79,10 @@ const ChangeUsernameForm = () => {
                         Change Username
                     </h2>
                     <p className="small-text text-slate-400">
-                        Current username: <span className="font-semibold text-white">@{currentUsername}</span>
+                        Current username: <span className="font-semibold text-white">@{currentUser.username}</span>
                     </p>
                 </div>
             </div>
-
-            {/* Restriction Warning */}
-            {!isAllowed && (
-                <div className="mb-4 p-4 bg-amber-500/10 rounded-lg border border-amber-500/20">
-                    <div className="flex items-start gap-3">
-                        <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
-                        <div>
-                            <p className="normal-text-2 font-semibold text-amber-300 mb-1">
-                                Username Change Restricted
-                            </p>
-                            <p className="small-text text-amber-300">
-                                You can only change your username once every 30 days. You&apos;ll be able to change it again in <strong>{daysUntilChange()} days</strong> (last changed on {new Date(lastChanged).toLocaleDateString('en-GH')}).
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            )}
 
             <AppErrorMessage visible={!!error} error={error} />
 
@@ -142,7 +115,6 @@ const ChangeUsernameForm = () => {
                             placeholder="Enter new username"
                             icon="at-sign"
                             required
-                            disabled={!isAllowed}
                         />
                         <p className="mt-1 small-text text-slate-500">
                             Only letters, numbers, and underscores (3-30 characters)
@@ -159,10 +131,9 @@ const ChangeUsernameForm = () => {
                         iconAria={passwordVisible ? "Hide password" : "Show password"}
                         placeholder="Confirm your password"
                         required
-                        disabled={!isAllowed}
                     />
 
-                    <SubmitButton title="Change Username" disabled={!isAllowed} />
+                    <SubmitButton title="Change Username" />
                 </div>
             </AppForm>
         </div>

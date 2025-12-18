@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
-import { ticketDetails } from '@/data/dummy.tickets';
 import { TicketDetailsContent } from '@/components';
+import { getMyTicketDetails } from '@/app/lib/dashboard';
 
 type Props = {
     params: Promise<{ ticket_id: string }>;
@@ -19,11 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const MyTicketDetailsPage = async ({ params }: Props) => {
     const { ticket_id } = await params;
     
-    // In production, fetch from API
-    // const ticket = await fetchTicketDetails(ticket_id);
-    const ticket = ticketDetails;
+    const ticket = await getMyTicketDetails(ticket_id);
 
-    if (!ticket || ticket.ticket_id !== ticket_id) {
+    if (!ticket) {
         return (
             <main className="dash-page">
                 <div className="inner-wrapper">
@@ -50,7 +48,6 @@ const MyTicketDetailsPage = async ({ params }: Props) => {
     return (
         <main className="dash-page">
             <div className="inner-wrapper space-y-6">
-                {/* Back Button */}
                 <Link
                     href="/dashboard/tickets"
                     className="inline-flex items-center gap-2 text-accent-50 hover:text-accent-100 transition-colors normal-text-2 font-semibold"
@@ -59,7 +56,6 @@ const MyTicketDetailsPage = async ({ params }: Props) => {
                     Back to My Tickets
                 </Link>
 
-                {/* Ticket Details Content */}
                 <TicketDetailsContent ticket={ticket} />
             </div>
         </main>

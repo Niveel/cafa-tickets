@@ -11,7 +11,8 @@ type Props = {
 };
 
 const AttendedEventsList = ({ attendedEvents }: Props) => {
-    if (attendedEvents.length === 0) {
+    // ✅ Check if attendedEvents exists first
+    if (!attendedEvents || attendedEvents.length === 0) {
         return (
             <div role="region" aria-label="Attended events" className="bg-primary rounded-xl p-12 border-2 border-accent/30 text-center">
                 <div className="w-20 h-20 rounded-2xl bg-accent/20 flex items-center justify-center mx-auto mb-6">

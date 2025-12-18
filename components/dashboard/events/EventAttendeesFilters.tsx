@@ -1,12 +1,16 @@
 "use client";
 
 import React from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
 import { Filter, Search, X, ArrowUpDown } from 'lucide-react';
 
 type Props = {
     eventSlug: string;
     ticketTypes: Array<{ id: number; name: string }>;
+    search: string;
+    ticketTypeId: string;
+    paymentStatus: string;
+    checkInStatus: string;
+    sortBy: string;
     onFilterChange: (filters: {
         search: string;
         ticket_type_id: string;
@@ -14,91 +18,77 @@ type Props = {
         check_in_status: string;
         sort_by: string;
     }) => void;
+    onClearFilters: () => void;
+    hasActiveFilters: boolean;
 };
 
-const EventAttendeesFilters = ({ eventSlug, ticketTypes, onFilterChange }: Props) => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
-
-    const [search, setSearch] = React.useState(searchParams.get('search') || '');
-    const [ticketTypeId, setTicketTypeId] = React.useState(searchParams.get('ticket_type_id') || '');
-    const [paymentStatus, setPaymentStatus] = React.useState(searchParams.get('payment_status') || 'paid');
-    const [checkInStatus, setCheckInStatus] = React.useState(searchParams.get('check_in_status') || 'all');
-    const [sortBy, setSortBy] = React.useState(searchParams.get('sort_by') || '-purchase_date');
-
-    const updateURL = React.useCallback((
-        newSearch: string,
-        newTicketTypeId: string,
-        newPaymentStatus: string,
-        newCheckInStatus: string,
-        newSortBy: string
-    ) => {
-        const params = new URLSearchParams();
-
-        if (newSearch) params.set('search', newSearch);
-        if (newTicketTypeId) params.set('ticket_type_id', newTicketTypeId);
-        if (newPaymentStatus !== 'paid') params.set('payment_status', newPaymentStatus);
-        if (newCheckInStatus !== 'all') params.set('check_in_status', newCheckInStatus);
-        if (newSortBy !== '-purchase_date') params.set('sort_by', newSortBy);
-
-        const queryString = params.toString();
-        router.push(`/dashboard/events/${eventSlug}/attendees${queryString ? `?${queryString}` : ''}`, { scroll: false });
-
-        onFilterChange({
-            search: newSearch,
-            ticket_type_id: newTicketTypeId,
-            payment_status: newPaymentStatus,
-            check_in_status: newCheckInStatus,
-            sort_by: newSortBy
-        });
-    }, [router, eventSlug, onFilterChange]);
+const EventAttendeesFilters = ({
+    eventSlug,
+    ticketTypes,
+    search,
+    ticketTypeId,
+    paymentStatus,
+    checkInStatus,
+    sortBy,
+    onFilterChange,
+    onClearFilters,
+    hasActiveFilters
+}: Props) => {
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newSearch = e.target.value;
-        setSearch(newSearch);
-        // Debounce search updates
-        const timeoutId = setTimeout(() => {
-            updateURL(newSearch, ticketTypeId, paymentStatus, checkInStatus, sortBy);
-        }, 500);
-        return () => clearTimeout(timeoutId);
+        onFilterChange({
+            search: e.target.value,
+            ticket_type_id: ticketTypeId,
+            payment_status: paymentStatus,
+            check_in_status: checkInStatus,
+            sort_by: sortBy
+        });
     };
 
     const handleTicketTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newTicketTypeId = e.target.value;
-        setTicketTypeId(newTicketTypeId);
-        updateURL(search, newTicketTypeId, paymentStatus, checkInStatus, sortBy);
+        onFilterChange({
+            search,
+            ticket_type_id: e.target.value,
+            payment_status: paymentStatus,
+            check_in_status: checkInStatus,
+            sort_by: sortBy
+        });
     };
 
-    const handlePaymentStatusChange = (newStatus: string) => {
-        setPaymentStatus(newStatus);
-        updateURL(search, ticketTypeId, newStatus, checkInStatus, sortBy);
+    const handlePaymentStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        onFilterChange({
+            search,
+            ticket_type_id: ticketTypeId,
+            payment_status: e.target.value,
+            check_in_status: checkInStatus,
+            sort_by: sortBy
+        });
     };
 
-    const handleCheckInStatusChange = (newStatus: string) => {
-        setCheckInStatus(newStatus);
-        updateURL(search, ticketTypeId, paymentStatus, newStatus, sortBy);
+    const handleCheckInStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        onFilterChange({
+            search,
+            ticket_type_id: ticketTypeId,
+            payment_status: paymentStatus,
+            check_in_status: e.target.value,
+            sort_by: sortBy
+        });
     };
 
     const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const newSortBy = e.target.value;
-        setSortBy(newSortBy);
-        updateURL(search, ticketTypeId, paymentStatus, checkInStatus, newSortBy);
+        onFilterChange({
+            search,
+            ticket_type_id: ticketTypeId,
+            payment_status: paymentStatus,
+            check_in_status: checkInStatus,
+            sort_by: e.target.value
+        });
     };
-
-    const clearFilters = () => {
-        setSearch('');
-        setTicketTypeId('');
-        setPaymentStatus('paid');
-        setCheckInStatus('all');
-        setSortBy('-purchase_date');
-        updateURL('', '', 'paid', 'all', '-purchase_date');
-    };
-
-    const hasActiveFilters = search || ticketTypeId || paymentStatus !== 'paid' || checkInStatus !== 'all' || sortBy !== '-purchase_date';
 
     const paymentStatusOptions = [
         { value: 'paid', label: 'Paid' },
-        { value: 'pending', label: 'Pending' }
+        { value: 'pending', label: 'Pending' },
+        { value: 'all', label: 'All Statuses' }
     ];
 
     const checkInStatusOptions = [
@@ -118,7 +108,7 @@ const EventAttendeesFilters = ({ eventSlug, ticketTypes, onFilterChange }: Props
     ];
 
     return (
-        <div role="region" aria-label="Attendees filters" className="bg-primary rounded-xl p-6 border-2 border-accent/30">
+        <div role="region" aria-label="Attendees filters" className="bg-primary rounded-xl p-4 border-2 border-accent/30 sticky top-4">
             <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
                     <Filter className="w-5 h-5 text-accent-50" aria-hidden="true" />
@@ -173,7 +163,7 @@ const EventAttendeesFilters = ({ eventSlug, ticketTypes, onFilterChange }: Props
                     <select
                         id="payment-status-filter"
                         value={paymentStatus}
-                        onChange={(e) => handlePaymentStatusChange(e.target.value)}
+                        onChange={handlePaymentStatusChange}
                         className="w-full h-12 px-4 bg-primary-100 border-2 border-accent text-white rounded-xl normal-text-2 focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-300"
                     >
                         {paymentStatusOptions.map((option) => (
@@ -192,7 +182,7 @@ const EventAttendeesFilters = ({ eventSlug, ticketTypes, onFilterChange }: Props
                     <select
                         id="checkin-status-filter"
                         value={checkInStatus}
-                        onChange={(e) => handleCheckInStatusChange(e.target.value)}
+                        onChange={handleCheckInStatusChange}
                         className="w-full h-12 px-4 bg-primary-100 border-2 border-accent text-white rounded-xl normal-text-2 focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-300"
                     >
                         {checkInStatusOptions.map((option) => (
@@ -227,7 +217,7 @@ const EventAttendeesFilters = ({ eventSlug, ticketTypes, onFilterChange }: Props
                 {hasActiveFilters && (
                     <button
                         type="button"
-                        onClick={clearFilters}
+                        onClick={onClearFilters}
                         className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-accent/20 text-accent-50 rounded-xl font-semibold normal-text-2 hover:bg-accent/30 transition-all duration-300 border border-accent/30"
                     >
                         <X className="w-4 h-4" aria-hidden="true" />

@@ -3,8 +3,8 @@
 import React, { useState } from 'react';
 import { Ticket, Plus, Edit, Trash2, AlertCircle, Calendar } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { EventTicketType } from '@/types/dash-events.types';
-
 
 type Props = {
     ticketTypes: EventTicketType[];
@@ -12,13 +12,46 @@ type Props = {
 };
 
 const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
+    const router = useRouter();
     const [deleteConfirm, setDeleteConfirm] = useState<number | null>(null);
+    const [deleting, setDeleting] = useState<number | null>(null);
+    const [deleteError, setDeleteError] = useState<string | null>(null);
 
-    const handleDelete = (ticketId: number) => {
-        // Simulated delete - replace with actual API call
-        console.log('Deleting ticket type:', ticketId);
-        setDeleteConfirm(null);
-        // TODO: Add API call and refresh data
+    const handleDelete = async (ticketId: number) => {
+        try {
+            setDeleting(ticketId);
+            setDeleteError(null);
+
+            console.log('Deleting ticket type:', ticketId);
+
+            const response = await fetch(`/api/dashboard/events/${eventSlug}/tickets/delete?ticketId=${ticketId}`, {
+                method: 'DELETE',
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // Use backend's detailed message if available
+                const errorMessage = data.message || data.error || 'Failed to delete ticket';
+                throw new Error(errorMessage);
+            }
+
+            console.log('Ticket deleted successfully');
+            setDeleteConfirm(null);
+            
+            router.refresh();
+
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.error('Error deleting ticket:', error.message);
+                setDeleteError(error.message);
+            } else {
+                console.error('Error deleting ticket:', error);
+                setDeleteError('Failed to delete ticket. Please try again.');
+            }
+        } finally {
+            setDeleting(null);
+        }
     };
 
     const formatDate = (dateString: string | null) => {
@@ -55,7 +88,6 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
 
     return (
         <div className="space-y-6">
-            {/* Section Header */}
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="big-text-2 font-bold text-white">
@@ -74,7 +106,6 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                 </Link>
             </div>
 
-            {/* Summary Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="p-4 bg-primary-200 rounded-xl border-2 border-accent/30">
                     <p className="small-text text-slate-400 mb-1">Total Ticket Types</p>
@@ -98,11 +129,9 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                 </div>
             </div>
 
-            {/* Ticket Types List */}
             <div className="space-y-4">
                 {ticketTypes.map((ticket) => (
                     <div key={ticket.id} className="group p-5 bg-primary rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300">
-                        {/* Header */}
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex items-start gap-3 flex-1">
                                 <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center shrink-0">
@@ -123,7 +152,6 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                                 </div>
                             </div>
 
-                            {/* Action Buttons */}
                             <div className="flex items-center gap-2 ml-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 transition-opacity">
                                 <Link
                                     href={`/dashboard/events/${eventSlug}/tickets/${ticket.id}/edit`}
@@ -134,7 +162,8 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                                 </Link>
                                 <button
                                     onClick={() => setDeleteConfirm(ticket.id)}
-                                    className="w-9 h-9 rounded-lg bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-red-400"
+                                    disabled={deleting === ticket.id}
+                                    className="w-9 h-9 rounded-lg bg-red-500 hover:bg-red-600 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-red-400 disabled:opacity-50 disabled:cursor-not-allowed"
                                     aria-label={`Delete ${ticket.name}`}
                                 >
                                     <Trash2 className="w-4 h-4 text-white" aria-hidden="true" />
@@ -142,7 +171,6 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                             </div>
                         </div>
 
-                        {/* Stats Grid */}
                         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
                             <div className="p-3 bg-primary-200 rounded-lg">
                                 <p className="small-text text-slate-400 mb-1">Price</p>
@@ -173,7 +201,6 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                             </div>
                         </div>
 
-                        {/* Sales Progress */}
                         <div className="mb-4">
                             <div className="flex items-center justify-between mb-2">
                                 <p className="small-text text-slate-400">Sales Progress</p>
@@ -189,7 +216,6 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                             </div>
                         </div>
 
-                        {/* Additional Info */}
                         <div className="flex flex-wrap items-center gap-4 text-slate-400">
                             <div className="flex items-center gap-1">
                                 <p className="small-text">
@@ -209,7 +235,6 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                             )}
                         </div>
 
-                        {/* Delete Confirmation */}
                         {deleteConfirm === ticket.id && (
                             <div className="mt-4 p-4 bg-red-500/10 rounded-lg border border-red-500/20">
                                 <div className="flex items-start gap-3">
@@ -221,16 +246,26 @@ const EventTicketTypesManagement = ({ ticketTypes, eventSlug }: Props) => {
                                         <p className="small-text text-red-300 mb-3">
                                             This will permanently delete this ticket type. Tickets already sold will not be affected.
                                         </p>
+                                        {deleteError && (
+                                            <p className="small-text text-red-400 mb-3">
+                                                {deleteError}
+                                            </p>
+                                        )}
                                         <div className="flex items-center gap-2">
                                             <button
                                                 onClick={() => handleDelete(ticket.id)}
-                                                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold small-text transition-colors"
+                                                disabled={deleting === ticket.id}
+                                                className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold small-text transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
-                                                Yes, Delete
+                                                {deleting === ticket.id ? 'Deleting...' : 'Yes, Delete'}
                                             </button>
                                             <button
-                                                onClick={() => setDeleteConfirm(null)}
-                                                className="px-4 py-2 bg-primary-200 hover:bg-primary-100 text-white rounded-lg font-semibold small-text transition-colors"
+                                                onClick={() => {
+                                                    setDeleteConfirm(null);
+                                                    setDeleteError(null);
+                                                }}
+                                                disabled={deleting === ticket.id}
+                                                className="px-4 py-2 bg-primary-200 hover:bg-primary-100 text-white rounded-lg font-semibold small-text transition-colors disabled:opacity-50"
                                             >
                                                 Cancel
                                             </button>

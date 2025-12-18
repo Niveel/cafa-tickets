@@ -1,16 +1,20 @@
 "use client";
 
 import React from 'react';
-import { Calendar, Clock, Info } from 'lucide-react';
+import { Calendar, Clock } from 'lucide-react';
 import { AppFormField } from '@/components';
 import { useFormikContext } from 'formik';
 
 const EventDateTimeSection = () => {
-    const { values } = useFormikContext<any>();
+    const { values, setFieldValue } = useFormikContext<any>();
+
+    // Get today's date in YYYY-MM-DD format for min date
+    const today = new Date().toISOString().split('T')[0];
 
     // Helper to convert time input (HH:MM) to HH:MM:SS format
     const handleTimeChange = (fieldName: string, value: string) => {
-        return value ? `${value}:00` : '';
+        const formattedTime = value ? `${value}:00` : '';
+        setFieldValue(fieldName, formattedTime);
     };
 
     // Helper to convert HH:MM:SS to HH:MM for display
@@ -47,6 +51,7 @@ const EventDateTimeSection = () => {
                         label="Start Date"
                         type="date"
                         required
+                        min={today} // ✅ Can't select past dates
                     />
 
                     <div>
@@ -58,13 +63,7 @@ const EventDateTimeSection = () => {
                             id="start_time_input"
                             type="time"
                             value={formatTimeForInput(values.start_time)}
-                            onChange={(e) => {
-                                const formattedTime = handleTimeChange('start_time', e.target.value);
-                                // This needs to use Formik's setFieldValue
-                                const event = new Event('change', { bubbles: true });
-                                Object.defineProperty(event, 'target', { writable: false, value: { name: 'start_time', value: formattedTime } });
-                                e.target.dispatchEvent(event);
-                            }}
+                            onChange={(e) => handleTimeChange('start_time', e.target.value)}
                             className="w-full h-12 px-4 bg-primary-100 border-2 border-accent text-white rounded-xl normal-text-2 focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-300"
                             required
                         />
@@ -83,6 +82,7 @@ const EventDateTimeSection = () => {
                         label="End Date"
                         type="date"
                         required
+                        min={values.start_date || today} // ✅ Can't be earlier than start_date
                     />
 
                     <div>
@@ -94,12 +94,7 @@ const EventDateTimeSection = () => {
                             id="end_time_input"
                             type="time"
                             value={formatTimeForInput(values.end_time)}
-                            onChange={(e) => {
-                                const formattedTime = handleTimeChange('end_time', e.target.value);
-                                const event = new Event('change', { bubbles: true });
-                                Object.defineProperty(event, 'target', { writable: false, value: { name: 'end_time', value: formattedTime } });
-                                e.target.dispatchEvent(event);
-                            }}
+                            onChange={(e) => handleTimeChange('end_time', e.target.value)}
                             className="w-full h-12 px-4 bg-primary-100 border-2 border-accent text-white rounded-xl normal-text-2 focus:outline-none focus:ring-2 focus:ring-accent transition-all duration-300"
                             required
                         />

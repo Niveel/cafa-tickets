@@ -4,6 +4,7 @@ import React from 'react';
 import { Image as ImageIcon, Info, X } from 'lucide-react';
 import { ImageUpload } from '@/components';
 import { useFormikContext } from 'formik';
+import { formatImageUrls } from '@/utils/functions';
 
 const EventImagesSection = () => {
     const { values, setFieldValue, errors, touched } = useFormikContext<any>();
@@ -34,7 +35,7 @@ const EventImagesSection = () => {
         }
     };
 
-    const additionalImages = values.additional_images || [];
+    const additionalImages = formatImageUrls(values.additional_images) || [];
     const canAddMore = additionalImages.length < 5;
 
     return (

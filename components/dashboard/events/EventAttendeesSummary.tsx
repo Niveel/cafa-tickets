@@ -43,14 +43,14 @@ const EventAttendeesSummary = ({ summary }: Props) => {
     ];
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {cards.map((card, index) => {
                 const Icon = card.icon;
                 
                 return (
                     <div 
                         key={index}
-                        className="bg-primary rounded-xl p-6 border-2 border-accent/30 hover:border-accent transition-all duration-300"
+                        className="bg-primary rounded-xl p-4 border-2 border-accent/30 hover:border-accent transition-all duration-300"
                     >
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex-1">

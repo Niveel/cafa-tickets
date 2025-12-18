@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Calendar, MapPin, Ticket, DollarSign, CheckCircle } from 'lucide-react';
 import { AttendedEventsResponse } from '@/types/dash-events.types';
+import { placeholderImage } from '@/data/constants';
 
 type AttendedEvent = AttendedEventsResponse['results'][0];
 
@@ -37,7 +38,7 @@ const AttendedEventCard = ({ attendedEvent }: Props) => {
             {/* Image */}
             <div className="relative h-48 overflow-hidden">
                 <Image
-                    src={event.featured_image}
+                    src={event.featured_image || placeholderImage}
                     alt={event.title}
                     fill
                     className="object-cover"
@@ -63,12 +64,12 @@ const AttendedEventCard = ({ attendedEvent }: Props) => {
                 </p>
 
                 {/* Title */}
-                <h3 className="big-text-4 font-bold text-white mb-3 line-clamp-2">
+                <h3 className="big-text-4 font-bold text-white mb-2 line-clamp-2">
                     {event.title}
                 </h3>
 
                 {/* Event Details */}
-                <div className="space-y-2 mb-4">
+                <div className="space-y-1 mb-2">
                     <div className="flex items-center gap-2">
                         <Calendar className="w-4 h-4 text-slate-400" aria-hidden="true" />
                         <p className="normal-text-2 text-slate-300">
@@ -84,8 +85,8 @@ const AttendedEventCard = ({ attendedEvent }: Props) => {
                 </div>
 
                 {/* Ticket Details Grid */}
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                    <div className="p-3 bg-primary-200 rounded-lg border border-accent/20">
+                <div className="grid grid-cols-2 gap-3 mb-2">
+                    <div className="p-2 bg-primary-200 rounded-lg border border-accent/20">
                         <div className="flex items-center gap-2 mb-1">
                             <Ticket className="w-4 h-4 text-blue-400" aria-hidden="true" />
                             <p className="small-text text-slate-400">Ticket Type</p>
@@ -95,7 +96,7 @@ const AttendedEventCard = ({ attendedEvent }: Props) => {
                         </p>
                     </div>
 
-                    <div className="p-3 bg-primary-200 rounded-lg border border-accent/20">
+                    <div className="p-2 bg-primary-200 rounded-lg border border-accent/20">
                         <div className="flex items-center gap-2 mb-1">
                             <DollarSign className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                             <p className="small-text text-slate-400">Amount Paid</p>
@@ -107,7 +108,7 @@ const AttendedEventCard = ({ attendedEvent }: Props) => {
                 </div>
 
                 {/* Attended Info */}
-                <div className="p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
+                <div className="p-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20">
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="small-text text-slate-400 mb-1">Attended On</p>
@@ -115,12 +116,12 @@ const AttendedEventCard = ({ attendedEvent }: Props) => {
                                 {formatDateTime(attended_date)}
                             </p>
                         </div>
-                        <CheckCircle className="w-6 h-6 text-emerald-400" aria-hidden="true" />
+                        <CheckCircle className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                     </div>
                 </div>
 
                 {/* Ticket ID */}
-                <div className="mt-3 pt-3 border-t border-accent/20">
+                <div className="mt-2 pt-2 border-t border-accent">
                     <p className="small-text text-slate-400">Ticket ID</p>
                     <p className="normal-text-2 font-mono text-slate-300">
                         {ticket_id}

@@ -3,11 +3,6 @@ import { BASE_URL } from "@/data/constants";
 import { sanitizeEventsResponse } from "@/utils/sanitizeEventData";
 import type { PaginatedEventsResponse } from "@/types/events.types";
 
-/**
- * GET /api/events/past
- * Fetch paginated PAST events from Django backend
- * This is a public endpoint (no authentication required)
- */
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url);

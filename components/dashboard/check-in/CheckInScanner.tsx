@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { MyEvent } from '@/types/dash-events.types';
+import { CheckInSuccessResponse, CheckInResponse } from '@/types/dashboard.types';
 import {
     CheckInStats,
     QRScanner,
@@ -12,7 +13,7 @@ import { ScanLine, Keyboard, ArrowLeft } from 'lucide-react';
 
 type Props = {
     event: MyEvent;
-    onSuccess: (checkInData: any) => void;
+    onSuccess: (checkInData: CheckInSuccessResponse) => void;
     onChangeEvent: () => void;
 };
 
@@ -20,7 +21,7 @@ type ScanMode = 'qr' | 'manual';
 
 const CheckInScanner = ({ event, onSuccess, onChangeEvent }: Props) => {
     const [scanMode, setScanMode] = useState<ScanMode>('qr');
-    const [checkInResult, setCheckInResult] = useState<any>(null);
+    const [checkInResult, setCheckInResult] = useState<CheckInResponse | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
 
     const handleCheckIn = async (ticketId: string) => {
@@ -28,85 +29,29 @@ const CheckInScanner = ({ event, onSuccess, onChangeEvent }: Props) => {
         setCheckInResult(null);
 
         try {
-            // Simulate API call
-            console.log('Checking in ticket:', ticketId, 'for event:', event.id);
-            
-            // Simulate network delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const response = await fetch(`/api/dashboard/events/${event.slug}/check-in`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ ticket_id: ticketId }),
+            });
 
-            // Simulate different responses (you can test different scenarios)
-            const scenarios = {
-                success: {
-                    success: true,
-                    message: "Ticket checked in successfully",
-                    ticket: {
-                        ticket_id: ticketId,
-                        attendee_name: "John Doe",
-                        attendee_email: "john.doe@example.com",
-                        ticket_type: {
-                            id: 1,
-                            name: "Regular",
-                            price: "50.00"
-                        },
-                        is_checked_in: true,
-                        checked_in_at: new Date().toISOString(),
-                        checked_in_by: {
-                            id: 5,
-                            username: "eventstaff",
-                            full_name: "Event Staff"
-                        }
-                    },
-                    event_stats: {
-                        total_checked_in: event.analytics.tickets_checked_in + 1,
-                        total_attendees: event.analytics.tickets_sold,
-                        check_in_percentage: ((event.analytics.tickets_checked_in + 1) / event.analytics.tickets_sold * 100).toFixed(2)
-                    }
-                },
-                alreadyCheckedIn: {
-                    success: false,
-                    error: "Already checked in",
-                    message: "This ticket was already used at 2025-07-15T20:10:00Z",
-                    ticket: {
-                        ticket_id: ticketId,
-                        attendee_name: "John Doe",
-                        checked_in_at: "2025-07-15T20:10:00Z",
-                        checked_in_by: "Event Staff"
-                    }
-                },
-                invalidTicket: {
-                    success: false,
-                    error: "Invalid ticket",
-                    message: "Ticket not found or not valid for this event"
-                },
-                wrongEvent: {
-                    success: false,
-                    error: "Wrong event",
-                    message: `This ticket is for 'Jazz Night' event, not '${event.title}'`
-                }
-            };
+            const data: CheckInResponse = await response.json();
 
-            // For demo, randomly pick a scenario (80% success, 20% error)
-            const random = Math.random();
-            let result;
-            
-            if (random < 0.8) {
-                result = scenarios.success;
-                onSuccess(result);
-            } else if (random < 0.9) {
-                result = scenarios.alreadyCheckedIn;
-            } else if (random < 0.95) {
-                result = scenarios.wrongEvent;
-            } else {
-                result = scenarios.invalidTicket;
+            setCheckInResult(data);
+
+            // If successful, call onSuccess callback
+            if (data.success) {
+                onSuccess(data);
             }
 
-            setCheckInResult(result);
-
-        } catch (error: any) {
+        } catch (error) {
+            console.error('Check-in error:', error);
             setCheckInResult({
                 success: false,
                 error: "Check-in failed",
-                message: error.message || "An unexpected error occurred. Please try again."
+                message: error instanceof Error ? error.message : "An unexpected error occurred. Please try again."
             });
         } finally {
             setIsProcessing(false);

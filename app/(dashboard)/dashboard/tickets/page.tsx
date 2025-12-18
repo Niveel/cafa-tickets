@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
-import { myTickets } from '@/data/dummy.tickets';
+
 import { MyTicketsContent } from '@/components';
+import { fetchMyTickets } from '@/app/lib/dashboard';
+import { getEventCategories } from '@/app/lib/general';
+import { redirect } from 'next/navigation';
 
 type Props = {
     searchParams: Promise<{
@@ -13,16 +16,23 @@ type Props = {
 
 export const metadata: Metadata = {
     title: 'My Tickets | Cafa Tickets',
-    description: 'View and manage all your purchased event tickets. Download tickets, check event details, and track your attendance.',
-    keywords: ['my tickets', 'purchased tickets', 'event tickets Ghana', 'ticket downloads'],
+    description: 'View and manage all your purchased event tickets.',
+    keywords: ['my tickets', 'purchased tickets', 'event tickets Ghana'],
 };
 
 const MyTicketsPage = async ({ searchParams }: Props) => {
     const params = await searchParams;
     
-    // In production, fetch from API with filters
-    // const tickets = await fetchMyTickets(params);
-    const tickets = myTickets;
+    const [tickets, eventCategories] = await Promise.all([
+        fetchMyTickets(params),
+        getEventCategories(),
+    ]);
+
+    // console.log("my fetched tickets", tickets?.results);
+    
+    if (!tickets) {
+        redirect('/login');
+    }
 
     return (
         <main className="dash-page">
@@ -30,6 +40,7 @@ const MyTicketsPage = async ({ searchParams }: Props) => {
                 <MyTicketsContent 
                     tickets={tickets} 
                     searchParams={params}
+                    eventCategories={eventCategories}
                 />
             </div>
         </main>

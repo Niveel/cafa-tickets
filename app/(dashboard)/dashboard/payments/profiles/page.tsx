@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { ArrowLeft, Plus } from 'lucide-react';
-import { paymentProfiles } from "@/data/dummy.payments";
 import { PaymentProfilesContent } from "@/components";
+import { getMyPaymentProfiles } from '@/app/lib/dashboard';
 
-const PaymentProfilesPage = () => {
+const PaymentProfilesPage = async () => {
+    const paymentProfiles = await getMyPaymentProfiles();
+    
     return (
-        <main className='dash-page space-y-8'>
+        <main className='dash-page space-y-6'>
             {/* Back Button */}
             <Link
                 href="/dashboard/payments"
@@ -56,7 +58,7 @@ const PaymentProfilesPage = () => {
             </div>
 
             {/* Payment Profiles List */}
-            <PaymentProfilesContent initialProfiles={paymentProfiles} />
+            <PaymentProfilesContent initialProfiles={paymentProfiles?.results || []} />
         </main>
     );
 };

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, ArrowRight } from 'lucide-react';
 import { SimilarEvent } from '@/types/events.types';
+import { placeholderImage } from '@/data/constants';
 
 interface SimilarEventCardProps {
     event: SimilarEvent;
@@ -30,7 +31,7 @@ const SimilarEventCard = ({ event }: SimilarEventCardProps) => {
                 {/* Image */}
                 <div className="relative aspect-16/10 overflow-hidden">
                     <Image
-                        src={event.featured_image}
+                        src={event.featured_image || placeholderImage}
                         alt={event.title}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-110"

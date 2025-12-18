@@ -8,8 +8,14 @@ import {
     ChangeUsernameForm,
     SecurityInfo
 } from '@/components';
+import { CurrentUser } from '@/types/general.types';
 
-const SecuritySettingsContent = () => {
+type Props = {
+    currentUser: CurrentUser
+}
+
+const SecuritySettingsContent = ({ currentUser }: Props) => {
+
     return (
         <div className="space-y-6">
             {/* Header */}
@@ -28,7 +34,7 @@ const SecuritySettingsContent = () => {
             </div>
 
             {/* Change Username */}
-            <ChangeUsernameForm />
+            <ChangeUsernameForm currentUser={currentUser} />
         </div>
     );
 };

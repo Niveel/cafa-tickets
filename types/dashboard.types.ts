@@ -75,3 +75,63 @@ export interface RecentActivity {
     date: string;               // ISO string
     amount?: string;            // only exists for purchase/sale
 }
+
+// -----------check in system
+
+export type CheckInTicketType = {
+    id: number;
+    name: string;
+    price: string;
+};
+
+export type CheckInUser = {
+    id: number;
+    username: string;
+    full_name: string;
+};
+
+export type CheckInTicketData = {
+    ticket_id: string;
+    attendee_name: string;
+    attendee_email: string;
+    ticket_type: CheckInTicketType;
+    is_checked_in: boolean;
+    checked_in_at: string;
+    checked_in_by: CheckInUser;
+};
+
+export type CheckInEventStats = {
+    total_checked_in: number;
+    total_attendees: number;
+    check_in_percentage: string;
+};
+
+export type CheckInSuccessResponse = {
+    success: true;
+    message: string;
+    ticket: CheckInTicketData;
+    event_stats: CheckInEventStats;
+};
+
+export type CheckInErrorResponse = {
+    success: false;
+    error: string;
+    message: string;
+    ticket?: {
+        ticket_id: string;
+        attendee_name: string;
+        checked_in_at: string;
+        checked_in_by: string;
+    };
+};
+
+export type CheckInResponse = CheckInSuccessResponse | CheckInErrorResponse;
+
+export type CheckInHistoryItem = {
+    ticket_id: string;
+    attendee_name: string;
+    attendee_email: string;
+    ticket_type: CheckInTicketType;
+    checked_in_at: string;
+    checked_in_by: CheckInUser;
+};

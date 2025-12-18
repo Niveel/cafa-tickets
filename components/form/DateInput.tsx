@@ -29,7 +29,7 @@ const DateInput = ({ name, label, value, onChange, onBlur, required = false, min
                     type="date"
                     id={inputId}
                     name={name}
-                    value={value}
+                    value={value || ''} // ✅ Convert null/undefined to empty string
                     onChange={onChange}
                     onBlur={onBlur}
                     min={min}

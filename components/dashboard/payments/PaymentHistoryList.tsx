@@ -62,12 +62,6 @@ const PaymentHistoryList = ({ payments }: Props) => {
                 <p className="normal-text text-slate-500">
                     Try adjusting your filters or browse events to purchase tickets.
                 </p>
-                <Link
-                    href="/events"
-                    className="inline-block mt-6 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-colors"
-                >
-                    Browse Events
-                </Link>
             </div>
         );
     }

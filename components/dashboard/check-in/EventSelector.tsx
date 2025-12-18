@@ -4,8 +4,11 @@ import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { MyEvent } from '@/types/dash-events.types';
 import { Calendar, MapPin, Users, ChevronRight, Search, X, Loader2 } from 'lucide-react';
+
+import { placeholderImage } from '@/data/constants';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
+import { sanitizeImgUrl } from '@/utils/functions';
 
 type Props = {
     events: MyEvent[];
@@ -139,7 +142,7 @@ const EventSelector = ({ events, onSelectEvent, hasMore = false, isLoading = fal
                             {/* Event Image */}
                             <div className="relative h-40 bg-primary-200">
                                 <Image
-                                    src={event.featured_image}
+                                    src={sanitizeImgUrl(event.featured_image) || placeholderImage}
                                     alt={event.title}
                                     fill
                                     className="object-cover group-hover:scale-105 transition-transform duration-300"

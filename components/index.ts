@@ -9,6 +9,7 @@ export {default as CategorySelect} from './ui/CategorySelect';
 export {default as ImageUpload} from './ui/ImageUpload';
 export {default as LocationSelector} from './ui/LocationSelector';
 export type { LocationData } from './ui/LocationSelector';
+export {default as TicketPurchaseModal} from './ui/TicketPurchaseModal';
 // home
 export {default as Landing} from './home/Landing';
 export {default as HomeCategoryBar} from './home/HomeCategoryBar';
@@ -60,6 +61,9 @@ export {default as SignupForm} from './auth/SignupForm';
 export {default as EmailVerificationPrompt} from './auth/EmailVerificationPrompt';
 export {default as ActivateAccountContent} from './auth/ActivateAccountContent';
 export {default as ProfileUpdatePrompt} from './auth/ProfileUpdatePrompt';
+export {default as ForgotPasswordForm} from './auth/ForgotPasswordForm';
+export {default as PasswordResetContent} from './auth/PasswordResetContent';
+export {default as PasswordResetEmailSent} from './auth/PasswordResetEmailSent';
 // dashboard
 export {default as DashboardTopBar} from './dashboard/DashboardTopBar';
 export {default as DashboardSideBar} from './dashboard/DashboardSideBar';
@@ -87,6 +91,7 @@ export {default as PaymentProfilesList} from './dashboard/payments/PaymentProfil
 export {default as CreatePaymentProfileForm} from './dashboard/payments/CreatePaymentProfileForm';
 export {default as PaymentHistoryContent} from './dashboard/payments/PaymentHistoryContent';
 export {default as PaymentProfilesContent} from './dashboard/payments/PaymentProfilesContent';
+export {default as EditPaymentProfileForm} from './dashboard/payments/EditPaymentProfileForm';
 // dashboard/events
 export {default as MyEventsFilters} from './dashboard/events/MyEventsFilters';
 export {default as MyEventsList} from './dashboard/events/MyEventsList';
@@ -116,6 +121,7 @@ export {default as EditEventForm} from './dashboard/events/EditEventForm';
 // dashboard/events/event-details
 export {default as EventInfoSection} from './dashboard/events/event-details/EventInfoSection';
 export {default as EventTicketTypesManagement} from './dashboard/events/event-details/EventTicketTypesManagement';
+export {default as EventImageGallery} from './dashboard/events/event-details/EventImageGallery';
 // dashboard/tickets
 export {default as CreateTicketForm} from './dashboard/tickets/CreateTicketForm';
 export {default as EditTicketForm} from './dashboard/tickets/EditTicketForm';

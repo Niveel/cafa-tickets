@@ -1,14 +1,3 @@
-/**
- * API Client with Automatic Token Refresh
- * 
- * This utility handles:
- * - Adding access token to requests
- * - Automatically refreshing expired tokens
- * - Retrying failed requests after token refresh
- * 
- * Note: This is a server-side utility for making authenticated requests
- * For client-side logout, use @/utils/logout from client components
- */
 
 type FetchOptions = RequestInit & {
     skipAuth?: boolean; // Skip adding auth header

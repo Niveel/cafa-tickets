@@ -2,9 +2,10 @@
 
 import React from 'react';
 import { X, Plus, Edit } from 'lucide-react';
-import { Formik, Form } from 'formik';
+import { Formik, useFormikContext } from 'formik';
+
 import { ticketTypeSchema, TicketTypeFormValues } from '@/data/eventsSchema';
-import { AppFormField, SubmitButton, FormLoader } from '@/components';
+import { AppFormField, FormLoader } from '@/components';
 
 type Props = {
     isOpen: boolean;
@@ -12,6 +13,30 @@ type Props = {
     onSubmit: (values: TicketTypeFormValues) => void;
     initialValues?: TicketTypeFormValues;
     isEditing?: boolean;
+};
+
+// Helper component to access Formik values
+const AvailabilityFields = () => {
+    const { values } = useFormikContext<TicketTypeFormValues>();
+    const today = new Date().toISOString().split('T')[0];
+
+    return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <AppFormField
+                name="available_from"
+                label="Available From"
+                type="date"
+                min={today} // ✅ Can't be in the past
+            />
+
+            <AppFormField
+                name="available_until"
+                label="Available Until"
+                type="date"
+                min={values.available_from || today} // ✅ Can't be before available_from
+            />
+        </div>
+    );
 };
 
 const AddTicketTypeModal = ({ isOpen, onClose, onSubmit, initialValues, isEditing = false }: Props) => {
@@ -24,8 +49,8 @@ const AddTicketTypeModal = ({ isOpen, onClose, onSubmit, initialValues, isEditin
         quantity: '',
         min_purchase: '1',
         max_purchase: '10',
-        available_from: null,
-        available_until: null
+        available_from: '',
+        available_until: ''
     };
 
     const handleSubmit = (values: TicketTypeFormValues) => {
@@ -73,8 +98,8 @@ const AddTicketTypeModal = ({ isOpen, onClose, onSubmit, initialValues, isEditin
                         onSubmit={handleSubmit}
                         enableReinitialize
                     >
-                        {({ isSubmitting }) => (
-                            <Form className="space-y-6">
+                        {({ isSubmitting, handleSubmit: formikHandleSubmit }) => (
+                            <div className="space-y-6">
                                 <FormLoader visible={isSubmitting} />
 
                                 {/* Basic Info */}
@@ -174,19 +199,7 @@ const AddTicketTypeModal = ({ isOpen, onClose, onSubmit, initialValues, isEditin
                                         </p>
                                     </div>
 
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                        <AppFormField
-                                            name="available_from"
-                                            label="Available From"
-                                            type="date"
-                                        />
-
-                                        <AppFormField
-                                            name="available_until"
-                                            label="Available Until"
-                                            type="date"
-                                        />
-                                    </div>
+                                    <AvailabilityFields />
                                 </div>
 
                                 {/* Action Buttons */}
@@ -198,12 +211,16 @@ const AddTicketTypeModal = ({ isOpen, onClose, onSubmit, initialValues, isEditin
                                     >
                                         Cancel
                                     </button>
-                                    <SubmitButton
-                                        title={isEditing ? 'Update Ticket Type' : 'Add Ticket Type'}
-                                        className="flex-1"
-                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => formikHandleSubmit()}
+                                        disabled={isSubmitting}
+                                        className="flex-1 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                                    >
+                                        {isEditing ? 'Update Ticket Type' : 'Add Ticket Type'}
+                                    </button>
                                 </div>
-                            </Form>
+                            </div>
                         )}
                     </Formik>
                 </div>

@@ -36,9 +36,9 @@ const EventBasicInfoSection = () => {
             {/* Category */}
             <div>
                 <CategorySelect
-                    id="category_id"
-                    value={values.category_id || ''}
-                    onChange={(value) => setFieldValue('category_id', value)}
+                    id="category_slug"
+                    value={values.category_slug || ''}
+                    onChange={(value) => setFieldValue('category_slug', value)}
                     label="Event Category"
                     placeholder="Select a category"
                     required

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { MyEvent } from '@/types/dash-events.types';
+import { CheckInSuccessResponse, CheckInHistoryItem } from '@/types/dashboard.types';
 import {
     CheckInHeader,
     EventSelector,
@@ -18,15 +19,27 @@ const CheckInContent = ({ initialEvents, initialHasMore = false }: Props) => {
     const [events, setEvents] = useState<MyEvent[]>(initialEvents);
     const [hasMore, setHasMore] = useState(initialHasMore);
     const [isLoading, setIsLoading] = useState(false);
+    const [upcomingPage, setUpcomingPage] = useState(1);
+    const [ongoingPage, setOngoingPage] = useState(1);
     const [selectedEventId, setSelectedEventId] = useState<number | null>(
         initialEvents.length === 1 ? initialEvents[0].id : null
     );
-    const [checkInHistory, setCheckInHistory] = useState<any[]>([]);
+    const [latestCheckIn, setLatestCheckIn] = useState<CheckInHistoryItem | null>(null);
 
     const selectedEvent = events.find(e => e.id === selectedEventId);
 
-    const handleCheckInSuccess = (checkInData: any) => {
-        setCheckInHistory(prev => [checkInData, ...prev]);
+    const handleCheckInSuccess = (checkInData: CheckInSuccessResponse) => {
+        // Convert to CheckInHistoryItem format
+        const historyItem: CheckInHistoryItem = {
+            ticket_id: checkInData.ticket.ticket_id,
+            attendee_name: checkInData.ticket.attendee_name,
+            attendee_email: checkInData.ticket.attendee_email,
+            ticket_type: checkInData.ticket.ticket_type,
+            checked_in_at: checkInData.ticket.checked_in_at,
+            checked_in_by: checkInData.ticket.checked_in_by
+        };
+
+        setLatestCheckIn(historyItem);
     };
 
     const handleLoadMore = async () => {
@@ -35,23 +48,35 @@ const CheckInContent = ({ initialEvents, initialHasMore = false }: Props) => {
         setIsLoading(true);
 
         try {
-            // Simulate API call to fetch next page
-            console.log('Loading more events...');
-            
-            // In production:
-            // const response = await fetch(`/api/v1/events/check-in/?page=${nextPage}`);
-            // const data = await response.json();
-            
-            // Simulate delay
-            await new Promise(resolve => setTimeout(resolve, 1500));
+            const nextUpcomingPage = upcomingPage + 1;
+            const nextOngoingPage = ongoingPage + 1;
 
-            // Mock response - in production, append real data
-            // setEvents(prev => [...prev, ...data.results]);
-            // setHasMore(!!data.next);
-            
-            // For now, just set hasMore to false after first load
-            setHasMore(false);
-            
+            // Fetch next pages for both upcoming and ongoing events
+            const [upcomingResponse, ongoingResponse] = await Promise.all([
+                fetch(`/api/events/my-events?page=${nextUpcomingPage}&page_size=20&status=upcoming`),
+                fetch(`/api/events/my-events?page=${nextOngoingPage}&page_size=20&status=ongoing`)
+            ]);
+
+            const upcomingData = upcomingResponse.ok ? await upcomingResponse.json() : null;
+            const ongoingData = ongoingResponse.ok ? await ongoingResponse.json() : null;
+
+            // Combine new results
+            const newEvents = [
+                ...(upcomingData?.results || []),
+                ...(ongoingData?.results || [])
+            ];
+
+            if (newEvents.length > 0) {
+                setEvents(prev => [...prev, ...newEvents]);
+            }
+
+            // Update pages
+            setUpcomingPage(nextUpcomingPage);
+            setOngoingPage(nextOngoingPage);
+
+            // Check if there are more events
+            setHasMore(!!(upcomingData?.next || ongoingData?.next));
+
         } catch (error) {
             console.error('Error loading more events:', error);
         } finally {
@@ -62,7 +87,7 @@ const CheckInContent = ({ initialEvents, initialHasMore = false }: Props) => {
     return (
         <div className="space-y-6">
             {/* Header */}
-            <CheckInHeader totalEvents={events.length} />
+            <CheckInHeader />
 
             {/* Event Selector */}
             {!selectedEventId && (
@@ -81,13 +106,17 @@ const CheckInContent = ({ initialEvents, initialHasMore = false }: Props) => {
                     <CheckInScanner 
                         event={selectedEvent}
                         onSuccess={handleCheckInSuccess}
-                        onChangeEvent={() => setSelectedEventId(null)}
+                        onChangeEvent={() => {
+                            setSelectedEventId(null);
+                            setLatestCheckIn(null);
+                        }}
                     />
 
                     {/* Check-in History */}
-                    {checkInHistory.length > 0 && (
-                        <CheckInHistory history={checkInHistory} />
-                    )}
+                    <CheckInHistory 
+                        eventSlug={selectedEvent.slug}
+                        latestCheckIn={latestCheckIn}
+                    />
                 </div>
             )}
         </div>

@@ -3,6 +3,7 @@
 import { FileText, Calendar, MapPin } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { EventDetails, RecurringEventDetails } from '@/types/events.types';
+import Link from 'next/link';
 
 interface EventDescriptionProps {
     event: EventDetails | RecurringEventDetails;
@@ -12,7 +13,7 @@ const EventDescription = ({ event }: EventDescriptionProps) => {
     const isRecurring = 'recurrence_info' in event && event.recurrence_info !== null;
 
     return (
-        <section className="relative py-12 sm:py-16 bg-primary-100">
+        <section className="relative py-8 sm:y-12 bg-primary-100">
             <div className="inner-wrapper">
                 <div className="grid lg:grid-cols-3 gap-8 lg:gap-12">
                     {/* Main Content - Description */}
@@ -184,14 +185,14 @@ const EventDescription = ({ event }: EventDescriptionProps) => {
                                         {event.venue.city}, {event.venue.country}
                                     </p>
                                 </div>
-                                <a
+                                <Link
                                     href={event.venue.google_maps_url}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="block w-full py-2.5 px-4 bg-accent text-white text-center rounded-lg font-bold normal-text-2 hover:bg-accent-100 transition-all duration-300"
                                 >
                                     View on Google Maps
-                                </a>
+                                </Link>
                             </div>
                         </div>
 
@@ -200,14 +201,14 @@ const EventDescription = ({ event }: EventDescriptionProps) => {
                             <h3 className="big-text-5 font-bold text-white mb-3">
                                 Category
                             </h3>
-                            <a
+                            <Link
                                 href={`/events?category=${event.category.slug}`}
                                 className="inline-flex items-center gap-2 px-4 py-2 bg-accent/20 backdrop-blur-sm rounded-lg border border-accent hover:bg-accent/30 transition-all duration-300"
                             >
                                 <span className="text-accent-50 font-bold normal-text">
                                     {event.category.name}
                                 </span>
-                            </a>
+                            </Link>
                             <p className="normal-text-2 text-slate-300 mt-3">
                                 {event.category.description}
                             </p>

@@ -9,7 +9,7 @@ type Props = {
 const RevenueByMonthChart = ({ revenueByMonth }: Props) => {
     if (!revenueByMonth || revenueByMonth.length === 0) {
         return (
-            <div role="region" aria-label="Monthly revenue" className="bg-primary rounded-xl p-6 border-2 border-accent/30">
+            <div role="region" aria-label="Monthly revenue" className="bg-primary rounded-xl p-4 border-2 border-accent">
                 <div className="text-center py-12">
                     <p className="normal-text text-slate-400">No monthly revenue data yet</p>
                 </div>
