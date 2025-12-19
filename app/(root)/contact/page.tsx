@@ -1,5 +1,7 @@
 import React from 'react';
 import { Mail, Phone, MapPin, MessageCircle, Clock, HeadphonesIcon } from 'lucide-react';
+import Link from 'next/link';
+
 import {ContactForm} from '@/components';
 import { getCurrentUser } from '@/app/lib/auth';
 import { contactInfo, socialLinks } from '@/data/static.general';
@@ -73,12 +75,12 @@ const ContactPage = async () => {
                             <p className="normal-text-2 text-slate-300 mb-3">
                                 Mon-Fri from 8am to 5pm
                             </p>
-                            <a 
-                                href={contactInfo[1].href}
+                            <Link 
+                                href={"mailto:info@cafaticket.com"}
                                 className="text-accent-50 hover:text-accent font-semibold normal-text-2 hover:underline"
                             >
-                                {contactInfo[1].value}
-                            </a>
+                                info@cafaticket.com
+                            </Link>
                         </div>
 
                         {/* Location Card */}

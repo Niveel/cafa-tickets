@@ -161,10 +161,10 @@ export default function Error({ error, reset }: ErrorProps) {
                                 </Link>
                                 
                                 
-                                <Link    href="mailto:support@cafatickets.com"
+                                <Link    href="mailto:info@cafaticket.com"
                                     className="small-text text-slate-400 hover:text-white transition-colors underline"
                                 >
-                                    support@cafatickets.com
+                                    info@cafaticket.com
                                 </Link>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ export default function Error({ error, reset }: ErrorProps) {
                         If this error continues, please report it to our technical team
                     </p>
                     <p className="small-text text-slate-500">
-                        Cafa Tickets • Always here to help
+                        Cafa Ticket • Always here to help
                     </p>
                 </div>
             </div>
