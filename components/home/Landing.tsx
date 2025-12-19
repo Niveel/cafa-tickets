@@ -136,7 +136,7 @@ const Landing = ({ events }: Props) => {
                                 />
                                 <AppButton
                                     title="Create Event"
-                                    url="/events/create"
+                                    url="/dashboard/events/create"
                                     variant="outline"
                                     size="lg"
                                     className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-primary"
