@@ -1,11 +1,72 @@
 "use client";
+import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowUpRight, Mail, Phone, MapPin, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, Mail, Phone, MapPin, ChevronRight, CheckCircle, AlertCircle } from 'lucide-react';
 
 import { contactInfo, socialLinks, navLinks } from '@/data/static.general';
 
 const Footer = () => {
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+
+    const handleNewsletterSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        
+        if (!email || !email.includes('@')) {
+            setMessage({ type: 'error', text: 'Please enter a valid email address' });
+            return;
+        }
+
+        setLoading(true);
+        setMessage(null);
+
+        try {
+            const response = await fetch('/api/subscribe', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to subscribe. Please try again.';
+                
+                if (data.email && Array.isArray(data.email)) {
+                    errorMessage = data.email[0];
+                } else if (data.error) {
+                    errorMessage = data.error;
+                } else if (data.detail) {
+                    errorMessage = data.detail;
+                } else if (data.message) {
+                    errorMessage = data.message;
+                }
+
+                setMessage({ type: 'error', text: errorMessage });
+                return;
+            }
+
+            // Success
+            setMessage({ type: 'success', text: 'Successfully subscribed to newsletter!' });
+            setEmail('');
+            
+            // Clear success message after 5 seconds
+            setTimeout(() => {
+                setMessage(null);
+            }, 5000);
+
+        } catch (error) {
+            console.error('Newsletter subscription error:', error);
+            setMessage({ type: 'error', text: 'Something went wrong. Please try again.' });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <footer className="relative bg-linear-to-br from-primary via-primary to-indigo-900 text-white overflow-hidden">
             {/* Decorative Background Elements */}
@@ -52,11 +113,11 @@ const Footer = () => {
                                             height={64}
                                             src="/assets/logo.png"
                                             className="w-full h-full object-cover"
-                                            alt="Cafa Ticket logo"
+                                            alt="Cafa Tickets logo"
                                         />
                                     </figure>
                                     <div>
-                                        <h2 className="big-text-4 font-bold text-white">Cafa Ticket</h2>
+                                        <h2 className="big-text-4 font-bold text-white">Cafa Tickets</h2>
                                         <p className="small-text text-blue-200">Your Event Partner</p>
                                     </div>
                                 </div>
@@ -155,19 +216,54 @@ const Footer = () => {
                                 <p className="normal-text-2 text-blue-100 mb-4">
                                     Get the latest events and exclusive offers delivered to your inbox.
                                 </p>
-                                <form className="flex flex-col gap-3" onSubmit={(e) => e.preventDefault()}>
+                                
+                                {/* Success/Error Message */}
+                                {message && (
+                                    <div className={`mb-3 p-3 rounded-lg flex items-start gap-2 animate-fade-in ${
+                                        message.type === 'success' 
+                                            ? 'bg-emerald-500/20 border border-emerald-500/30' 
+                                            : 'bg-red-500/20 border border-red-500/30'
+                                    }`}>
+                                        {message.type === 'success' ? (
+                                            <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                                        ) : (
+                                            <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                                        )}
+                                        <p className={`small-text ${
+                                            message.type === 'success' ? 'text-emerald-200' : 'text-red-200'
+                                        }`}>
+                                            {message.text}
+                                        </p>
+                                    </div>
+                                )}
+
+                                <form className="flex flex-col gap-3" onSubmit={handleNewsletterSubmit}>
                                     <input
                                         type="email"
                                         placeholder="Enter your email"
-                                        className="px-4 py-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-blue-300 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        disabled={loading}
+                                        className="px-4 py-3 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder:text-blue-300 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                         aria-label="Email for newsletter"
+                                        required
                                     />
                                     <button
                                         type="submit"
-                                        className="px-6 py-3 bg-white text-primary font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 group"
+                                        disabled={loading}
+                                        className="px-6 py-3 bg-white text-primary font-semibold rounded-xl hover:bg-blue-50 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                                     >
-                                        Subscribe
-                                        <Mail className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                        {loading ? (
+                                            <>
+                                                <span className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                                                Subscribing...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Subscribe
+                                                <Mail className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                                            </>
+                                        )}
                                     </button>
                                 </form>
                             </div>
@@ -202,7 +298,7 @@ const Footer = () => {
                     <div className="pt-6 border-t border-white/10">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                             <p className="small-text text-blue-200 text-center md:text-left">
-                                &copy; {new Date().getFullYear()} Cafa Ticket. All rights reserved.
+                                &copy; {new Date().getFullYear()} Cafa Tickets. All rights reserved.
                             </p>
                             <div className="flex items-center gap-6">
                                 <Link href="/sitemap" className="small-text text-blue-200 hover:text-white transition-colors duration-300">
@@ -210,9 +306,6 @@ const Footer = () => {
                                 </Link>
                                 <Link href="/accessibility" className="small-text text-blue-200 hover:text-white transition-colors duration-300">
                                     Accessibility
-                                </Link>
-                                <Link href="/help" className="small-text text-blue-200 hover:text-white transition-colors duration-300">
-                                    Help Center
                                 </Link>
                             </div>
                         </div>
