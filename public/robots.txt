@@ -1,0 +1,57 @@
+# Cafa Ticket - Robots.txt
+# https://www.cafaticket.com/robots.txt
+
+User-agent: *
+Allow: /
+Allow: /events
+Allow: /events/*
+Allow: /about
+Allow: /contact
+Allow: /terms
+Allow: /privacy
+Allow: /accessibility
+Allow: /sitemap
+
+# Disallow private/auth pages
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /login
+Disallow: /signup
+Disallow: /api/*
+Disallow: /_next/*
+Disallow: /activate/*
+Disallow: /password-reset/*
+
+# Disallow search results with query parameters
+Disallow: /events?*
+
+# Crawl-delay (optional, for slower crawling)
+# Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://www.cafaticket.com/sitemap.xml
+
+# Google-specific
+User-agent: Googlebot
+Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /api/*
+
+# Bing-specific
+User-agent: Bingbot
+Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /api/*
+
+# Image indexing
+User-agent: Googlebot-Image
+Allow: /
+Disallow: /dashboard/*
+
+# Mobile crawlers
+User-agent: Googlebot-Mobile
+Allow: /
+Disallow: /dashboard
+Disallow: /dashboard/*

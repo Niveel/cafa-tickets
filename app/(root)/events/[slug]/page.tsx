@@ -20,35 +20,78 @@ const EventDetailsPage = async ({ params }: Props) => {
     const [eventDetails, currentUser] = await Promise.all([
         getEventBySlug(slug),
         getCurrentUser()
-    ]) 
+    ])
 
     if (!eventDetails) {
         return <EventNotFound />;
     }
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'Event',
+        name: eventDetails.title,
+        description: eventDetails.description,
+        image: eventDetails.featured_image,
+        startDate: eventDetails.start_date,
+        endDate: eventDetails.end_date,
+        eventStatus: 'https://schema.org/EventScheduled',
+        eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+        location: {
+            '@type': 'Place',
+            name: eventDetails.venue.name,
+            address: {
+                '@type': 'PostalAddress',
+                streetAddress: eventDetails.venue.address,
+                addressLocality: eventDetails.venue.city,
+                addressCountry: eventDetails.venue.country
+            }
+        },
+        offers: {
+            '@type': 'Offer',
+            url: `https://www.cafaticket.com/events/${eventDetails.slug}`,
+            price: eventDetails.lowest_price,
+            priceCurrency: 'GHS',
+            availability: 'https://schema.org/InStock',
+            validFrom: new Date().toISOString()
+        },
+        organizer: {
+            '@type': 'Organization',
+            name: eventDetails.organizer.full_name,
+            url: 'https://www.cafaticket.com'
+        }
+    };
+
+
     return (
-        <main className="min-h-screen bg-primary">
-            {/* Hero Section with Image Gallery & Key Info */}
-            <EventHero event={eventDetails} />
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
 
-            {/* Event Description with Markdown Support */}
-            <EventDescription event={eventDetails} />
+            <main className="min-h-screen bg-primary">
+                {/* Hero Section with Image Gallery & Key Info */}
+                <EventHero event={eventDetails} />
 
-            {/* Tickets Section (Conditionally shown based on status) */}
-            <TicketsSection event={eventDetails} currentUser={currentUser} />
+                {/* Event Description with Markdown Support */}
+                <EventDescription event={eventDetails} />
 
-            {/* Organizer Profile & Stats */}
-            <OrganizerSection event={eventDetails} />
+                {/* Tickets Section (Conditionally shown based on status) */}
+                <TicketsSection event={eventDetails} currentUser={currentUser} />
 
-            {/* Venue Location with Google Maps */}
-            <VenueSection event={eventDetails} />
+                {/* Organizer Profile & Stats */}
+                <OrganizerSection event={eventDetails} />
 
-            {/* Share Event on Social Media */}
-            <ShareSection event={eventDetails} />
+                {/* Venue Location with Google Maps */}
+                <VenueSection event={eventDetails} />
 
-            {/* Similar Events Recommendations */}
-            <SimilarEventsSection event={eventDetails} />
-        </main>
+                {/* Share Event on Social Media */}
+                <ShareSection event={eventDetails} />
+
+                {/* Similar Events Recommendations */}
+                <SimilarEventsSection event={eventDetails} />
+            </main>
+        </>
     );
 };
 
