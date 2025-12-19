@@ -34,7 +34,7 @@ const VenueSection = ({ event }: VenueSectionProps) => {
                     </p>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid lg:grid-cols-3 gap-4">
                     {/* Map */}
                     <div className="lg:col-span-2">
                         <div className="relative rounded-2xl overflow-hidden border-2 border-accent shadow-2xl aspect-video bg-primary">
@@ -60,7 +60,7 @@ const VenueSection = ({ event }: VenueSectionProps) => {
                         </div>
 
                         {/* Quick Actions Below Map */}
-                        <div className="grid sm:grid-cols-2 gap-4 mt-6">
+                        <div className="grid sm:grid-cols-2 gap-4 mt-4">
                             <a
                                 href={venue.google_maps_url}
                                 target="_blank"
@@ -83,7 +83,7 @@ const VenueSection = ({ event }: VenueSectionProps) => {
                     </div>
 
                     {/* Venue Details Card */}
-                    <div className="lg:col-span-1 space-y-6">
+                    <div className="lg:col-span-1 space-y-4">
                         {/* Venue Info */}
                         <div className="p-6 bg-primary rounded-xl border border-accent">
                             <h3 className="big-text-4 font-bold text-white mb-6">

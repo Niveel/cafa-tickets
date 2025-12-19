@@ -34,16 +34,16 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
                     </h2>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-8">
+                <div className="grid lg:grid-cols-3 gap-4">
                     {/* Organizer Profile Card */}
                     <div className="lg:col-span-1">
-                        <div className="relative p-8 bg-linear-to-br from-primary-100 to-primary-200 rounded-2xl border-2 border-accent overflow-hidden">
+                        <div className="relative p-4 bg-linear-to-br from-primary-100 to-primary-200 rounded-2xl border-2 border-accent overflow-hidden">
                             {/* Decorative Background */}
                             <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full blur-3xl"></div>
                             <div className="absolute bottom-0 left-0 w-32 h-32 bg-accent/5 rounded-full blur-3xl"></div>
 
                             {/* Content */}
-                            <div className="relative space-y-6">
+                            <div className="relative space-y-4">
                                 {/* Profile Image */}
                                 <div className="flex justify-center">
                                     <div className="relative w-32 h-32 rounded-full overflow-hidden ring-4 ring-accent shadow-2xl">
@@ -91,22 +91,22 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
                                 </a>
 
                                 {/* View Profile Link */}
-                                <Link
+                                {/* <Link
                                     href={`/organizers/${organizer.username}`}
                                     className="block text-center normal-text-2 text-accent-50 hover:text-accent-100 transition-colors duration-300 font-semibold"
                                 >
                                     View Full Profile →
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </div>
 
                     {/* Stats & Achievements */}
-                    <div className="lg:col-span-2 space-y-6">
+                    <div className="lg:col-span-2 space-y-4">
                         {/* Stats Grid */}
-                        <div className="grid sm:grid-cols-2 gap-6">
+                        <div className="grid sm:grid-cols-2 gap-4">
                             {/* Events Organized */}
-                            <div className="relative p-6 bg-primary-100 rounded-xl border border-accent overflow-hidden group hover:border-accent-100 transition-all duration-300">
+                            <div className="relative p-4 bg-primary-100 rounded-xl border border-accent overflow-hidden group hover:border-accent-100 transition-all duration-300">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/10 transition-all duration-300"></div>
                                 <div className="relative flex items-start gap-4">
                                     <div className="w-14 h-14 rounded-xl bg-accent/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -125,7 +125,7 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
                             </div>
 
                             {/* Tickets Sold */}
-                            <div className="relative p-6 bg-primary-100 rounded-xl border border-accent overflow-hidden group hover:border-accent-100 transition-all duration-300">
+                            <div className="relative p-4 bg-primary-100 rounded-xl border border-accent overflow-hidden group hover:border-accent-100 transition-all duration-300">
                                 <div className="absolute top-0 right-0 w-24 h-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/10 transition-all duration-300"></div>
                                 <div className="relative flex items-start gap-4">
                                     <div className="w-14 h-14 rounded-xl bg-accent/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
@@ -145,7 +145,7 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
                         </div>
 
                         {/* Achievements/Trust Badges */}
-                        <div className="p-6 bg-primary-100 rounded-xl border border-accent">
+                        <div className="p-4 bg-primary-100 rounded-xl border border-accent">
                             <h3 className="big-text-4 font-bold text-white mb-4 flex items-center gap-2">
                                 <TrendingUp className="w-5 h-5 text-accent-50" aria-hidden="true" />
                                 Why Trust This Organizer
@@ -199,7 +199,7 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
                         </div>
 
                         {/* Other Events by Organizer */}
-                        <div className="p-6 bg-linear-to-br from-accent/5 to-accent/10 rounded-xl border border-accent">
+                        {/* <div className="p-4 bg-linear-to-br from-accent/5 to-accent/10 rounded-xl border border-accent">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="big-text-4 font-bold text-white">
                                     More from {organizer.full_name}
@@ -215,7 +215,7 @@ const OrganizerSection = ({ event }: OrganizerSectionProps) => {
                                 Discover other amazing events organized by {organizer.full_name}. 
                                 From concerts to conferences, they bring the best experiences to life.
                             </p>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

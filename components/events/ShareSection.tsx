@@ -58,11 +58,11 @@ const ShareSection = ({ event }: ShareSectionProps) => {
     ];
 
     return (
-        <section className="relative py-8 sm:y-12 bg-primary-100">
+        <section className="relative py-8 bg-primary-100">
             <div className="inner-wrapper">
                 <div className="max-w-4xl mx-auto">
                     {/* Section Header */}
-                    <div className="text-center space-y-4 mb-10">
+                    <div className="text-center space-y-2 mb-10">
                         <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-accent/20 border border-accent mb-4">
                             <Share2 className="w-8 h-8 text-accent-50" aria-hidden="true" />
                         </div>
@@ -75,7 +75,7 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                     </div>
 
                     {/* Share Buttons Grid */}
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                         {shareButtons.map((button) => {
                             const Icon = button.icon;
                             return (
@@ -84,7 +84,7 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                                     href={button.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className={`group relative p-6 bg-primary rounded-xl border-2 border-accent/20 hover:border-accent transition-all duration-300 hover:scale-105 overflow-hidden`}
+                                    className={`group relative p-4 bg-primary rounded-xl border-2 border-accent/20 hover:border-accent transition-all duration-300 hover:scale-105 overflow-hidden`}
                                 >
                                     {/* Background Glow */}
                                     <div className={`absolute inset-0 ${button.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
@@ -104,12 +104,9 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                     </div>
 
                     {/* Copy Link Section */}
-                    <div className="p-6 bg-primary rounded-xl border border-accent">
+                    <div className="p-4 bg-primary rounded-xl border border-accent">
                         <div className="flex flex-col sm:flex-row items-center gap-4">
                             <div className="flex-1 w-full">
-                                <label className="small-text text-slate-300 font-semibold mb-2 block">
-                                    Event Link
-                                </label>
                                 <div className="flex items-center gap-3 p-4 bg-primary-100 rounded-lg border border-accent/30">
                                     <LinkIcon className="w-5 h-5 text-accent-50 shrink-0" aria-hidden="true" />
                                     <input
@@ -123,7 +120,7 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                             </div>
                             <button
                                 onClick={handleCopyLink}
-                                className={`shrink-0 px-8 py-4 rounded-xl font-bold normal-text transition-all duration-300 hover:scale-105 flex items-center gap-2 border-2 ${
+                                className={`shrink-0 px-8 py-3 rounded-xl font-bold normal-text transition-all duration-300 hover:scale-105 flex items-center gap-2 border-2 ${
                                     copied
                                         ? 'bg-green-600 border-green-600 text-white'
                                         : 'bg-accent border-accent text-white hover:bg-accent-100'
@@ -146,7 +143,7 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                     </div>
 
                     {/* Share Stats (Optional) */}
-                    <div className="mt-8 text-center">
+                    <div className="mt-4 text-center">
                         <p className="small-text text-slate-400">
                             Help us reach more people by sharing this event with your network
                         </p>

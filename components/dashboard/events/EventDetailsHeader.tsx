@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Calendar, MapPin, Edit, Users, Eye, ArrowLeft, Trash2, AlertCircle } from 'lucide-react';
+import { Calendar, MapPin, Edit, Users, Eye, ArrowLeft, Trash2, AlertCircle, Copy, Check, ExternalLink } from 'lucide-react';
 
 import { placeholderImage } from '@/data/constants';
 import { MyEventDetailsResponse } from '@/types/dash-events.types';
@@ -13,11 +13,31 @@ type Props = {
     event: MyEventDetailsResponse;
 };
 
-const EventDetailsHeader = ({ event }: Props) => {
+const EventDetailsHeader = ({ event }: Props) => { 
     const router = useRouter();
     const [deleteConfirm, setDeleteConfirm] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
+    const [copied, setCopied] = useState(false);
+
+    // Construct the full event URL
+    const eventUrl = typeof window !== 'undefined' 
+        ? `${window.location.origin}/events/${event.slug}`
+        : `/events/${event.slug}`;
+
+    const handleCopyLink = async () => {
+        try {
+            await navigator.clipboard.writeText(eventUrl);
+            setCopied(true);
+            
+            // Reset copied state after 2 seconds
+            setTimeout(() => {
+                setCopied(false);
+            }, 2000);
+        } catch (error) {
+            console.error('Failed to copy link:', error);
+        }
+    };
 
     const handleDeleteEvent = async () => {
         try {
@@ -109,6 +129,52 @@ const EventDetailsHeader = ({ event }: Props) => {
                 </div>
             </div>
 
+            {/* Shareable Link Banner */}
+            <div className="px-2 pb-4">
+                <div className="bg-primary-200 border-2 border-accent/30 rounded-xl p-2">
+                    <div className="flex items-center justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 bg-primary rounded-lg px-4 py-2 border border-accent/20">
+                                <ExternalLink className="w-4 h-4 text-accent-50 shrink-0" aria-hidden="true" />
+                                <input
+                                    id="event-url"
+                                    type="text"
+                                    readOnly
+                                    value={eventUrl}
+                                    className="flex-1 bg-transparent text-slate-300 normal-text-2 outline-none select-all"
+                                    aria-label="Event public URL"
+                                />
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleCopyLink}
+                            className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg font-semibold normal-text-2 transition-all duration-300 focus:outline-none focus:ring-2 ${
+                                copied
+                                    ? 'bg-green-500 text-white focus:ring-green-400'
+                                    : 'bg-accent text-white hover:bg-accent-50 focus:ring-accent'
+                            }`}
+                            aria-label={copied ? 'Link copied to clipboard' : 'Copy event link to clipboard'}
+                            aria-live="polite"
+                        >
+                            {copied ? (
+                                <>
+                                    <Check className="w-4 h-4" aria-hidden="true" />
+                                    <span className="hidden sm:inline">Copied!</span>
+                                </>
+                            ) : (
+                                <>
+                                    <Copy className="w-4 h-4" aria-hidden="true" />
+                                    <span className="hidden sm:inline">Copy Link</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                    <p className="small-text text-slate-400 mt-2">
+                        Share this link with attendees so they can view details and purchase tickets
+                    </p>
+                </div>
+            </div>
+
             {/* Event Image */}
             <div className="relative h-64 md:h-96 overflow-hidden">
                 <Image
@@ -165,17 +231,8 @@ const EventDetailsHeader = ({ event }: Props) => {
             </div>
 
             {/* Action Buttons */}
-            <div className="p-6 border-t border-accent/30">
+            <div className="p-4 border-t border-accent/30">
                 <div className="flex flex-wrap gap-3">
-                    <Link
-                        href={`/dashboard/events/${event.slug}/edit`}
-                        className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-xl font-semibold normal-text-2 hover:bg-blue-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        aria-label="Edit event details"
-                    >
-                        <Edit className="w-4 h-4" aria-hidden="true" />
-                        Edit Event
-                    </Link>
-
                     <Link
                         href={`/dashboard/events/${event.slug}/attendees`}
                         className="flex items-center gap-2 px-6 py-3 bg-purple-500 text-white rounded-xl font-semibold normal-text-2 hover:bg-purple-600 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-400"

@@ -185,14 +185,16 @@ const EventDescription = ({ event }: EventDescriptionProps) => {
                                         {event.venue.city}, {event.venue.country}
                                     </p>
                                 </div>
-                                <Link
-                                    href={event.venue.google_maps_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block w-full py-2.5 px-4 bg-accent text-white text-center rounded-lg font-bold normal-text-2 hover:bg-accent-100 transition-all duration-300"
-                                >
-                                    View on Google Maps
-                                </Link>
+                                {event.venue.google_maps_url && (
+                                    <Link
+                                        href={event.venue.google_maps_url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block w-full py-2.5 px-4 bg-accent text-white text-center rounded-lg font-bold normal-text-2 hover:bg-accent-100 transition-all duration-300"
+                                    >
+                                        View on Google Maps
+                                    </Link>
+                                )}
                             </div>
                         </div>
 
