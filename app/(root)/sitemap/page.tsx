@@ -100,8 +100,6 @@ const SitemapPage = () => {
             links: [
                 { label: 'Terms of Service', url: '/terms' },
                 { label: 'Privacy Policy', url: '/privacy' },
-                { label: 'Cookie Policy', url: '/cookies' },
-                { label: 'Refund Policy', url: '/refund-policy' }
             ]
         }
     ];
