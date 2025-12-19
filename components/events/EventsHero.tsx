@@ -79,19 +79,6 @@ const EventsHero = ({ totalEvents, searchQuery, onSearchChange, onSearchSubmit }
                             </p>
                         </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center border border-accent">
-                            <MapPin className="w-6 h-6 text-accent-50" aria-hidden="true" />
-                        </div>
-                        <div>
-                            <p className="big-text-4 font-bold text-white">
-                                8
-                            </p>
-                            <p className="small-text text-slate-300">
-                                Cities Covered
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>

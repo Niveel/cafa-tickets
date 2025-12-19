@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/data/constants";
-import { EventCategory } from "@/types/general.types";
+import { EventCategory, PublicStats } from "@/types/general.types";
 
 // ============================================
 // TYPE DEFINITIONS
@@ -46,3 +46,27 @@ export const getEventCategories = async (): Promise<EventCategory[]> => {
         throw error;
     }
 };
+
+export async function getPublicStats(): Promise<PublicStats | null> {
+    try {
+        const response = await fetch(`${BASE_URL}/public/stats/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            cache: 'no-store', // Always get fresh data
+        });
+
+        if (!response.ok) {
+            console.error('Failed to fetch public stats:', await response.json());
+            return null;
+        }
+
+        const data = await response.json();
+        return data;
+
+    } catch (error) {
+        console.error('Error fetching public stats:', error);
+        return null;
+    }
+}

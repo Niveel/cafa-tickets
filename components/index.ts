@@ -15,6 +15,7 @@ export {default as Landing} from './home/Landing';
 export {default as HomeCategoryBar} from './home/HomeCategoryBar';
 export {default as SoonEvents} from './home/SoonEvents';
 export {default as HomeEvents} from './home/HomeEvents';
+export {default as StatsSection} from './home/StatsSection';
 // cards / dashboard-cards
 export {default as SoonEventCard} from './cards/SoonEventCard';
 export {default as EventCard} from './cards/EventCard';

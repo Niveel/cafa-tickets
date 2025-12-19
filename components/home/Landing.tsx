@@ -140,31 +140,6 @@ const Landing = ({ events }: Props) => {
                                 </div>
                             </form>
 
-                            {/* Stats */}
-                            <div className="flex flex-wrap gap-8 pt-4">
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Calendar className="w-5 h-5 text-accent-50" aria-hidden="true" />
-                                        <p className="big-text-3 font-bold text-white">5,000+</p>
-                                    </div>
-                                    <p className="normal-text-2 text-slate-300">Events Listed</p>
-                                </div>
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <Users className="w-5 h-5 text-accent-50" aria-hidden="true" />
-                                        <p className="big-text-3 font-bold text-white">50K+</p>
-                                    </div>
-                                    <p className="normal-text-2 text-slate-300">Happy Attendees</p>
-                                </div>
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <TrendingUp className="w-5 h-5 text-accent-50" aria-hidden="true" />
-                                        <p className="big-text-3 font-bold text-white">200+</p>
-                                    </div>
-                                    <p className="normal-text-2 text-slate-300">Event Organizers</p>
-                                </div>
-                            </div>
-
                             {/* CTA Buttons */}
                             <div className="flex flex-wrap gap-4 pt-4">
                                 <AppButton

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, Mail, Loader2 } from "lucide-react";
 
 import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader, ProfileUpdatePrompt } from "@/components";
 import { LoginValidationSchema, LoginFormValues } from "@/data/validationConstants";
@@ -18,6 +18,12 @@ const LoginForm = () => {
     const [showActivatedMessage, setShowActivatedMessage] = useState(false);
     const [showSessionExpiredMessage, setShowSessionExpiredMessage] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState<CurrentUser | null>(null);
+    
+    // ✅ New states for email verification
+    const [needsEmailVerification, setNeedsEmailVerification] = useState(false);
+    const [unverifiedEmail, setUnverifiedEmail] = useState("");
+    const [resendingEmail, setResendingEmail] = useState(false);
+    const [resendSuccess, setResendSuccess] = useState(false);
 
     // Get redirect URL from query params (set by middleware)
     const redirectUrl = searchParams.get('redirect') || '/dashboard';
@@ -43,6 +49,8 @@ const LoginForm = () => {
     const handleLogin = async (values: LoginFormValues) => {
         setLoading(true);
         setLoginError("");
+        setNeedsEmailVerification(false); // ✅ Reset verification state
+        setResendSuccess(false); // ✅ Reset resend success
 
         // Backend expects "email" field but accepts email or username
         const payload = {
@@ -79,6 +87,13 @@ const LoginForm = () => {
                 }
 
                 setLoginError(errorMessage);
+
+                // ✅ Check if error is about email verification
+                if (errorMessage.toLowerCase().includes('verify') && errorMessage.toLowerCase().includes('before logging in')) {
+                    setNeedsEmailVerification(true);
+                    setUnverifiedEmail(values.emailOrUsername);
+                }
+
                 return;
             }
 
@@ -111,6 +126,49 @@ const LoginForm = () => {
             }
         } finally {
             setLoading(false);
+        }
+    };
+
+    // ✅ Handle resend verification email
+    const handleResendVerification = async () => {
+        setResendingEmail(true);
+        setResendSuccess(false);
+
+        try {
+            const response = await fetch('/api/auth/resend-activation', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email: unverifiedEmail }),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                let errorMessage = 'Failed to resend verification email.';
+                
+                if (data.email && Array.isArray(data.email)) {
+                    errorMessage = data.email[0];
+                } else if (data.detail) {
+                    errorMessage = data.detail;
+                } else if (data.error) {
+                    errorMessage = data.error;
+                }
+
+                setLoginError(errorMessage);
+                return;
+            }
+
+            // Success
+            setResendSuccess(true);
+            setLoginError(""); // Clear error
+
+        } catch (error) {
+            console.error('Resend verification error:', error);
+            setLoginError('Failed to resend verification email. Please try again.');
+        } finally {
+            setResendingEmail(false);
         }
     };
 
@@ -177,6 +235,23 @@ const LoginForm = () => {
                 </div>
             )}
 
+            {/* ✅ Resend Success Message */}
+            {resendSuccess && (
+                <div className="mb-6 p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20 animate-fade-in">
+                    <div className="flex items-center gap-3">
+                        <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0" aria-hidden="true" />
+                        <div>
+                            <p className="normal-text-2 font-semibold text-emerald-400">
+                                Verification Email Sent!
+                            </p>
+                            <p className="small-text text-emerald-300">
+                                Please check your inbox at <span className="font-semibold">{unverifiedEmail}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Redirect Notice */}
             {redirectUrl !== '/dashboard' && (
                 <div className="mb-6 p-4 bg-primary-100 rounded-xl border border-accent/30">
@@ -213,6 +288,40 @@ const LoginForm = () => {
             {/* Form Card */}
             <div className="bg-primary-100 rounded-2xl p-4 sm:p-6 shadow-2xl border-2 border-accent">
                 <AppErrorMessage visible={!!loginError} error={loginError} />
+
+                {/* ✅ Resend Verification Button */}
+                {needsEmailVerification && !resendSuccess && (
+                    <div className="mb-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                        <div className="flex items-start gap-3 mb-3">
+                            <Mail className="w-5 h-5 text-blue-400 shrink-0 mt-0.5" />
+                            <div className="flex-1">
+                                <p className="small-text text-blue-300 mb-1">
+                                    <strong>Need a new verification link?</strong>
+                                </p>
+                                <p className="small-text text-blue-300">
+                                    Click below to resend the verification email to <span className="font-semibold">{unverifiedEmail}</span>
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={handleResendVerification}
+                            disabled={resendingEmail}
+                            className="w-full py-2.5 px-4 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-semibold small-text transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                            {resendingEmail ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                    Sending...
+                                </>
+                            ) : (
+                                <>
+                                    <Mail className="w-4 h-4" />
+                                    Resend Verification Email
+                                </>
+                            )}
+                        </button>
+                    </div>
+                )}
 
                 <AppForm
                     initialValues={{ emailOrUsername: "", password: "" }}
