@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Edit, Lock, Bell, Ticket, Calendar, CreditCard } from 'lucide-react';
+import { Lock, Bell, CreditCard } from 'lucide-react';
 
 const ProfileQuickActions = () => {
     const actions = [
@@ -22,7 +22,7 @@ const ProfileQuickActions = () => {
             title: 'Payment Profile',
             description: 'Manage payment profile',
             icon: CreditCard,
-            href: '/dashboard/payment-profile',
+            href: '/dashboard/payment/profile',
             color: 'from-pink-500 to-pink-600'
         }
     ];

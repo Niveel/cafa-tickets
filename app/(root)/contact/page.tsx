@@ -64,25 +64,6 @@ const ContactPage = async () => {
                             </a>
                         </div>
 
-                        {/* Phone Card */}
-                        <div className="bg-primary rounded-xl p-6 border-2 border-accent/20 hover:border-accent transition-all duration-300 group">
-                            <div className="w-14 h-14 rounded-xl bg-accent/20 flex-center mb-4 border border-accent/30 group-hover:scale-110 transition-transform">
-                                <Phone className="w-7 h-7 text-accent-50" />
-                            </div>
-                            <h3 className="big-text-5 font-bold text-white mb-2">
-                                Call Us
-                            </h3>
-                            <p className="normal-text-2 text-slate-300 mb-3">
-                                Mon-Fri from 8am to 5pm
-                            </p>
-                            <Link 
-                                href={"mailto:info@cafaticket.com"}
-                                className="text-accent-50 hover:text-accent font-semibold normal-text-2 hover:underline"
-                            >
-                                info@cafaticket.com
-                            </Link>
-                        </div>
-
                         {/* Location Card */}
                         <div className="bg-primary rounded-xl p-6 border-2 border-accent/20 hover:border-accent transition-all duration-300 group">
                             <div className="w-14 h-14 rounded-xl bg-accent/20 flex-center mb-4 border border-accent/30 group-hover:scale-110 transition-transform">
