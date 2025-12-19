@@ -50,7 +50,7 @@ const Footer = () => {
                                         <Image
                                             width={64}
                                             height={64}
-                                            src="/assets/images/logo.png"
+                                            src="/assets/logo.png"
                                             className="w-full h-full object-cover"
                                             alt="Cafa Ticket logo"
                                         />

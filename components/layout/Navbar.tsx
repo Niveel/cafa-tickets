@@ -165,7 +165,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                             >
                                 <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden ring-2 ring-accent/30 group-hover:ring-accent transition-all duration-300 group-hover:scale-105">
                                     <Image
-                                        src="/assets/images/logo.png"
+                                        src="/assets/logo.png"
                                         width={48}
                                         height={48}
                                         alt="Cafa Ticket Logo"

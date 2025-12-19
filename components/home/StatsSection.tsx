@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, Ticket, Calendar, CheckCircle, Activity } from 'lucide-react';
+import { Users, Ticket, Calendar, CheckCircle } from 'lucide-react';
 import { PublicStats } from '@/types/general.types';
 
 interface StatsSectionProps {

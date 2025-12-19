@@ -171,3 +171,5 @@ export {default as PrivacySettingsContent} from './dashboard/settings/privacy/Pr
 export {default as PrivacyInfo} from './dashboard/settings/privacy/PrivacyInfo';
 export {default as DeleteAccountSection} from './dashboard/settings/privacy/DeleteAccountSection';
 export {default as DataPrivacySection} from './dashboard/settings/privacy/DataPrivacySection';
+// contact
+export {default as ContactForm} from './contact/ContactForm';
