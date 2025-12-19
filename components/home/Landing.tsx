@@ -113,7 +113,7 @@ const Landing = ({ events }: Props) => {
                                         />
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 rounded-xl shrink-0">
+                                        {/* <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 rounded-xl shrink-0">
                                             <MapPin className="w-5 h-5 text-slate-400" aria-hidden="true" />
                                             <select 
                                                 value={selectedCity}
@@ -128,7 +128,7 @@ const Landing = ({ events }: Props) => {
                                                     </option>
                                                 ))}
                                             </select>
-                                        </div>
+                                        </div> */}
                                         <button
                                             type="submit"
                                             className="px-8 py-3.5 bg-linear-to-r from-accent to-accent-100 text-white font-semibold rounded-xl hover:from-accent-100 hover:to-accent transition-all duration-300 hover:scale-105 hover:shadow-2xl shrink-0 normal-text"

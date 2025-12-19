@@ -7,7 +7,7 @@ import { getMyCreatedEvents } from '@/app/lib/dashboard';
 export const metadata: Metadata = {
     title: 'Event Check-in | Cafa Ticket',
     description: 'Check in attendees at your events using QR code scanner or manual entry.',
-    keywords: ['event check-in', 'QR scanner', 'attendee management', 'Ghana events'],
+    keywords: ['event check-in', 'QR scanner', 'attendee management', 'events'],
 };
 
 const CheckInPage = async () => {
