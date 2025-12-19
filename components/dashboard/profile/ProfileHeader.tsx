@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { MapPin, Mail, Phone, Calendar, CheckCircle, Edit } from 'lucide-react';
 
 import { CurrentUser } from '@/types/general.types';
-import { placeholderPic } from '@/data/constants';
+import { placeholderPic } from '@/data/constants'; 
 
 type Props = {
     user: CurrentUser;
@@ -33,6 +33,8 @@ const ProfileHeader = ({ user }: Props) => {
         if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
         return formatDate(date);
     };
+
+    console.log("Profile image", user.profile_image);
 
     return (
         <div role="region" aria-label="Profile header" className="bg-primary rounded-xl p-4 sm:p-8">
