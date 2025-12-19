@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { ForgotPasswordForm } from '@/components';
 
 export const metadata: Metadata = {
-    title: 'Forgot Password | Cafa Tickets',
-    description: 'Reset your Cafa Tickets account password.',
+    title: 'Forgot Password | Cafa Ticket',
+    description: 'Reset your Cafa Ticket account password.',
 };
 
 const ForgotPasswordPage = () => {

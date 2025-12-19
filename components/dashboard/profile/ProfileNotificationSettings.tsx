@@ -12,7 +12,7 @@ const ProfileNotificationSettings = ({ settings }: Props) => {
         {
             key: 'marketing_emails',
             title: 'Marketing Emails',
-            description: 'Receive promotional emails from Cafa Tickets',
+            description: 'Receive promotional emails from Cafa Ticket',
             icon: Mail,
             enabled: settings.marketing_emails
         },

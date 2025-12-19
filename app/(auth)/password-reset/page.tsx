@@ -3,8 +3,8 @@ import { PasswordResetContent } from '@/components';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-    title: 'Reset Password | Cafa Tickets',
-    description: 'Set a new password for your Cafa Tickets account.',
+    title: 'Reset Password | Cafa Ticket',
+    description: 'Set a new password for your Cafa Ticket account.',
 };
 
 type Props = {

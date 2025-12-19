@@ -52,11 +52,11 @@ const Footer = () => {
                                             height={64}
                                             src="/assets/images/logo.png"
                                             className="w-full h-full object-cover"
-                                            alt="Cafa Tickets logo"
+                                            alt="Cafa Ticket logo"
                                         />
                                     </figure>
                                     <div>
-                                        <h2 className="big-text-4 font-bold text-white">Cafa Tickets</h2>
+                                        <h2 className="big-text-4 font-bold text-white">Cafa Ticket</h2>
                                         <p className="small-text text-blue-200">Your Event Partner</p>
                                     </div>
                                 </div>
@@ -177,7 +177,7 @@ const Footer = () => {
                                 <ul className="space-y-3">
                                     <li>
                                         <Link
-                                            href="/privacy-policy"
+                                            href="/privacy"
                                             className="normal-text-2 text-blue-100 hover:text-white transition-colors duration-300 flex items-center gap-2 group"
                                         >
                                             <span>Privacy Policy</span>
@@ -186,7 +186,7 @@ const Footer = () => {
                                     </li>
                                     <li>
                                         <Link
-                                            href="/terms-and-conditions"
+                                            href="/terms"
                                             className="normal-text-2 text-blue-100 hover:text-white transition-colors duration-300 flex items-center gap-2 group"
                                         >
                                             <span>Terms &amp; Conditions</span>
@@ -202,7 +202,7 @@ const Footer = () => {
                     <div className="pt-6 border-t border-white/10">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
                             <p className="small-text text-blue-200 text-center md:text-left">
-                                &copy; {new Date().getFullYear()} Cafa Tickets. All rights reserved.
+                                &copy; {new Date().getFullYear()} Cafa Ticket. All rights reserved.
                             </p>
                             <div className="flex items-center gap-6">
                                 <Link href="/sitemap" className="small-text text-blue-200 hover:text-white transition-colors duration-300">

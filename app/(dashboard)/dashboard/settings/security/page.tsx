@@ -4,7 +4,7 @@ import { SecuritySettingsContent } from '@/components';
 import { getCurrentUser } from '@/app/lib/auth';
 
 export const metadata: Metadata = {
-    title: 'Security Settings | Cafa Tickets',
+    title: 'Security Settings | Cafa Ticket',
     description: 'Manage your password, email address, and account security settings.',
     keywords: ['security', 'password', 'email', 'account security', 'Ghana'],
 };

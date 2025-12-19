@@ -161,20 +161,20 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                             <Link
                                 href="/"
                                 className="flex items-center gap-3 group"
-                                aria-label="Cafa Tickets Home"
+                                aria-label="Cafa Ticket Home"
                             >
                                 <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-xl overflow-hidden ring-2 ring-accent/30 group-hover:ring-accent transition-all duration-300 group-hover:scale-105">
                                     <Image
                                         src="/assets/images/logo.png"
                                         width={48}
                                         height={48}
-                                        alt="Cafa Tickets Logo"
+                                        alt="Cafa Ticket Logo"
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
                                 <div className="hidden sm:block">
                                     <h1 className="big-text-5 font-bold text-white">
-                                        Cafa Tickets
+                                        Cafa Ticket
                                     </h1>
                                     <p className="small-text-2 text-slate-200 -mt-1">
                                         Your Event Partner
@@ -295,7 +295,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                             />
                         </div>
                         <div>
-                            <h2 className="normal-text font-bold text-white">Cafa Tickets</h2>
+                            <h2 className="normal-text font-bold text-white">Cafa Ticket</h2>
                             <p className="small-text text-slate-200">Menu</p>
                         </div>
                     </div>

@@ -18,23 +18,7 @@ const formatNumber = (num: number): string => {
 };
 
 const StatsSection = ({ stats }: StatsSectionProps) => {
-    if (!stats) {
-        return (
-            <section className="py-20 bg-primary-100">
-                <div className="inner-wrapper">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {[1, 2, 3, 4].map((i) => (
-                            <div key={i} className="p-6 bg-primary rounded-2xl border-2 border-accent/30 animate-pulse">
-                                <div className="w-12 h-12 bg-accent/20 rounded-xl mb-4" />
-                                <div className="h-8 bg-accent/20 rounded mb-2" />
-                                <div className="h-4 bg-accent/20 rounded w-2/3" />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-        );
-    }
+    if (!stats) return null;
 
     const statCards = [
         {

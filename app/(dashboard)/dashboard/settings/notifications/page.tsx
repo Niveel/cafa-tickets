@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import { NotificationsSettingsContent } from '@/components';
 
 export const metadata: Metadata = {
-    title: 'Notification Settings | Cafa Tickets',
+    title: 'Notification Settings | Cafa Ticket',
     description: 'Manage your email and SMS notification preferences for events, reminders, and marketing.',
     keywords: ['notifications', 'email preferences', 'SMS alerts', 'event reminders', 'Ghana'],
 };

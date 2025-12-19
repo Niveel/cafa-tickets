@@ -114,7 +114,7 @@ const SignupForm = () => {
                         <span className="text-2xl">🎫</span>
                     </div>
                     <div>
-                        <h1 className="big-text-3 font-bold text-white">Cafa Tickets</h1>
+                        <h1 className="big-text-3 font-bold text-white">Cafa Ticket</h1>
                         <p className="small-text text-slate-300">Join the Community</p>
                     </div>
                 </div>

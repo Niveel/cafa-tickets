@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const metadata: Metadata = {
-    title: 'My Tickets | Cafa Tickets',
+    title: 'My Tickets | Cafa Ticket',
     description: 'View and manage all your purchased event tickets.',
     keywords: ['my tickets', 'purchased tickets', 'event tickets Ghana'],
 };

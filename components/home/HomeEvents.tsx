@@ -86,44 +86,6 @@ const HomeEvents = ({ events }: HomeEventsProps) => {
                         />
                     </Link>
                 </div>
-
-                {/* Stats Bar - Optional */}
-                <div className="mt-12 pt-10 border-t border-accent/30">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6">
-                        <div className="text-center">
-                            <p className="big-text-2 font-bold text-white mb-1">
-                                {events.filter(e => e.status === 'upcoming').length}+
-                            </p>
-                            <p className="normal-text text-slate-300">
-                                Upcoming Events
-                            </p>
-                        </div>
-                        <div className="text-center">
-                            <p className="big-text-2 font-bold text-white mb-1">
-                                8
-                            </p>
-                            <p className="normal-text text-slate-300">
-                                Cities Covered
-                            </p>
-                        </div>
-                        <div className="text-center">
-                            <p className="big-text-2 font-bold text-white mb-1">
-                                50K+
-                            </p>
-                            <p className="normal-text text-slate-300">
-                                Tickets Sold
-                            </p>
-                        </div>
-                        <div className="text-center">
-                            <p className="big-text-2 font-bold text-white mb-1">
-                                200+
-                            </p>
-                            <p className="normal-text text-slate-300">
-                                Event Organizers
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             {/* Animation Keyframes */}

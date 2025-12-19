@@ -183,7 +183,7 @@ const DashboardTopBar: React.FC<Props> = ({ user }) => {
                 {/* Footer in mobile menu */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-accent/30 bg-primary">
                     <p className="small-text text-slate-300 text-center">
-                        Cafa Tickets Dashboard
+                        Cafa Ticket Dashboard
                     </p>
                 </div>
             </nav>

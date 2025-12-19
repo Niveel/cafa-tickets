@@ -23,7 +23,7 @@ const metrophobic = Metrophobic({
 });
 
 export const metadata: Metadata = {
-  title: "Cafa Tickets",
+  title: "Cafa Ticket",
   description: "An Event ticketing platform.",
 };
 

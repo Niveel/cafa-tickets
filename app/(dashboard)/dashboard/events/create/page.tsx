@@ -7,7 +7,7 @@ import {CreateEventForm} from '@/components';
 import { getMyPaymentProfiles } from '@/app/lib/dashboard';
 
 export const metadata: Metadata = {
-    title: 'Create Event | Cafa Tickets',
+    title: 'Create Event | Cafa Ticket',
     description: 'Create and publish your event on Ghana\'s premier ticketing platform. Set up ticket types, venue details, and start selling tickets.',
     keywords: ['create event Ghana', 'sell tickets online', 'event management', 'Ghana events'],
 };

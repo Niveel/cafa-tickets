@@ -11,7 +11,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { ticket_id } = await params;
     return {
-        title: `Ticket ${ticket_id} | Cafa Tickets`,
+        title: `Ticket ${ticket_id} | Cafa Ticket`,
         description: 'View your ticket details, QR code, and event information.',
     };
 }

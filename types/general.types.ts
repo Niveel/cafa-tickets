@@ -90,3 +90,19 @@ export interface PublicStats {
         last_updated: string;
     };
 }
+
+export interface PolicySection {
+    id: number;
+    title: string;
+    content: string[];
+}
+
+export interface TermSection {
+    id: number;
+    title: string;
+    content: string[];
+    subsections?: {
+        title: string;
+        content: string[];
+    }[];
+}

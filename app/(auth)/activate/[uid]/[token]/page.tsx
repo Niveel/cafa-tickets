@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { ActivateAccountContent } from '@/components';
 
 export const metadata: Metadata = {
-    title: 'Activate Account | Cafa Tickets',
-    description: 'Activate your Cafa Tickets account to start exploring events.',
+    title: 'Activate Account | Cafa Ticket',
+    description: 'Activate your Cafa Ticket account to start exploring events.',
 };
 
 type Props = {

@@ -55,7 +55,7 @@ const PasswordResetEmailSent = ({ email }: Props) => {
                                 Check your inbox
                             </p>
                             <p className="small-text text-slate-400">
-                                Look for an email from Cafa Tickets with the subject &quot;Password Reset Request&quot;
+                                Look for an email from Cafa Ticket with the subject &quot;Password Reset Request&quot;
                             </p>
                         </div>
                     </div>

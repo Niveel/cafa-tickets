@@ -13,7 +13,7 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { slug } = await params;
     return {
-        title: `Edit Ticket Type | Cafa Tickets`,
+        title: `Edit Ticket Type | Cafa Ticket`,
         description: 'Edit ticket type details for your event.',
     };
 }

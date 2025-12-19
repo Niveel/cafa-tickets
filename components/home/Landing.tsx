@@ -325,7 +325,7 @@ const FallbackCards = React.memo(() => (
             <Link
                 href="/events/create"
                 className="block relative h-48 rounded-2xl overflow-hidden border-2 border-accent/30 shadow-xl bg-primary-100 hover:border-accent transition-all duration-300"
-                aria-label="Create your own event on Cafa Tickets"
+                aria-label="Create your own event on Cafa Ticket"
             >
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4 text-center">
                     <Calendar className="w-12 h-12 text-accent-50 mb-3" aria-hidden="true" />
@@ -363,7 +363,7 @@ const NoEventsCard = React.memo(() => (
                 <Link 
                     href="/events"
                     className="px-6 py-3 bg-accent text-white rounded-xl hover:bg-accent-100 transition-colors font-semibold normal-text"
-                    aria-label="Explore all events on Cafa Tickets"
+                    aria-label="Explore all events on Cafa Ticket"
                 >
                     Explore Events
                 </Link>

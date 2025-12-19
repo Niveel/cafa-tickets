@@ -269,7 +269,7 @@ const LoginForm = () => {
                         <span className="text-2xl">🎫</span>
                     </div>
                     <div>
-                        <h1 className="big-text-3 font-bold text-white">Cafa Tickets</h1>
+                        <h1 className="big-text-3 font-bold text-white">Cafa Ticket</h1>
                         <p className="small-text text-slate-300">Your Gateway to Amazing Events</p>
                     </div>
                 </div>
@@ -367,7 +367,7 @@ const LoginForm = () => {
                             </div>
                             <div className="relative flex justify-center normal-text-2">
                                 <span className="bg-primary-100 px-4 text-slate-300">
-                                    New to Cafa Tickets?
+                                    New to Cafa Ticket?
                                 </span>
                             </div>
                         </div>
