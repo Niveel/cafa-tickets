@@ -3,27 +3,13 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {  MapPin, Users, Clock, TrendingUp } from 'lucide-react';
+import { MapPin, Users, Clock, TrendingUp } from 'lucide-react';
+import { Event } from '@/types/events.types';
 
 import { placeholderImage } from '@/data/constants';
 
 interface SoonEventCardProps {
-    event: {
-        id: number;
-        title: string;
-        slug: string;
-        featured_image: string;
-        venue_name: string;
-        venue_city: string;
-        start_date: string;
-        start_time: string;
-        lowest_price: string;
-        tickets_sold: number;
-        total_tickets: number;
-        category: {
-            name: string;
-        };
-    };
+    event: Event;
 }
 
 const SoonEventCard = ({ event }: SoonEventCardProps) => {
@@ -73,7 +59,7 @@ const SoonEventCard = ({ event }: SoonEventCardProps) => {
                 </div>
 
                 {/* Content */}
-                <div className="relative h-full flex flex-col p-6 sm:p-8">
+                <div className="relative h-full flex flex-col p-4 sm:p-6">
                     {/* Top Section - Category & Days Badge */}
                     <div className="flex items-start justify-between mb-auto">
                         {/* Category Badge */}
@@ -145,7 +131,7 @@ const SoonEventCard = ({ event }: SoonEventCardProps) => {
                             <div className="flex items-center gap-2 text-slate-100">
                                 <Users className="w-5 h-5 text-accent-50 shrink-0" aria-hidden="true" />
                                 <span className="normal-text font-medium">
-                                    {event.total_tickets - event.tickets_sold} tickets left
+                                    {event.tickets_available} tickets left
                                 </span>
                             </div>
                         </div>

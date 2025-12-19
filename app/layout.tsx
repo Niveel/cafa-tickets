@@ -209,15 +209,9 @@ export default function RootLayout({
               url: 'https://www.cafaticket.com',
               logo: 'https://www.cafaticket.com/logo.png',
               description: 'Event ticketing platform for discovering and booking tickets worldwide',
-              sameAs: [
-                'https://twitter.com/cafaticket',
-                'https://facebook.com/cafaticket',
-                'https://instagram.com/cafaticket',
-                'https://linkedin.com/company/cafaticket'
-              ],
               contactPoint: {
                 '@type': 'ContactPoint',
-                email: 'support@cafaticket.com',
+                email: 'info@cafaticket.com',
                 contactType: 'Customer Support',
                 availableLanguage: ['English']
               }
