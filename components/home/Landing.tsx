@@ -99,36 +99,20 @@ const Landing = ({ events }: Props) => {
                             </div>
 
                             {/* Search Bar */}
-                            <form onSubmit={handleSearch} className="bg-white rounded-2xl p-2 shadow-2xl max-w-2xl">
+                            <form onSubmit={handleSearch} className="bg-white rounded-2xl p-1 shadow-2xl max-w-2xl">
                                 <div className="flex flex-col sm:flex-row gap-2">
-                                    <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-slate-50 rounded-xl">
-                                        <Search className="w-5 h-5 text-slate-400 shrink-0" aria-hidden="true" />
+                                    <div className="flex-1 flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
+                                        <Search className="w-4 h-4 text-slate-400 shrink-0" aria-hidden="true" />
                                         <input
                                             type="text"
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
-                                            placeholder="Search events, artists, venues..."
-                                            className="w-full bg-transparent outline-none normal-text text-slate-900 placeholder:text-slate-400"
-                                            aria-label="Search events, artists, or venues"
+                                            placeholder="event name, city, venues, artists, ..."
+                                            className="w-full bg-transparent outline-none normal-text-2 text-slate-900 placeholder:text-slate-400"
+                                            aria-label="Search event name, city, venues, etc."
                                         />
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        {/* <div className="flex items-center gap-2 px-4 py-3 bg-slate-50 rounded-xl shrink-0">
-                                            <MapPin className="w-5 h-5 text-slate-400" aria-hidden="true" />
-                                            <select 
-                                                value={selectedCity}
-                                                onChange={(e) => setSelectedCity(e.target.value)}
-                                                className="bg-transparent outline-none normal-text text-slate-900 cursor-pointer"
-                                                aria-label="Filter by city"
-                                            >
-                                                <option value="">All Cities</option>
-                                                {cities.map((city) => (
-                                                    <option key={city} value={city}>
-                                                        {city}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div> */}
                                         <button
                                             type="submit"
                                             className="px-8 py-3.5 bg-linear-to-r from-accent to-accent-100 text-white font-semibold rounded-xl hover:from-accent-100 hover:to-accent transition-all duration-300 hover:scale-105 hover:shadow-2xl shrink-0 normal-text"
