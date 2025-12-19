@@ -166,7 +166,7 @@ const PrivacyPage = () => {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                                 <a
-                                    href="mailto:cafatickets74@gmail.com"
+                                    href="mailto:info@cafaticket.com"
                                     className="px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text hover:bg-accent-100 transition-all duration-300 hover:scale-105 active:scale-95"
                                 >
                                     Email Us

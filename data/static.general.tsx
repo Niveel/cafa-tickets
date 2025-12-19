@@ -58,15 +58,15 @@ export const contactInfo = [
     {
         id: 1,
         label: "Email",
-        value: "cafatickets74@gmail.com",
-        href: "mailto:cafatickets74@gmail.com",
+        value: "info@cafaticket.com",
+        href: "mailto:info@cafaticket.com",
     },
-    {
-        id: 2,
-        label: "Phone",
-        value: "+233 5455454 545",
-        href: "tel:+233555454545",
-    },
+    // {
+    //     id: 2,
+    //     label: "Phone",
+    //     value: "+233 5455454 545",
+    //     href: "tel:+233555454545",
+    // },
 ];
 
 export const profileMenuItems: ProfileMenuItem[] = [
@@ -266,7 +266,7 @@ export const privacyPolicy: PolicySection[] = [
         title: "Contact Us",
         content: [
             "If you have questions, concerns, or requests regarding this Privacy Policy or our data practices, please contact us:",
-            "Email: cafatickets74@gmail.com",
+            "Email: info@cafaticket.com",
             "Phone: +233 5455454 545",
             "We will respond to your inquiry within a reasonable timeframe and work to address your concerns."
         ]
@@ -494,7 +494,7 @@ export const termsOfService: TermSection[] = [
         title: "Contact Information",
         content: [
             "For questions, concerns, or support regarding these Terms, please contact us:",
-            "Email: cafatickets74@gmail.com",
+            "Email: info@cafaticket.com",
             "Phone: +233 5455454 545",
             "We are committed to addressing your inquiries and resolving issues promptly."
         ]

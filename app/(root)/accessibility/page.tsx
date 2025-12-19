@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { Eye, Ear, Keyboard, MousePointer, Users, CheckCircle, Mail, AlertCircle } from 'lucide-react';
+import { Eye, Ear, Keyboard, MousePointer, Users, CheckCircle, Mail } from 'lucide-react';
 
 export const metadata: Metadata = {
     title: 'Accessibility Statement | Cafa Ticket',
@@ -214,7 +214,7 @@ const AccessibilityPage = () => {
                                     </p>
                                     <div className="space-y-2">
                                         <p className="normal-text-2 text-slate-200">
-                                            <strong>Email:</strong> <a href="mailto:accessibility@cafatickets.com" className="text-accent-50 hover:text-accent-100 transition-colors">accessibility@cafatickets.com</a>
+                                            <strong>Email:</strong> <a href="mailto:info@cafaticket.com" className="text-accent-50 hover:text-accent-100 transition-colors">info@cafaticket.com</a>
                                         </p>
                                         <p className="normal-text-2 text-slate-200">
                                             <strong>Response Time:</strong> We aim to respond within 2 business days
