@@ -1,4 +1,5 @@
-import React from 'react';
+'use client';
+
 import { Ticket, Sparkles, Music } from 'lucide-react';
 
 export default function Loading() {
@@ -91,75 +92,7 @@ export default function Loading() {
                 </div>
             </div>
 
-            {/* Custom animations */}
-            <style jsx>{`
-                @keyframes spin-slow-reverse {
-                    from {
-                        transform: rotate(360deg);
-                    }
-                    to {
-                        transform: rotate(0deg);
-                    }
-                }
-
-                @keyframes linear-x {
-                    0%, 100% {
-                        background-position: 0% 50%;
-                    }
-                    50% {
-                        background-position: 100% 50%;
-                    }
-                }
-
-                @keyframes progress {
-                    0% {
-                        transform: translateX(-100%);
-                    }
-                    100% {
-                        transform: translateX(100%);
-                    }
-                }
-
-                @keyframes float {
-                    0%, 100% {
-                        transform: translateY(0) rotate(0deg);
-                        opacity: 0.3;
-                    }
-                    50% {
-                        transform: translateY(-20px) rotate(180deg);
-                        opacity: 0.6;
-                    }
-                }
-
-                .animate-spin-slow-reverse {
-                    animation: spin-slow-reverse 3s linear infinite;
-                }
-
-                .animate-linear-x {
-                    background-size: 200% 200%;
-                    animation: linear-x 3s ease infinite;
-                }
-
-                .animate-progress {
-                    animation: progress 1.5s ease-in-out infinite;
-                }
-
-                .animate-float {
-                    animation: float 4s ease-in-out infinite;
-                }
-
-                .delay-300 {
-                    animation-delay: 0.3s;
-                }
-
-                .delay-500 {
-                    animation-delay: 0.5s;
-                }
-
-                .delay-1000 {
-                    animation-delay: 1s;
-                }
-            `}</style>
+            {/* Custom animations - moved to global CSS or use Tailwind config */}
         </div>
     );
 }
