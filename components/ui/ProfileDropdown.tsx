@@ -147,10 +147,6 @@ const ProfileDropdown = ({
                                         alt="User avatar"
                                     />
                                 </div>
-                                <span 
-                                    className="absolute bottom-0 right-0 w-3.5 h-3.5 bg-accent-50 border-2 border-white rounded-full"
-                                    aria-label="Online status"
-                                ></span>
                             </div>
                             <div className="flex-1 min-w-0">
                                 <p className="normal-text font-bold text-slate-50 truncate">
