@@ -17,7 +17,7 @@ export async function getUserStats() {
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error('Backend error:', errorData);
+            console.error('Could not get user stats:', errorData);
             return null;
         }
 

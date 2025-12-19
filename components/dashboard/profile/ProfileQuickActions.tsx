@@ -22,7 +22,7 @@ const ProfileQuickActions = () => {
             title: 'Payment Profile',
             description: 'Manage payment profile',
             icon: CreditCard,
-            href: '/dashboard/payment/profiles',
+            href: '/dashboard/payments/profiles',
             color: 'from-pink-500 to-pink-600'
         }
     ];
