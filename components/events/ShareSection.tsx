@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Share2, Facebook, Twitter, Mail, Link as LinkIcon, Check } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
 import { EventDetails, RecurringEventDetails } from '@/types/events.types';
+import Link from 'next/link';
 
 interface ShareSectionProps {
     event: EventDetails | RecurringEventDetails;
@@ -11,10 +12,16 @@ interface ShareSectionProps {
 
 const ShareSection = ({ event }: ShareSectionProps) => {
     const [copied, setCopied] = useState<boolean>(false);
+    const [currentUrl, setCurrentUrl] = useState<string>('');
+
+    // ✅ Set URL only on client side
+    useEffect(() => {
+        setCurrentUrl(window.location.href);
+    }, []);
 
     const handleCopyLink = async () => {
         try {
-            await navigator.clipboard.writeText(window.location.href);
+            await navigator.clipboard.writeText(currentUrl);
             setCopied(true);
             setTimeout(() => setCopied(false), 3000);
         } catch (err) {
@@ -79,8 +86,8 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                         {shareButtons.map((button) => {
                             const Icon = button.icon;
                             return (
-                                <a
-                                    key={button.name}
+
+                                <Link key={button.name}
                                     href={button.url}
                                     target="_blank"
                                     rel="noopener noreferrer"
@@ -88,7 +95,7 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                                 >
                                     {/* Background Glow */}
                                     <div className={`absolute inset-0 ${button.bgColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
-                                    
+
                                     {/* Content */}
                                     <div className="relative flex flex-col items-center gap-3">
                                         <div className={`w-14 h-14 rounded-xl ${button.bgColor} border border-accent/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
@@ -98,7 +105,7 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                                             {button.name}
                                         </span>
                                     </div>
-                                </a>
+                                </Link>
                             );
                         })}
                     </div>
@@ -111,20 +118,21 @@ const ShareSection = ({ event }: ShareSectionProps) => {
                                     <LinkIcon className="w-5 h-5 text-accent-50 shrink-0" aria-hidden="true" />
                                     <input
                                         type="text"
-                                        value={typeof window !== 'undefined' ? window.location.href : ''}
+                                        value={currentUrl}
                                         readOnly
                                         className="flex-1 bg-transparent text-slate-200 normal-text-2 outline-none"
                                         onClick={(e) => e.currentTarget.select()}
+                                        placeholder="Loading URL..."
                                     />
                                 </div>
                             </div>
                             <button
                                 onClick={handleCopyLink}
-                                className={`shrink-0 px-8 py-3 rounded-xl font-bold normal-text transition-all duration-300 hover:scale-105 flex items-center gap-2 border-2 ${
-                                    copied
+                                disabled={!currentUrl}
+                                className={`shrink-0 px-8 py-3 rounded-xl font-bold normal-text transition-all duration-300 hover:scale-105 flex items-center gap-2 border-2 disabled:opacity-50 disabled:cursor-not-allowed ${copied
                                         ? 'bg-green-600 border-green-600 text-white'
                                         : 'bg-accent border-accent text-white hover:bg-accent-100'
-                                }`}
+                                    }`}
                                 type="button"
                             >
                                 {copied ? (

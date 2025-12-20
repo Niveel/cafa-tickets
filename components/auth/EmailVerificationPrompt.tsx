@@ -1,6 +1,8 @@
 import React from 'react';
 import { Mail, CheckCircle } from 'lucide-react';
 
+import { contactInfo } from '@/data/static.general';
+
 type Props = {
     email: string;
 };
@@ -92,8 +94,8 @@ const EmailVerificationPrompt = ({ email }: Props) => {
                 <div className="mt-6 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
                     <p className="small-text text-blue-300">
                         💡 <strong>Didn&apos;t receive the email?</strong> Check your spam folder or contact support at{' '}
-                        <a href="mailto:support@cafatickets.com" className="text-blue-400 hover:text-blue-300 font-semibold underline">
-                            support@cafatickets.com
+                        <a href={contactInfo[0].href} className="text-blue-400 hover:text-blue-300 font-semibold underline">
+                            {contactInfo[0].value}
                         </a>
                     </p>
                 </div>

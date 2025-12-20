@@ -3,7 +3,7 @@ import { BASE_URL } from '@/data/constants';
 export async function GET() {
     // Frontend base URL
     const frontendUrl = process.env.NODE_ENV === 'production'
-        ? 'https://cafatickets.com'  // Replace with your actual domain
+        ? 'https://www.cafaticket.com' 
         : 'http://localhost:3000';
 
     // Static routes (only pages that actually exist)
