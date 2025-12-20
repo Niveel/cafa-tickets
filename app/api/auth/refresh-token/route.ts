@@ -32,16 +32,16 @@ export async function POST(request: Request) {
         if (!response.ok) {
             // Refresh token is invalid/expired
             console.error('Refresh token invalid:', data);
-            
+
             // Clear invalid tokens
             const nextResponse = NextResponse.json(
                 { error: 'Refresh token expired', detail: data.detail },
                 { status: 401 }
             );
-            
+
             nextResponse.cookies.delete('access_token');
             nextResponse.cookies.delete('refresh_token');
-            
+
             return nextResponse;
         }
 
@@ -51,11 +51,14 @@ export async function POST(request: Request) {
             { status: 200 }
         );
 
+        const payload = JSON.parse(Buffer.from(data.access.split('.')[1], 'base64').toString('utf-8'));
+        const expiresIn = payload.exp ? payload.exp - Math.floor(Date.now() / 1000) : 60 * 60;
+
         nextResponse.cookies.set('access_token', data.access, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            maxAge: 60 * 5, // 5 minutes
+            maxAge: expiresIn,
             path: '/',
         });
 
