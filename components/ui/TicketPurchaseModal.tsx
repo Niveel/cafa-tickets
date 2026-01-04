@@ -123,13 +123,13 @@ const TicketPurchaseModal = ({ ticket, event, quantity, currentUser, onClose }: 
         setError(null);
 
         try {
-            const response = await fetch('/api/tickets/purchase', {
+            const response = await fetch('/api/payments/initiate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    event_id: event.id,
+                    event_slug: event.slug,
                     ticket_type_id: ticket.id,
                     quantity: quantity,
                     attendee_info: {
@@ -307,4 +307,4 @@ const TicketPurchaseModal = ({ ticket, event, quantity, currentUser, onClose }: 
     );
 };
 
-export default TicketPurchaseModal;
+export default TicketPurchaseModal
