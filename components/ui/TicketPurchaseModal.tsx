@@ -123,7 +123,7 @@ const TicketPurchaseModal = ({ ticket, event, quantity, currentUser, onClose }: 
         setError(null);
 
         try {
-            const response = await fetch('/api/payments/initiate', {
+            const response = await fetch('/api/payments/initiate', { 
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

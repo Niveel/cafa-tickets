@@ -1,14 +1,13 @@
 "use client";
 
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { CheckCircle, XCircle, Loader2, Ticket as TicketIcon, Download, Home } from 'lucide-react';
+import { useSearchParams } from 'next/navigation';
+import { CheckCircle, XCircle, Loader2, Ticket as TicketIcon, Home } from 'lucide-react';
 import Link from 'next/link';
 
 // Separate component for the main content
 function PaymentResultsContent() {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const [status, setStatus] = useState<'verifying' | 'success' | 'failed' | 'error'>('verifying');
     const [tickets, setTickets] = useState<any[]>([]);
     const [purchaseDetails, setPurchaseDetails] = useState<any>(null);
@@ -71,7 +70,7 @@ function PaymentResultsContent() {
 
     if (status === 'success') {
         return (
-            <div className="min-h-screen bg-primary py-12 px-4">
+            <div className="min-h-screen bg-primary py-24 px-4">
                 <div className="max-w-4xl mx-auto">
                     {/* Success Header */}
                     <div className="bg-primary-100 rounded-2xl border-2 border-green-500 p-8 mb-6 text-center">
@@ -137,9 +136,7 @@ function PaymentResultsContent() {
                                         {ticket.qr_code && (
                                             <div className="bg-white p-2 rounded-lg">
                                                 <img 
-                                                    src={`${process.env.NODE_ENV === 'production' 
-                                                        ? 'https://cafaticket.pythonanywhere.com' 
-                                                        : 'http://localhost:8000'}${ticket.qr_code}`}
+                                                    src={ticket.qr_code}
                                                     alt={`QR Code for ${ticket.ticket_id}`}
                                                     className="w-24 h-24"
                                                 />
