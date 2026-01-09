@@ -29,6 +29,7 @@ export interface CurrentUser {
     is_email_verified: boolean;
     date_joined: string;
     last_login: string | null;
+    is_organizer: boolean;
 
     settings: {
         marketing_emails: boolean;

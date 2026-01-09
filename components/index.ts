@@ -171,5 +171,11 @@ export {default as PrivacySettingsContent} from './dashboard/settings/privacy/Pr
 export {default as PrivacyInfo} from './dashboard/settings/privacy/PrivacyInfo';
 export {default as DeleteAccountSection} from './dashboard/settings/privacy/DeleteAccountSection';
 export {default as DataPrivacySection} from './dashboard/settings/privacy/DataPrivacySection';
+// dashboard/verification   
+export {default as VerificationHeader} from './dashboard/verification/VerificationHeader';
+export {default as VerificationFlow} from './dashboard/verification/VerificationFlow';
+export {default as IDUploadStep} from './dashboard/verification/IDUploadStep';
+export {default as SelfieStep} from './dashboard/verification/SelfieStep';
+export {default as VerificationResult} from './dashboard/verification/VerificationResult';
 // contact
 export {default as ContactForm} from './contact/ContactForm';
