@@ -33,33 +33,43 @@ export const dashboardActions: Action[] = [
 ];
 
 // for payment profile
-export const networkOptions = [
-    { value: '', label: 'Select Network' },
-    { value: 'MTN', label: 'MTN Mobile Money' },
-    { value: 'Vodafone', label: 'Vodafone Cash' },
-    { value: 'AirtelTigo', label: 'AirtelTigo Money' }
+// Complete Ghana bank data with codes
+export const ghanaBanks = [
+    { name: 'Absa Bank Ghana Limited', code: '030100' },
+    { name: 'Access Bank Ghana Plc', code: '280100' },
+    { name: 'ADB Bank Limited', code: '080100' },
+    { name: 'ARB Apex Bank', code: '070101' },
+    { name: 'Bank of Africa Ghana Limited', code: '210100' },
+    { name: 'Bank of Ghana', code: '010100' },
+    { name: 'CAL Bank Limited', code: '140100' }, // ✅ Fixed - was 401100
+    { name: 'Consolidated Bank Ghana Limited', code: '340100' },
+    { name: 'Ecobank Ghana Limited', code: '130100' },
+    { name: 'FBNBank Ghana Limited', code: '200100' },
+    { name: 'Fidelity Bank Ghana Limited', code: '240100' },
+    { name: 'First Atlantic Bank Limited', code: '170100' },
+    { name: 'First National Bank Ghana Limited', code: '330100' },
+    { name: 'GCB Bank Limited', code: '040100' },
+    { name: 'Guaranty Trust Bank (Ghana) Limited', code: '230100' },
+    { name: 'National Investment Bank Limited', code: '050100' },
+    { name: 'OmniBSIC Bank Ghana Limited', code: '360100' },
+    { name: 'Prudential Bank Limited', code: '180100' },
+    { name: 'Republic Bank (GH) Limited', code: '110100' },
+    { name: 'Société Générale Ghana Limited', code: '090100' },
+    { name: 'Stanbic Bank Ghana Limited', code: '190100' },
+    { name: 'Standard Chartered Bank Ghana Limited', code: '020100' },
+    { name: 'United Bank for Africa Ghana Limited', code: '060100' },
+    { name: 'Universal Merchant Bank Ghana Limited', code: '100100' },
+    { name: 'Zenith Bank Ghana Limited', code: '120100' },
 ];
 
-export const bankOptions = [
-    { value: '', label: 'Select Bank' },
-    { value: 'CAL Bank', label: 'CAL Bank' },
-    { value: 'GCB Bank', label: 'GCB Bank Limited' },
-    { value: 'Ecobank Ghana', label: 'Ecobank Ghana' },
-    { value: 'Standard Chartered', label: 'Standard Chartered Bank Ghana' },
-    { value: 'Fidelity Bank', label: 'Fidelity Bank Ghana' },
-    { value: 'Absa Bank', label: 'Absa Bank Ghana' },
-    { value: 'Zenith Bank', label: 'Zenith Bank Ghana' },
-    { value: 'Stanbic Bank', label: 'Stanbic Bank Ghana' }
-];
+// Bank options for dropdown (only names)
+export const bankOptions = ghanaBanks.map(bank => ({
+    label: bank.name,
+    value: bank.name
+}));
 
-export const bankCodeOptions = [
-    { value: '', label: 'Select Bank Code' },
-    { value: 'CAL', label: 'CAL' },
-    { value: 'GCB', label: 'GCB' },
-    { value: 'ECO', label: 'ECO' },
-    { value: 'SCB', label: 'SCB' },
-    { value: 'FID', label: 'FID' },
-    { value: 'ABS', label: 'ABS' },
-    { value: 'ZEN', label: 'ZEN' },
-    { value: 'SBG', label: 'SBG' }
-];
+// Helper function to get bank code from name
+export const getBankCodeFromName = (bankName: string): string => {
+    const bank = ghanaBanks.find(b => b.name === bankName);
+    return bank?.code || '';
+};

@@ -2,17 +2,14 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Smartphone, Building2, AlertCircle } from 'lucide-react';
+import { Building2, AlertCircle } from 'lucide-react';
 
 import { AppForm, AppFormField, SubmitButton, FormLoader } from '@/components';
-import { mobileMoneyValidation, bankTransferValidation } from '@/data/validationConstants';
-import { networkOptions, bankOptions, bankCodeOptions } from '@/data/static.dashboard';
-
-type PaymentMethod = 'mobile_money' | 'bank_transfer';
+import { bankTransferValidation } from '@/data/validationConstants';
+import { bankOptions, getBankCodeFromName } from '@/data/static.dashboard';
 
 const CreatePaymentProfileForm = () => {
     const router = useRouter();
-    const [paymentMethod, setPaymentMethod] = React.useState<PaymentMethod>('mobile_money');
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
 
@@ -21,24 +18,25 @@ const CreatePaymentProfileForm = () => {
         setError(null);
 
         try {
+            // Automatically get bank code from bank name
+            const bankCode = getBankCodeFromName(values.bank_name);
+
+            if (!bankCode) {
+                throw new Error('Invalid bank selected. Please try again.');
+            }
+
             // Build request payload
             const payload = {
-                method: paymentMethod,
+                method: 'bank_transfer',
                 name: values.name,
                 description: values.description || '',
-                account_details: paymentMethod === 'mobile_money'
-                    ? {
-                        mobile_number: values.mobile_number,
-                        network: values.network,
-                        account_name: values.account_name
-                    }
-                    : {
-                        account_number: values.account_number,
-                        account_name: values.account_name,
-                        bank_name: values.bank_name,
-                        bank_code: values.bank_code,
-                        branch: values.branch || ''
-                    }
+                account_details: {
+                    account_number: values.account_number,
+                    account_name: values.account_name,
+                    bank_name: values.bank_name,
+                    bank_code: bankCode, // ✅ Automatically mapped
+                    branch: values.branch || ''
+                }
             };
 
             // Call API
@@ -70,57 +68,18 @@ const CreatePaymentProfileForm = () => {
             <FormLoader visible={isSubmitting} />
 
             <div role="region" aria-label="Create payment profile" className="bg-primary rounded-xl p-6 border-2 border-accent/30">
-                <h1 className="big-text-2 font-bold text-white mb-6">
-                    Create Payment Profile
-                </h1>
-
-                {/* Payment Method Selection */}
-                <div className="mb-8">
-                    <label className="block normal-text-2 text-slate-300 font-medium mb-3">
-                        Payment Method <span className="text-accent-50">*</span>
-                    </label>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <button
-                            type="button"
-                            onClick={() => setPaymentMethod('mobile_money')}
-                            className={`p-6 rounded-xl border-2 transition-all duration-300 ${paymentMethod === 'mobile_money'
-                                ? 'border-accent bg-accent/10'
-                                : 'border-accent/30 hover:border-accent/50'
-                                }`}
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-xl ${paymentMethod === 'mobile_money' ? 'bg-blue-500/20' : 'bg-slate-500/20'
-                                    } flex items-center justify-center`}>
-                                    <Smartphone className={`w-6 h-6 ${paymentMethod === 'mobile_money' ? 'text-blue-400' : 'text-slate-400'
-                                        }`} aria-hidden="true" />
-                                </div>
-                                <div className="text-left">
-                                    <p className="big-text-5 font-bold text-white">Mobile Money</p>
-                                    <p className="small-text text-slate-400">MTN, Vodafone, AirtelTigo</p>
-                                </div>
-                            </div>
-                        </button>
-
-                        <button
-                            type="button"
-                            onClick={() => setPaymentMethod('bank_transfer')}
-                            className={`p-6 rounded-xl border-2 transition-all duration-300 ${paymentMethod === 'bank_transfer'
-                                ? 'border-accent bg-accent/10'
-                                : 'border-accent/30 hover:border-accent/50'
-                                }`}
-                        >
-                            <div className="flex items-center gap-4">
-                                <div className={`w-12 h-12 rounded-xl ${paymentMethod === 'bank_transfer' ? 'bg-purple-500/20' : 'bg-slate-500/20'
-                                    } flex items-center justify-center`}>
-                                    <Building2 className={`w-6 h-6 ${paymentMethod === 'bank_transfer' ? 'text-purple-400' : 'text-slate-400'
-                                        }`} aria-hidden="true" />
-                                </div>
-                                <div className="text-left">
-                                    <p className="big-text-5 font-bold text-white">Bank Transfer</p>
-                                    <p className="small-text text-slate-400">All major Ghanaian banks</p>
-                                </div>
-                            </div>
-                        </button>
+                {/* Header */}
+                <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
+                        <Building2 className="w-6 h-6 text-purple-400" aria-hidden="true" />
+                    </div>
+                    <div>
+                        <h1 className="big-text-2 font-bold text-white">
+                            Create Bank Account Profile
+                        </h1>
+                        <p className="small-text text-slate-400">
+                            Add your bank account for receiving payouts
+                        </p>
                     </div>
                 </div>
 
@@ -137,15 +96,15 @@ const CreatePaymentProfileForm = () => {
                 {/* Form */}
                 <AppForm
                     initialValues={{
-                        method: paymentMethod,
                         name: '',
                         description: '',
-                        ...(paymentMethod === 'mobile_money'
-                            ? { mobile_number: '', network: '', account_name: '' }
-                            : { account_number: '', account_name: '', bank_name: '', bank_code: '', branch: '' }
-                        )
+                        account_number: '',
+                        account_name: '',
+                        bank_name: '',
+                        branch: ''
+                        // bank_code removed - added automatically
                     }}
-                    validationSchema={paymentMethod === 'mobile_money' ? mobileMoneyValidation : bankTransferValidation}
+                    validationSchema={bankTransferValidation}
                     onSubmit={handleSubmit}
                 >
                     {/* Profile Name */}
@@ -153,7 +112,7 @@ const CreatePaymentProfileForm = () => {
                         type="text"
                         name="name"
                         label="Profile Name"
-                        placeholder="e.g., My MTN Mobile Money"
+                        placeholder="e.g., My GCB Bank Account"
                     />
 
                     {/* Description */}
@@ -166,82 +125,51 @@ const CreatePaymentProfileForm = () => {
                         rows={3}
                     />
 
-                    {/* Mobile Money Fields */}
-                    {paymentMethod === 'mobile_money' && (
-                        <>
-                            <AppFormField
-                                type="tel"
-                                name="mobile_number"
-                                label="Mobile Number"
-                                placeholder="+233241234567"
-                            />
+                    {/* Account Number */}
+                    <AppFormField
+                        type="text"
+                        name="account_number"
+                        label="Account Number"
+                        placeholder="1234567890"
+                    />
 
-                            <AppFormField
-                                type="select"
-                                name="network"
-                                label="Network"
-                                options={networkOptions}
-                            />
+                    {/* Account Name */}
+                    <AppFormField
+                        type="text"
+                        name="account_name"
+                        label="Account Name"
+                        placeholder="Full name as registered with the bank"
+                    />
 
-                            <AppFormField
-                                type="text"
-                                name="account_name"
-                                label="Account Name"
-                                placeholder="Full name as registered"
-                            />
-                        </>
-                    )}
+                    {/* Bank Name - Only field user sees */}
+                    <AppFormField
+                        type="select"
+                        name="bank_name"
+                        label="Bank Name"
+                        options={bankOptions}
+                        placeholder="Select your bank"
+                    />
 
-                    {/* Bank Transfer Fields */}
-                    {paymentMethod === 'bank_transfer' && (
-                        <>
-                            <AppFormField
-                                type="text"
-                                name="account_number"
-                                label="Account Number"
-                                placeholder="1234567890"
-                            />
+                    {/* Bank Code field REMOVED - handled automatically */}
 
-                            <AppFormField
-                                type="text"
-                                name="account_name"
-                                label="Account Name"
-                                placeholder="Full name as registered"
-                            />
-
-                            <AppFormField
-                                type="select"
-                                name="bank_name"
-                                label="Bank Name"
-                                options={bankOptions}
-                            />
-
-                            <AppFormField
-                                type="select"
-                                name="bank_code"
-                                label="Bank Code"
-                                options={bankCodeOptions}
-                            />
-
-                            <AppFormField
-                                type="text"
-                                name="branch"
-                                label="Branch (Optional)"
-                                placeholder="e.g., Osu Branch"
-                            />
-                        </>
-                    )}
+                    {/* Branch */}
+                    <AppFormField
+                        type="text"
+                        name="branch"
+                        label="Branch (Optional)"
+                        placeholder="e.g., Osu Branch"
+                    />
 
                     {/* Verification Info */}
                     <div className="p-4 bg-blue-500/10 rounded-lg border border-blue-500/20">
                         <p className="small-text text-blue-300">
-                            <strong>Verification Process:</strong> A 1 GHS verification fee will be deducted from your account.
-                            If successful, your profile will be verified within 1-2 minutes. This fee is non-refundable.
+                            <strong>Verification Process:</strong> Your bank account will be verified automatically.
+                            This process is free and takes about 5-10 seconds.
                         </p>
                     </div>
 
                     {/* Submit Button */}
-                    <SubmitButton title='Create Payment Profile' />
+                    <SubmitButton title='Create Bank Account Profile' />
                 </AppForm>
             </div>
         </>

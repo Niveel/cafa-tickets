@@ -9,6 +9,11 @@ export async function POST(request: Request) {
 
         // Validate required fields
         if (!body.method || !body.name || !body.account_details) {
+            console.error('❌ Validation error - Missing fields:', { 
+                hasMethod: !!body.method, 
+                hasName: !!body.name, 
+                hasAccountDetails: !!body.account_details 
+            });
             return NextResponse.json(
                 {
                     error: "Validation error",
@@ -18,18 +23,19 @@ export async function POST(request: Request) {
             );
         }
 
-        // Validate method
-        if (!["mobile_money", "bank_transfer"].includes(body.method)) {
+        // Validate method - only bank_transfer allowed
+        if (body.method !== "bank_transfer") {
+            console.error('❌ Invalid payment method:', body.method);
             return NextResponse.json(
                 {
                     error: "Validation error",
-                    message: "Invalid method. Must be 'mobile_money' or 'bank_transfer'"
+                    message: "Invalid method. Only 'bank_transfer' is supported"
                 },
                 { status: 400 }
             );
         }
 
-        // ✅ Use shared helper - handles auth + retry automatically
+        // Call backend API
         const response = await fetchWithAuthRetry(`${BASE_URL}/auth/payment-profile/`, {
             method: "POST",
             headers: {
@@ -41,16 +47,48 @@ export async function POST(request: Request) {
         const data = await response.json();
 
         if (!response.ok) {
-            return NextResponse.json(data, { status: response.status });
+            console.error('❌ Backend error:', {
+                status: response.status,
+                data,
+                details: data?.details
+            });
+            
+            // Extract specific error message from details
+            let errorMessage = data.message || 'Failed to create payment profile';
+            
+            if (data.details) {
+                // Handle account_details errors (array of strings)
+                if (data.details.account_details && Array.isArray(data.details.account_details)) {
+                    errorMessage = data.details.account_details[0];
+                }
+                // Handle other field errors (could be strings or arrays)
+                else if (typeof data.details === 'object') {
+                    const firstError = Object.values(data.details)[0];
+                    if (Array.isArray(firstError)) {
+                        errorMessage = firstError[0];
+                    } else if (typeof firstError === 'string') {
+                        errorMessage = firstError;
+                    }
+                }
+            }
+            
+            return NextResponse.json(
+                { 
+                    ...data, 
+                    message: errorMessage // Override generic message with specific one
+                }, 
+                { status: response.status }
+            );
         }
 
         return NextResponse.json(data, { status: 201 });
 
     } catch (error) {
-        console.error("Payment profile creation error:", error);
+        console.error("💥 Payment profile creation error:", error);
         
         // Handle auth errors
         if (error instanceof Error && error.message === 'Authentication required') {
+            console.error('❌ Authentication required - no token found');
             return NextResponse.json(
                 { error: "Unauthorized", message: "No authentication token found" },
                 { status: 401 }

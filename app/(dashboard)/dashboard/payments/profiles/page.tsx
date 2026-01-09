@@ -43,7 +43,7 @@ const PaymentProfilesPage = async () => {
                 </h2>
                 <div className="space-y-2">
                     <p className="normal-text text-slate-200">
-                        • Add your <strong>Mobile Money</strong> (MTN, Vodafone, AirtelTigo) or <strong>Bank Account</strong> to receive payments
+                        • Add your or <strong>Bank Account</strong> to receive payments
                     </p>
                     <p className="normal-text text-slate-200">
                         • A <strong>1 GHS verification fee</strong> will be deducted to verify your account (non-refundable)
@@ -52,7 +52,7 @@ const PaymentProfilesPage = async () => {
                         • Set one profile as <strong>default</strong> for automatic payouts
                     </p>
                     <p className="normal-text text-slate-200">
-                        • Transaction fees: <strong>Mobile Money 1.5%</strong> | <strong>Bank Transfer 2.0%</strong>
+                        • Transaction fees: <strong>Bank Transfer 2.0%</strong>
                     </p>
                 </div>
             </div>

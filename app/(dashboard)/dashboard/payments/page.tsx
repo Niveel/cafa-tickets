@@ -4,14 +4,16 @@ import { Receipt, Wallet } from 'lucide-react';
 import {
     PayoutStatusCard,
     RevenueByEventTable,
-    RevenueByMonthChart
+    RevenueByMonthChart,
+    RequestPayoutButton
 } from "@/components";
-import { getMyRevenueSummary } from '@/app/lib/dashboard';
+import { getMyRevenueSummary, getMyPaymentProfiles } from '@/app/lib/dashboard';
 
 const PaymentsPage = async () => {
-    const revenueSummary = await getMyRevenueSummary();
-
-    console.log("Revenue Summary:", revenueSummary);
+    const [revenueSummary, paymentProfiles] = await Promise.all([
+        getMyRevenueSummary(),
+        getMyPaymentProfiles()
+    ]);
 
     if (!revenueSummary) {
         return (
@@ -22,6 +24,11 @@ const PaymentsPage = async () => {
             </main>
         );
     }
+
+    // Check if user has verified payment profile
+    const hasVerifiedProfile = paymentProfiles?.results?.some(
+        profile => profile.is_default && profile.is_verified
+    ) ?? false;
 
     return (
         <main className='dash-page space-y-8'>
@@ -36,7 +43,13 @@ const PaymentsPage = async () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <RequestPayoutButton
+                    availableBalance={revenueSummary.payout_status.available_balance}
+                    pendingBalance={revenueSummary.payout_status.pending_balance}
+                    hasVerifiedProfile={hasVerifiedProfile}
+                />
+
                 <Link
                     href="/dashboard/payments/history"
                     className="group p-6 bg-primary rounded-xl border-2 border-accent/30 hover:border-accent transition-all duration-300 hover:scale-[1.02]"

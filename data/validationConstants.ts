@@ -76,7 +76,6 @@ export const mobileMoneyValidation = Yup.object().shape({
 });
 
 export const bankTransferValidation = Yup.object().shape({
-    method: Yup.string().required(),
     name: Yup.string()
         .required('Profile name is required')
         .min(3, 'Name must be at least 3 characters')
@@ -85,14 +84,14 @@ export const bankTransferValidation = Yup.object().shape({
         .max(500, 'Description must not exceed 500 characters'),
     account_number: Yup.string()
         .required('Account number is required')
-        .matches(/^[0-9]{10}$/, 'Account number must be exactly 10 digits'),
+        .matches(/^\d+$/, 'Account number must contain only digits')
+        .min(8, 'Account number must be at least 8 digits')
+        .max(17, 'Account number must be at most 17 digits'),
     account_name: Yup.string()
         .required('Account name is required')
         .min(3, 'Account name must be at least 3 characters'),
     bank_name: Yup.string()
         .required('Bank name is required'),
-    bank_code: Yup.string()
-        .required('Bank code is required'),
     branch: Yup.string()
 });
 
