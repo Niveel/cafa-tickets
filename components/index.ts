@@ -94,6 +94,7 @@ export {default as PaymentHistoryContent} from './dashboard/payments/PaymentHist
 export {default as PaymentProfilesContent} from './dashboard/payments/PaymentProfilesContent';
 export {default as EditPaymentProfileForm} from './dashboard/payments/EditPaymentProfileForm';
 export {default as RequestPayoutButton} from './dashboard/payments/RequestPayoutButton';
+export {default as FaceVerificationModal} from './dashboard/payments/FaceVerificationModal';
 // dashboard/events
 export {default as MyEventsFilters} from './dashboard/events/MyEventsFilters';
 export {default as MyEventsList} from './dashboard/events/MyEventsList';

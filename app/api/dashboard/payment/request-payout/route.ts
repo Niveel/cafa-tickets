@@ -1,4 +1,4 @@
-// app/api/dashboard/payments/request-payout/route.ts
+// app/api/dashboard/payment/request-payout/route.ts
 import { NextResponse } from 'next/server';
 import { BASE_URL } from '@/data/constants';
 import { fetchWithAuthRetry } from '@/app/lib/serverAuth';

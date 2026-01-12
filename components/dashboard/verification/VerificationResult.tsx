@@ -38,7 +38,7 @@ const VerificationResult = ({ status, rejectionReason, onRetry }: VerificationRe
                     <CheckCircle className="w-10 h-10 text-green-400" />
                 </div>
                 <h2 className="big-text-2 font-bold text-white mb-3">
-                    Verification Successful! 🎉
+                    Verification Successful! 
                 </h2>
                 <p className="normal-text text-slate-300 mb-8">
                     Your identity has been verified. You can now create events on Cafa Tickets.

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DollarSign, X, AlertCircle, CheckCircle, Wallet, ArrowRight } from 'lucide-react';
+import FaceVerificationModal from './FaceVerificationModal';
 
 interface RequestPayoutButtonProps {
     availableBalance: string;
@@ -14,6 +15,7 @@ const RequestPayoutButton = ({
     pendingBalance,
     hasVerifiedProfile 
 }: RequestPayoutButtonProps) => {
+    const [isFaceVerificationOpen, setIsFaceVerificationOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [step, setStep] = useState<'amount' | 'confirm'>('amount');
     const [amount, setAmount] = useState('');
@@ -26,7 +28,7 @@ const RequestPayoutButton = ({
     const hasBalance = balance > 0;
     const isDisabled = !hasBalance || !hasVerifiedProfile || pending > 0;
 
-    const minPayoutAmount = 10; // GHS 50 minimum
+    const minPayoutAmount = 50; // GHS 50 minimum
     const parsedAmount = parseFloat(amount);
 
     const getDisabledReason = () => {
@@ -37,11 +39,22 @@ const RequestPayoutButton = ({
     };
 
     const handleOpenModal = () => {
+        // Open face verification first
+        setIsFaceVerificationOpen(true);
+    };
+
+    const handleFaceVerificationSuccess = () => {
+        // Face verified, now open withdrawal modal
+        setIsFaceVerificationOpen(false);
         setIsModalOpen(true);
         setStep('amount');
         setAmount('');
         setError(null);
         setSuccess(false);
+    };
+
+    const handleFaceVerificationClose = () => {
+        setIsFaceVerificationOpen(false);
     };
 
     const handleCloseModal = () => {
@@ -140,7 +153,7 @@ const RequestPayoutButton = ({
             <button
                 onClick={handleOpenModal}
                 disabled={isDisabled}
-                className="group p-4 bg-emerald-600 rounded-xl border-2 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="group p-6 bg-emerald-600 rounded-xl border-2 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                 aria-label="Request payout"
                 title={isDisabled ? getDisabledReason() : 'Request payout'}
             >
@@ -157,7 +170,16 @@ const RequestPayoutButton = ({
                 </div>
             </button>
 
-            {/* Modal */}
+            {/* Face Verification Modal - Security Check */}
+            <FaceVerificationModal
+                isOpen={isFaceVerificationOpen}
+                onClose={handleFaceVerificationClose}
+                onSuccess={handleFaceVerificationSuccess}
+                title="Verify Identity for Withdrawal"
+                description="For your security, please verify your identity before requesting a payout."
+            />
+
+            {/* Withdrawal Modal - After Verification */}
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
                     <div 
