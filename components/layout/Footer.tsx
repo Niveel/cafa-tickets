@@ -13,7 +13,7 @@ const Footer = () => {
 
     const handleNewsletterSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         if (!email || !email.includes('@')) {
             setMessage({ type: 'error', text: 'Please enter a valid email address' });
             return;
@@ -35,7 +35,7 @@ const Footer = () => {
 
             if (!response.ok) {
                 let errorMessage = 'Failed to subscribe. Please try again.';
-                
+
                 if (data.email && Array.isArray(data.email)) {
                     errorMessage = data.email[0];
                 } else if (data.error) {
@@ -53,7 +53,7 @@ const Footer = () => {
             // Success
             setMessage({ type: 'success', text: 'Successfully subscribed to newsletter!' });
             setEmail('');
-            
+
             // Clear success message after 5 seconds
             setTimeout(() => {
                 setMessage(null);
@@ -90,9 +90,10 @@ const Footer = () => {
                             Ready to Experience Something Amazing?
                         </h2>
                         <p className="normal-text text-blue-100 max-w-2xl mx-auto mb-6">
-                            Join thousands of event-goers discovering the best experiences across Ghana
+                            Join thousands of event-goers discovering the best experiences near them.
                         </p>
-                        <Link 
+
+                        <Link
                             href="/events"
                             className="inline-flex items-center gap-2 px-4 py-2 md:px-6 md:py-3 bg-white text-primary font-semibold rounded-full hover:bg-blue-50 transition-all duration-300 hover:scale-105 hover:shadow-2xl group small-text"
                         >
@@ -122,17 +123,18 @@ const Footer = () => {
                                     </div>
                                 </div>
                             </Link>
-                            
+
                             <p className="normal-text-2 text-blue-100 leading-relaxed">
-                                Ghana&apos;s premier event ticketing platform. Discover, book, and experience unforgettable moments.
+                                A premier event ticketing platform. Discover, book, and experience unforgettable moments.
                             </p>
-                            
+
+
                             {/* Social Links */}
                             <div>
                                 <p className="small-text font-semibold text-white mb-3 uppercase tracking-wider">Connect With Us</p>
                                 <div className="flex gap-3" aria-label="Social media links">
                                     {socialLinks.map(({ id, label, icon, href }) => (
-                                        <Link 
+                                        <Link
                                             key={id}
                                             href={href}
                                             aria-label={`Visit our ${label}`}
@@ -155,7 +157,7 @@ const Footer = () => {
                             </h3>
                             <nav aria-label="Footer navigation" className="space-y-3">
                                 {navLinks.map((link) => (
-                                    <Link 
+                                    <Link
                                         key={link.id}
                                         href={link.url}
                                         className="group flex items-center gap-2 normal-text text-blue-100 hover:text-white transition-all duration-300 hover:translate-x-2"
@@ -216,22 +218,20 @@ const Footer = () => {
                                 <p className="normal-text-2 text-blue-100 mb-4">
                                     Get the latest events and exclusive offers delivered to your inbox.
                                 </p>
-                                
+
                                 {/* Success/Error Message */}
                                 {message && (
-                                    <div className={`mb-3 p-3 rounded-lg flex items-start gap-2 animate-fade-in ${
-                                        message.type === 'success' 
-                                            ? 'bg-emerald-500/20 border border-emerald-500/30' 
-                                            : 'bg-red-500/20 border border-red-500/30'
-                                    }`}>
+                                    <div className={`mb-3 p-3 rounded-lg flex items-start gap-2 animate-fade-in ${message.type === 'success'
+                                        ? 'bg-emerald-500/20 border border-emerald-500/30'
+                                        : 'bg-red-500/20 border border-red-500/30'
+                                        }`}>
                                         {message.type === 'success' ? (
                                             <CheckCircle className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
                                         ) : (
                                             <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                                         )}
-                                        <p className={`small-text ${
-                                            message.type === 'success' ? 'text-emerald-200' : 'text-red-200'
-                                        }`}>
+                                        <p className={`small-text ${message.type === 'success' ? 'text-emerald-200' : 'text-red-200'
+                                            }`}>
                                             {message.text}
                                         </p>
                                     </div>

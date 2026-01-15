@@ -23,8 +23,9 @@ const MyEventsList = ({ events, onDelete }: Props) => {
                     No Events Found
                 </h2>
                 <p className="normal-text text-slate-300 mb-6 max-w-md mx-auto">
-                    You haven&apos;t created any events yet. Start by creating your first event and reach thousands of attendees across Ghana.
+                    You haven&apos;t created any events yet. Start by creating your first event and reach thousands of attendees.
                 </p>
+
                 <Link
                     href="/dashboard/events/create"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300"

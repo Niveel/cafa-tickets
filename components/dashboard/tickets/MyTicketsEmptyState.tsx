@@ -38,8 +38,9 @@ const MyTicketsEmptyState = ({ hasFilters }: Props) => {
                 No Tickets Yet
             </h2>
             <p className="normal-text text-slate-400 text-center max-w-md mb-6">
-                You haven&apos;t purchased any tickets yet. Browse events and get your tickets to amazing experiences across Ghana!
+                You haven&apos;t purchased any tickets yet. Browse events and get your tickets to amazing experiences!
             </p>
+
             <Link
                 href="/events"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-accent hover:bg-accent-100 text-white rounded-xl font-semibold normal-text-2 transition-colors"

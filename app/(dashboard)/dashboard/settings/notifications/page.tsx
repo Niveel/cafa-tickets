@@ -4,7 +4,7 @@ import { NotificationsSettingsContent } from '@/components';
 export const metadata: Metadata = {
     title: 'Notification Settings | Cafa Ticket',
     description: 'Manage your email and SMS notification preferences for events, reminders, and marketing.',
-    keywords: ['notifications', 'email preferences', 'SMS alerts', 'event reminders', 'Ghana'],
+    keywords: ['notifications', 'email preferences', 'SMS alerts', 'event reminders'],
 };
 
 const NotificationsSettingsPage = async () => {

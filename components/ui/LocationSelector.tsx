@@ -70,7 +70,7 @@ const LocationSelector = ({
         const country = addressComponents.find(comp => 
             comp.types.includes('country')
         );
-        return country?.long_name || 'Ghana';
+        return country?.long_name || '';
     };
 
     // Extract street address from address components
@@ -120,10 +120,7 @@ const LocationSelector = ({
 
     // Handle autocomplete load
     const onLoad = useCallback((autocompleteInstance: google.maps.places.Autocomplete) => {
-        // Restrict to Ghana (optional - remove if you want worldwide)
-        autocompleteInstance.setComponentRestrictions({
-            country: ['gh']
-        });
+        // No country restrictions - worldwide search enabled
 
         // Set fields to retrieve
         autocompleteInstance.setFields([
@@ -196,7 +193,7 @@ const LocationSelector = ({
                             type="text"
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            placeholder="Search for a venue or address..."
+                            placeholder="Search for a venue or address worldwide..."
                             className={`
                                 w-full h-12 pl-12 pr-4 bg-primary-100 border-2 text-white rounded-xl 
                                 normal-text-2 placeholder:text-slate-500
@@ -222,7 +219,7 @@ const LocationSelector = ({
             {/* Helper Text */}
             {!error && (
                 <p className="mt-2 small-text text-slate-400">
-                    Start typing to search for venues, landmarks, or addresses in Ghana
+                    Start typing to search for venues, landmarks, or addresses anywhere in the world
                 </p>
             )}
         </div>

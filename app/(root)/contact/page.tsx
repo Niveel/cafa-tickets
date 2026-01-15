@@ -2,7 +2,7 @@ import React from 'react';
 import { Mail, Phone, MapPin, MessageCircle, Clock, HeadphonesIcon } from 'lucide-react';
 import Link from 'next/link';
 
-import {ContactForm} from '@/components';
+import { ContactForm } from '@/components';
 import { getCurrentUser } from '@/app/lib/auth';
 import { contactInfo, socialLinks } from '@/data/static.general';
 
@@ -14,7 +14,7 @@ const ContactPage = async () => {
             {/* Hero Section */}
             <section className="relative overflow-hidden bg-linear-to-br from-primary via-primary-100 to-primary-200 border-b-2 border-accent">
                 <div className="absolute inset-0 bg-[url('/assets/patterns/grid.svg')] opacity-5"></div>
-                
+
                 <div className="inner-wrapper relative py-16 sm:py-20 md:py-24">
                     <div className="text-center max-w-3xl mx-auto">
                         {/* Icon */}
@@ -28,7 +28,7 @@ const ContactPage = async () => {
                         <h1 className="massive-text text-white mb-4">
                             Get in Touch
                         </h1>
-                        
+
                         {/* Subtitle */}
                         <p className="big-text-5 text-slate-200 mb-6">
                             Have questions? We're here to help. Send us a message and we'll respond as soon as possible.
@@ -56,28 +56,12 @@ const ContactPage = async () => {
                             <p className="normal-text-2 text-slate-300 mb-3">
                                 Send us an email anytime
                             </p>
-                            <a 
+                            <a
                                 href={contactInfo[0].href}
                                 className="text-accent-50 hover:text-accent font-semibold normal-text-2 hover:underline"
                             >
                                 {contactInfo[0].value}
                             </a>
-                        </div>
-
-                        {/* Location Card */}
-                        <div className="bg-primary rounded-xl p-6 border-2 border-accent/20 hover:border-accent transition-all duration-300 group">
-                            <div className="w-14 h-14 rounded-xl bg-accent/20 flex-center mb-4 border border-accent/30 group-hover:scale-110 transition-transform">
-                                <MapPin className="w-7 h-7 text-accent-50" />
-                            </div>
-                            <h3 className="big-text-5 font-bold text-white mb-2">
-                                Location
-                            </h3>
-                            <p className="normal-text-2 text-slate-300 mb-3">
-                                Serving all of Ghana
-                            </p>
-                            <p className="text-accent-50 font-semibold normal-text-2">
-                                Accra, Ghana
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -145,19 +129,19 @@ const ContactPage = async () => {
                                             Check out our frequently asked questions or browse our help center.
                                         </p>
                                         <div className="space-y-2">
-                                            <a 
+                                            <a
                                                 href="/events"
                                                 className="block text-accent-50 hover:text-accent font-semibold normal-text-2 hover:underline"
                                             >
                                                 Browse Events →
                                             </a>
-                                            <a 
+                                            <a
                                                 href="/privacy"
                                                 className="block text-accent-50 hover:text-accent font-semibold normal-text-2 hover:underline"
                                             >
                                                 Privacy Policy →
                                             </a>
-                                            <a 
+                                            <a
                                                 href="/terms"
                                                 className="block text-accent-50 hover:text-accent font-semibold normal-text-2 hover:underline"
                                             >
@@ -200,8 +184,9 @@ const ContactPage = async () => {
                         Looking for Events?
                     </h3>
                     <p className="normal-text text-slate-200 mb-6 max-w-2xl mx-auto">
-                        Discover amazing events happening across Ghana. From concerts to conferences, find your next experience.
+                        Discover amazing events happening near you. From concerts to conferences, find your next experience.
                     </p>
+
                     <a
                         href="/events"
                         className="inline-block px-8 py-4 bg-accent hover:bg-accent-100 text-white rounded-xl font-bold normal-text transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"

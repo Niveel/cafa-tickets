@@ -4,7 +4,7 @@ import { SettingsContent } from '@/components';
 export const metadata: Metadata = {
     title: 'Settings | Cafa Ticket',
     description: 'Manage your account settings, notifications, security, and privacy preferences.',
-    keywords: ['account settings', 'notifications', 'security', 'privacy', 'Ghana'],
+    keywords: ['account settings', 'notifications', 'security', 'privacy'],
 };
 
 const SettingsPage = async () => {

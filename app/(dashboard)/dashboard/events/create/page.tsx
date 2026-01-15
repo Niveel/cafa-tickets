@@ -8,8 +8,8 @@ import { getMyPaymentProfiles } from '@/app/lib/dashboard';
 
 export const metadata: Metadata = {
     title: 'Create Event | Cafa Ticket',
-    description: 'Create and publish your event on Ghana\'s premier ticketing platform. Set up ticket types, venue details, and start selling tickets.',
-    keywords: ['create event Ghana', 'sell tickets online', 'event management', 'Ghana events'],
+    description: 'Create and publish your event on a premier ticketing platform. Set up ticket types, venue details, and start selling tickets.',
+    keywords: ['create event', 'sell tickets online', 'event management', 'events platform'],
 };
 
 const CreateEventPage = async () => {

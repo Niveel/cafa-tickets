@@ -4,7 +4,7 @@ import { PrivacySettingsContent } from '@/components';
 export const metadata: Metadata = {
     title: 'Privacy & Data Settings | Cafa Ticket',
     description: 'Manage your privacy settings, data preferences, and account deletion.',
-    keywords: ['privacy', 'data protection', 'account deletion', 'GDPR', 'Ghana'],
+    keywords: ['privacy', 'data protection', 'account deletion', 'GDPR',],
 };
 
 const PrivacySettingsPage = async () => {

@@ -37,12 +37,12 @@ const SignupForm = () => {
 
             if (!response.ok) {
                 console.log("Signup error response:", data);
-                
+
                 // ✅ PRIORITY 1: Check for backend validation errors in 'details' object
                 if (data.details) {
                     // Backend returns errors like: { details: { password: ["Error message"] } }
                     const details = data.details;
-                    
+
                     // Check each field in priority order
                     if (details.password) {
                         setError(Array.isArray(details.password) ? details.password[0] : details.password);
@@ -57,7 +57,7 @@ const SignupForm = () => {
                     }
                     return;
                 }
-                
+
                 // ✅ PRIORITY 2: Check for top-level field errors (old format)
                 if (data.username) {
                     setError(Array.isArray(data.username) ? data.username[0] : data.username);
@@ -71,13 +71,13 @@ const SignupForm = () => {
                     setError(Array.isArray(data.password) ? data.password[0] : data.password);
                     return;
                 }
-                
+
                 // ✅ PRIORITY 3: Check for general error messages
                 if (data.message && data.message !== 'The data provided is invalid') {
                     setError(data.message);
                     return;
                 }
-                
+
                 // ✅ FALLBACK: Generic error messages
                 setError(data.error || 'Registration failed. Please try again.');
                 return;
@@ -127,8 +127,9 @@ const SignupForm = () => {
                         </h2>
                     </div>
                     <p className="big-text-5 text-slate-200">
-                        Start your journey with Ghana&apos;s premier event ticketing platform. Access thousands of events!
+                        Start your journey with a premier event ticketing platform. Access thousands of events!
                     </p>
+
                 </div>
             </div>
 

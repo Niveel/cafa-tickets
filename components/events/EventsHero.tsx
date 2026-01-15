@@ -37,8 +37,9 @@ const EventsHero = ({ totalEvents, searchQuery, onSearchChange, onSearchSubmit }
                         Explore Amazing Events
                     </h1>
                     <p className="big-text-5 text-slate-200 max-w-2xl mx-auto">
-                        Find the perfect event for you. From concerts to conferences, discover experiences across Ghana.
+                        Find the perfect event for you. From concerts to conferences, discover unforgettable experiences.
                     </p>
+
                 </div>
 
                 {/* Search Bar */}

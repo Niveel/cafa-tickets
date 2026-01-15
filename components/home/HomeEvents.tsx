@@ -15,7 +15,7 @@ const HomeEvents = ({ events }: HomeEventsProps) => {
     const displayEvents = events.slice(0, 18);
 
     return (
-        <section 
+        <section
             className="relative py-12 sm:py-16 lg:py-20 bg-primary"
             aria-label="Explore events"
         >
@@ -35,8 +35,9 @@ const HomeEvents = ({ events }: HomeEventsProps) => {
                             </h2>
                         </div>
                         <p className="big-text-5 text-slate-200 max-w-2xl">
-                            Discover the most exciting events happening across Ghana. From concerts to conferences, find your next experience.
+                            Discover the most exciting events happening around you. From concerts to conferences, find your next experience.
                         </p>
+
                     </div>
 
                     {/* Browse All Button - Desktop */}
@@ -46,15 +47,15 @@ const HomeEvents = ({ events }: HomeEventsProps) => {
                         aria-label="Browse all events"
                     >
                         Browse All Events
-                        <ArrowRight 
-                            className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" 
+                        <ArrowRight
+                            className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
                             aria-hidden="true"
                         />
                     </Link>
                 </div>
 
                 {/* Events Grid */}
-                <div 
+                <div
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
                     role="list"
                     aria-label="Event list"
@@ -80,8 +81,8 @@ const HomeEvents = ({ events }: HomeEventsProps) => {
                         aria-label="Browse all events"
                     >
                         Browse All Events
-                        <ArrowRight 
-                            className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" 
+                        <ArrowRight
+                            className="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300"
                             aria-hidden="true"
                         />
                     </Link>

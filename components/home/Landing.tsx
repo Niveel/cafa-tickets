@@ -20,9 +20,9 @@ const Landing = ({ events }: Props) => {
     // ✅ Memoize hero event calculation - only recalculates when events array changes
     const heroEvent = useMemo(() => {
         if (!events || events.length === 0) return null;
-        
+
         const now = new Date();
-        
+
         // Check for live events (current date/time between start and end)
         const liveEvent = events.find(event => {
             const eventStart = new Date(`${event.start_date}T${event.start_time}`);
@@ -42,7 +42,7 @@ const Landing = ({ events }: Props) => {
     // ✅ Memoize side events calculation
     const sideEvents = useMemo(() => {
         if (!events || events.length === 0) return [];
-        
+
         const heroEventId = heroEvent?.event.id;
         return events
             .filter(event => event.status === 'upcoming' && event.id !== heroEventId)
@@ -55,7 +55,7 @@ const Landing = ({ events }: Props) => {
         const params = new URLSearchParams();
         if (searchQuery) params.append('search', searchQuery);
         if (selectedCity) params.append('city', selectedCity);
-        
+
         window.location.href = `/events?${params.toString()}`;
     }, [searchQuery, selectedCity]); // ✅ Only recreates when search params change
 
@@ -69,7 +69,7 @@ const Landing = ({ events }: Props) => {
             </div>
 
             {/* Dot Pattern Overlay */}
-            <div 
+            <div
                 className="absolute inset-0 opacity-5"
                 style={{
                     backgroundImage: `radial-gradient(circle, #DC0000 1px, transparent 1px)`,
@@ -93,9 +93,10 @@ const Landing = ({ events }: Props) => {
                                     </span>
                                 </h1>
                                 <p className="big-text-5 text-slate-200 leading-relaxed max-w-xl">
-                                    From electrifying concerts to inspiring conferences, find and book tickets to Ghana&apos;s hottest events. 
+                                    From electrifying concerts to inspiring conferences, find and book tickets to the hottest events.
                                     Your next unforgettable experience starts here.
                                 </p>
+
                             </div>
 
                             {/* Search Bar */}
@@ -145,7 +146,7 @@ const Landing = ({ events }: Props) => {
                         </div>
 
                         {/* Right Content - Event Cards Grid */}
-                        <EventCardsGrid 
+                        <EventCardsGrid
                             heroEvent={heroEvent}
                             sideEvents={sideEvents}
                         />
@@ -160,18 +161,18 @@ const Landing = ({ events }: Props) => {
 };
 
 // ✅ Extract event cards grid to separate memoized component
-const EventCardsGrid = React.memo(({ 
-    heroEvent, 
-    sideEvents 
-}: { 
-    heroEvent: { event: Event; isLive: boolean } | null; 
-    sideEvents: Event[] 
+const EventCardsGrid = React.memo(({
+    heroEvent,
+    sideEvents
+}: {
+    heroEvent: { event: Event; isLive: boolean } | null;
+    sideEvents: Event[]
 }) => {
     return (
         <div className="relative hidden lg:block">
             {/* Background Glow */}
             <div className="absolute inset-0 bg-accent/20 blur-3xl rounded-full" aria-hidden="true" />
-            
+
             {/* Floating Event Cards */}
             <div className="relative grid grid-cols-2 gap-4">
                 {heroEvent ? (
@@ -214,7 +215,7 @@ const HeroEventCard = React.memo(({ heroEvent }: { heroEvent: { event: Event; is
             />
             <div className="absolute inset-0 bg-linear-to-t from-primary via-primary/60 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6">
-                <div 
+                <div
                     className="inline-flex items-center gap-2 px-3 py-1 bg-accent rounded-full mb-3"
                     role="status"
                     aria-live="polite"
@@ -228,14 +229,14 @@ const HeroEventCard = React.memo(({ heroEvent }: { heroEvent: { event: Event; is
                     {heroEvent.event.title}
                 </h2>
                 <div className="flex items-center gap-4 text-slate-200">
-                    <time 
+                    <time
                         className="flex items-center gap-1 normal-text-2"
                         dateTime={heroEvent.event.start_date}
                     >
                         <Calendar className="w-4 h-4" aria-hidden="true" />
-                        {new Date(heroEvent.event.start_date).toLocaleDateString('en-GB', { 
-                            month: 'short', 
-                            day: 'numeric' 
+                        {new Date(heroEvent.event.start_date).toLocaleDateString('en-GB', {
+                            month: 'short',
+                            day: 'numeric'
                         })}
                     </time>
                     <span className="flex items-center gap-1 normal-text-2">
@@ -266,7 +267,7 @@ const SideEventCard = React.memo(({ event }: { event: Event }) => (
             />
             <div className="absolute inset-0 bg-linear-to-t from-primary via-primary/60 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-4">
-                <span 
+                <span
                     className="inline-block px-2 py-1 bg-accent/80 rounded-lg normal-text-2 font-bold text-white mb-2"
                     aria-label={`Starting price: ${event.lowest_price} Ghana Cedis`}
                 >
@@ -286,7 +287,7 @@ SideEventCard.displayName = 'SideEventCard';
 const FallbackCards = React.memo(() => (
     <>
         {/* Fallback Card 1 - More Events Coming */}
-        <div 
+        <div
             className="group"
             role="status"
             aria-label="More events coming soon"
@@ -329,7 +330,7 @@ FallbackCards.displayName = 'FallbackCards';
 
 // ✅ Memoized no events card (static content)
 const NoEventsCard = React.memo(() => (
-    <div 
+    <div
         className="col-span-2"
         role="status"
         aria-live="polite"
@@ -342,9 +343,10 @@ const NoEventsCard = React.memo(() => (
                     Events Loading Soon
                 </h2>
                 <p className="normal-text text-slate-200 mb-4 max-w-md">
-                    Ghana&apos;s biggest events are coming. Be the first to know!
+                    The biggest events are coming. Be the first to know!
                 </p>
-                <Link 
+
+                <Link
                     href="/events"
                     className="px-6 py-3 bg-accent text-white rounded-xl hover:bg-accent-100 transition-colors font-semibold normal-text"
                     aria-label="Explore all events on Cafa Ticket"

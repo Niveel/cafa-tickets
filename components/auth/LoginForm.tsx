@@ -18,7 +18,7 @@ const LoginForm = () => {
     const [showActivatedMessage, setShowActivatedMessage] = useState(false);
     const [showSessionExpiredMessage, setShowSessionExpiredMessage] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState<CurrentUser | null>(null);
-    
+
     // ✅ New states for email verification
     const [needsEmailVerification, setNeedsEmailVerification] = useState(false);
     const [unverifiedEmail, setUnverifiedEmail] = useState("");
@@ -32,7 +32,7 @@ const LoginForm = () => {
     useEffect(() => {
         const activated = searchParams.get('activated');
         const sessionExpired = searchParams.get('session_expired');
-        
+
         if (activated === 'true') {
             setShowActivatedMessage(true);
             // Hide message after 5 seconds
@@ -100,7 +100,7 @@ const LoginForm = () => {
             // Success - Tokens are stored in HttpOnly cookies by the API route
             if (data.user) {
                 console.log('Login successful, tokens stored in HttpOnly cookies');
-                
+
                 // Check if profile needs updating (missing required fields)
                 const needsProfileUpdate = !data.user.full_name || !data.user.phone_number;
 
@@ -147,7 +147,7 @@ const LoginForm = () => {
 
             if (!response.ok) {
                 let errorMessage = 'Failed to resend verification email.';
-                
+
                 if (data.email && Array.isArray(data.email)) {
                     errorMessage = data.email[0];
                 } else if (data.detail) {
@@ -280,8 +280,9 @@ const LoginForm = () => {
                         Sign In
                     </h2>
                     <p className="big-text-5 text-slate-200">
-                        Enter your credentials to access your account and discover upcoming events across Ghana.
+                        Enter your credentials to access your account and discover upcoming events.
                     </p>
+
                 </div>
             </div>
 
