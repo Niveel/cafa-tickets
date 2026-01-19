@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Formik, Form } from 'formik';
+
 import { ticketTypeSchema, TicketTypeFormValues } from '@/data/eventsSchema';
 import { AppFormField, SubmitButton, FormLoader } from '@/components';
 import { CheckCircle, AlertCircle, Ticket, Info } from 'lucide-react';
@@ -42,7 +43,7 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                 price: values.price,
                 quantity: parseInt(values.quantity),
                 min_purchase: parseInt(values.min_purchase),
-                max_purchase: parseInt(values.max_purchase),
+                max_purchase: values.max_purchase ? parseInt(values.max_purchase) : undefined,
                 available_from: values.available_from || undefined,
                 available_until: values.available_until || undefined
             };
@@ -111,7 +112,7 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                                 Ticket Has Sales
                             </p>
                             <p className="small-text text-amber-300">
-                                {ticket.tickets_sold} ticket{ticket.tickets_sold > 1 ? 's' : ''} sold. 
+                                {ticket.tickets_sold} ticket{ticket.tickets_sold > 1 ? 's' : ''} sold.
                                 Be careful when editing as changes may affect existing ticket holders.
                             </p>
                         </div>
@@ -224,7 +225,7 @@ const EditTicketForm = ({ ticket, eventSlug }: Props) => {
                                 />
                             </div>
                             <p className="small-text text-slate-400">
-                                {hasSales 
+                                {hasSales
                                     ? `Minimum quantity: ${ticket.tickets_sold} (already sold) • Maximum: 1,000,000`
                                     : 'Minimum price: GH₵ 10.00 • Maximum quantity: 1,000,000'
                                 }

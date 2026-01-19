@@ -41,7 +41,7 @@ const CreateTicketForm = ({ eventSlug }: Props) => {
                 price: values.price,
                 quantity: parseInt(values.quantity),
                 min_purchase: parseInt(values.min_purchase),
-                max_purchase: parseInt(values.max_purchase),
+                max_purchase: values.max_purchase ? parseInt(values.max_purchase) : undefined,
                 available_from: values.available_from || undefined,
                 available_until: values.available_until || undefined,
             };
