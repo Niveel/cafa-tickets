@@ -394,7 +394,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                             />
                             <AppButton
                                 title="Sign Up"
-                                url="/register"
+                                url="/signup"
                                 variant="primary"
                                 size="lg"
                                 fullWidth

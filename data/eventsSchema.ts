@@ -32,11 +32,11 @@ export const ticketTypeSchema = Yup.object().shape({
             return Number(value) <= Number(max_purchase);
         }),
     max_purchase: Yup.string()
-        .required('Maximum purchase is required')
-        .test('is-number', 'Must be a valid number', (value) => !isNaN(Number(value)))
-        .test('is-integer', 'Must be a whole number', (value) => Number.isInteger(Number(value)))
-        .test('min-value', 'Maximum purchase must be at least 1', (value) => Number(value) >= 1)
-        .test('max-value', 'Maximum purchase per transaction is 100', (value) => Number(value) <= 100),
+        .nullable()
+        .test('is-number', 'Must be a valid number', (value) => !value || !isNaN(Number(value)))
+        .test('is-integer', 'Must be a whole number', (value) => !value || Number.isInteger(Number(value)))
+        .test('min-value', 'Maximum purchase must be at least 1', (value) => !value || Number(value) >= 1)
+        .test('max-value', 'Maximum purchase per transaction is 100', (value) => !value || Number(value) <= 100),
     available_from: Yup.string()
         .nullable(),
     available_until: Yup.string()

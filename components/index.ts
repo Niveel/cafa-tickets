@@ -10,6 +10,7 @@ export {default as ImageUpload} from './ui/ImageUpload';
 export {default as LocationSelector} from './ui/LocationSelector';
 export type { LocationData } from './ui/LocationSelector';
 export {default as TicketPurchaseModal} from './ui/TicketPurchaseModal';
+export {default as CurrencySelector} from './ui/CurrencySelector';
 // home
 export {default as Landing} from './home/Landing';
 export {default as HomeCategoryBar} from './home/HomeCategoryBar';

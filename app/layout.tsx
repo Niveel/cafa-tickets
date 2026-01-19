@@ -3,6 +3,7 @@ import { Nunito, Rhodium_Libre, Metrophobic } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import "@/styles/general.css";
+import { CurrencyProvider } from "@/contexts/CurrencyContext";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0; // Don't cache
@@ -223,7 +224,9 @@ export default function RootLayout({
         className={`${nunito.variable} ${rhodiumLibre.variable} ${metrophobic.variable} antialiased`}
       >
         <Analytics />
-        {children}
+        <CurrencyProvider>
+          {children}
+        </CurrencyProvider>
       </body>
     </html>
   );

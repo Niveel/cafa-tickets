@@ -20,7 +20,7 @@ type Props = {
 const CreateEventForm = ({ paymentProfiles }: Props) => {
     const router = useRouter();
     const [submitError, setSubmitError] = useState<string | null>(null);
-    const [submitSuccess, setSubmitSuccess] = useState(false); 
+    const [submitSuccess, setSubmitSuccess] = useState(false);
 
     const initialValues: EventFormValues = {
         // Basic Info
@@ -111,8 +111,8 @@ const CreateEventForm = ({ paymentProfiles }: Props) => {
             Object.keys(errors).forEach(key => {
                 if (!missing.includes(key)) {
                     // Only add if not already in missing list
-                    const errorMessage = typeof errors[key] === 'string' 
-                        ? errors[key] 
+                    const errorMessage = typeof errors[key] === 'string'
+                        ? errors[key]
                         : 'has validation errors';
                     missing.push(`${key}: ${errorMessage}`);
                 }
@@ -178,7 +178,7 @@ const CreateEventForm = ({ paymentProfiles }: Props) => {
                     price: ticket.price,
                     quantity: parseInt(ticket.quantity),
                     min_purchase: parseInt(ticket.min_purchase),
-                    max_purchase: parseInt(ticket.max_purchase),
+                    max_purchase: ticket.max_purchase ? parseInt(ticket.max_purchase) : undefined,
                     available_from: ticket.available_from || undefined,
                     available_until: ticket.available_until || undefined,
                 }))

@@ -173,7 +173,7 @@ const EventTicketTypesSection = () => {
                     <div className="flex items-start gap-2">
                         <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" aria-hidden="true" />
                         <p className="small-text text-amber-300">
-                            You&apos;ve reached the maximum of 10 ticket types per event. You can edit or remove existing tickets to add new ones.
+                            You&apos;ve reached the maximum of ticket types per event. You can edit or remove existing tickets to add new ones.
                         </p>
                     </div>
                 </div>

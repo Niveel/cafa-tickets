@@ -175,12 +175,11 @@ const AddTicketTypeModal = ({ isOpen, onClose, onSubmit, initialValues, isEditin
 
                                         <AppFormField
                                             name="max_purchase"
-                                            label="Maximum Purchase"
+                                            label="Maximum Purchase (optional)"
                                             type="number"
                                             placeholder="10"
-                                            min="1"
-                                            max="100"
-                                            required
+                                            min="0"
+                                            max="1000"
                                         />
                                     </div>
                                     <p className="small-text text-slate-400">

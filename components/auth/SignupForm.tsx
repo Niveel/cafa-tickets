@@ -153,7 +153,7 @@ const SignupForm = () => {
                         {/* Username */}
                         <AppFormField
                             name="username"
-                            placeholder="e.g. kwame_mensah"
+                            placeholder="e.g. john_doe"
                             label="Username"
                             type="text"
                             required

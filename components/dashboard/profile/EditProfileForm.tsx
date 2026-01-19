@@ -226,11 +226,11 @@ const EditProfileForm = ({ user }: Props) => {
                                     <AppFormField
                                         name="phone_number"
                                         label="Phone Number"
-                                        placeholder="0241234567 or +233241234567"
+                                        placeholder="0241234567 (Ghana) or +234241234567"
                                         type="tel"
                                     />
                                     <p className="mt-1 small-text text-slate-400">
-                                        Ghana format (0241234567) or international (+233241234567)
+                                        Ghana format (0241234567) or international (+233241234567). Add your country code if outside Ghana.
                                     </p>
                                 </div>
 

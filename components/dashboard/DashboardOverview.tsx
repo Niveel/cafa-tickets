@@ -1,6 +1,9 @@
+"use client";
 import { Ticket, Calendar, TrendingUp, Wallet, Users, Award } from 'lucide-react';
+
 import { DashboardMetricCard } from '@/components';
 import { UserStats } from '@/types/dashboard.types';
+import { useCurrency } from '@/contexts/CurrencyContext';
 
 type Props = {
     stats: UserStats;
@@ -8,12 +11,20 @@ type Props = {
 
 const DashboardOverview = ({ stats }: Props) => {
     const { overview } = stats;
+    const { convertFromGHS, formatCurrency, displayCurrency } = useCurrency();
 
     const getAccountAge = (days: number, display: string) => {
         if (days === 0) return display; // "5h" or "Just now"
         if (days < 30) return `${days} day${days > 1 ? 's' : ''}`;
         if (days < 365) return `${Math.floor(days / 30)} month${Math.floor(days / 30) > 1 ? 's' : ''}`;
         return `${Math.floor(days / 365)} year${Math.floor(days / 365) > 1 ? 's' : ''}`;
+    };
+
+    // Helper function to format monetary values
+    const formatMoney = (ghsAmount: string | number) => {
+        const amount = parseFloat(ghsAmount.toString());
+        const localAmount = convertFromGHS(amount);
+        return formatCurrency(localAmount);
     };
 
     return (
@@ -59,7 +70,7 @@ const DashboardOverview = ({ stats }: Props) => {
 
                 <DashboardMetricCard
                     title="Total Spent"
-                    value={`GH₵ ${parseFloat(overview.total_spent).toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
+                    value={formatMoney(overview.total_spent)}
                     icon={Wallet}
                     subtitle="On ticket purchases"
                     iconBgColor="bg-accent/20"
@@ -68,7 +79,7 @@ const DashboardOverview = ({ stats }: Props) => {
 
                 <DashboardMetricCard
                     title="Total Revenue"
-                    value={`GH₵ ${parseFloat(overview.total_revenue).toLocaleString('en-GH', { minimumFractionDigits: 2 })}`}
+                    value={formatMoney(overview.total_revenue)}
                     icon={TrendingUp}
                     subtitle="From event sales"
                     iconBgColor="bg-emerald-500/20"
