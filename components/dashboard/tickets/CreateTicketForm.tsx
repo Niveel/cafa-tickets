@@ -24,7 +24,7 @@ const CreateTicketForm = ({ eventSlug }: Props) => {
         price: '',
         quantity: '',
         min_purchase: '1',
-        max_purchase: '10',
+        max_purchase: '',
         available_from: '',
         available_until: ''
     };
