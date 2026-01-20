@@ -157,10 +157,6 @@ const EventsHistoryContent = () => {
         <main className="min-h-screen bg-primary">
             {/* Hero Section */}
             <section className="relative bg-primary pt-24 sm:pt-28 pb-8 sm:pb-12">
-                <div className="absolute inset-0 opacity-5">
-                    <div className="absolute top-0 right-1/4 w-96 h-96 bg-slate-500 rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-slate-600 rounded-full blur-3xl"></div>
-                </div>
 
                 <div className="inner-wrapper relative z-10">
                     <div className="text-center mb-8">

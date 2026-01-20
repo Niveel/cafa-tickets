@@ -19,12 +19,6 @@ const HomeEvents = ({ events }: HomeEventsProps) => {
             className="relative py-12 sm:py-16 lg:py-20 bg-primary"
             aria-label="Explore events"
         >
-            {/* Decorative Background Elements */}
-            <div className="absolute inset-0 opacity-5">
-                <div className="absolute top-0 right-1/4 w-96 h-96 bg-accent-50 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-1/4 w-96 h-96 bg-accent rounded-full blur-3xl"></div>
-            </div>
-
             <div className="inner-wrapper relative z-10">
                 {/* Section Header */}
                 <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10 sm:mb-14">
