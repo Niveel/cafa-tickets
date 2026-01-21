@@ -1,10 +1,12 @@
 import React from 'react';
 import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 import {CreateEventForm} from '@/components';
 import { getMyPaymentProfiles } from '@/app/lib/dashboard';
+import { getCurrentUser } from '@/app/lib/auth';
 
 export const metadata: Metadata = {
     title: 'Create Event | Cafa Ticket',
@@ -13,7 +15,17 @@ export const metadata: Metadata = {
 };
 
 const CreateEventPage = async () => {
-    const paymentProfiles = await getMyPaymentProfiles();
+    const [paymentProfiles, user] = await Promise.all([ 
+        getMyPaymentProfiles(),
+        getCurrentUser()
+    ]);
+
+    const isOrganizer = user?.is_organizer;
+
+    // ✅ Redirect non-organizers to verification page
+    if (!isOrganizer) {
+        redirect('/dashboard/profile/verify');
+    }
 
     return (
         <main className="min-h-screen bg-primary-100 dash-page">

@@ -74,7 +74,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                 setTimeout(() => setCurrentStep('selfie'), 500);
             } else {
                 console.error('ID Upload Failed:', data);
-                alert(data.message || 'Failed to upload ID. Please try again.');
+                console.log(data.message || 'Failed to upload ID. Please try again.');
             }
         } catch (error) {
             console.error('ID upload error:', error);

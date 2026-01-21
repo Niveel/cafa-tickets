@@ -6,6 +6,8 @@ import { fetchWithAuthRetry } from "@/app/lib/serverAuth";
 export async function isAuthenticated(): Promise<boolean> {
     const cookieStore = await cookies();
     const refreshToken = cookieStore.get('refresh_token')?.value;
+
+    console.log("my auth check refresh token:", refreshToken);
     
     // If no refresh token, definitely not authenticated
     if (!refreshToken) {

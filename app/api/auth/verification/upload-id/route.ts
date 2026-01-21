@@ -1,7 +1,7 @@
 // app/api/auth/verification/upload-id/route.ts
 import { NextResponse } from 'next/server';
 import { BASE_URL } from '@/data/constants';
-import { fetchWithAuthRetry } from '@/app/lib/serverAuth';
+import { fetchWithAuthRetry } from '@/app/lib/serverAuth'; 
 
 export async function POST(request: Request) {
     try {
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
         const backendFormData = new FormData();
         backendFormData.append('id_document', idDocument);
 
-        const response = await fetchWithAuthRetry(`${BASE_URL}/auth/verification/upload-id/`, {
+        const response = await fetchWithAuthRetry(`https://api.cafatickets.com/api/v1/auth/verification/upload-id/`, {
             method: 'POST',
             body: backendFormData,
         });
