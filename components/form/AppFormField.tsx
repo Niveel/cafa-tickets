@@ -1,7 +1,7 @@
 "use client";
 
 import { useFormikContext } from 'formik';
-import { TextInput, AppErrorMessage, SelectInput, DateInput } from "@/components";
+import { TextInput, AppErrorMessage, SelectInput, DateInput, SearchableSelect } from "@/components";
 
 type StringFieldFormValues = Record<string, string>;
 type Option = { value: string; label: string };
@@ -13,15 +13,13 @@ type Props<Values extends StringFieldFormValues = StringFieldFormValues> = {
     rows?: number;
     styles?: string;
     options?: Option[];
-    type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'select' | 'date';
+    type?: 'text' | 'email' | 'password' | 'number' | 'tel' | 'url' | 'select' | 'searchable-select' | 'date';
     required?: boolean;
     placeholder?: string;
     min?: string;
     max?: string;
-} & Omit<
-    React.ComponentPropsWithoutRef<typeof TextInput>,
-    'name' | 'label' | 'value' | 'onChange' | 'onBlur'
->;
+    isLoading?: boolean;
+} & Omit<React.ComponentPropsWithoutRef<typeof TextInput>, 'name' | 'label' | 'value' | 'onChange' | 'onBlur'>;
 
 const AppFormField = <Values extends StringFieldFormValues = StringFieldFormValues>({
     name,
@@ -35,9 +33,10 @@ const AppFormField = <Values extends StringFieldFormValues = StringFieldFormValu
     placeholder,
     min,
     max,
+    isLoading = false,
     ...props
 }: Props<Values>) => {
-    const { errors, setFieldTouched, handleChange, touched, values } = useFormikContext<Values>();
+    const { errors, setFieldTouched, handleChange, setFieldValue, touched, values } = useFormikContext<Values>();
 
     const error = errors[name] as string;
     const isTouched = touched[name] as boolean;
@@ -45,7 +44,19 @@ const AppFormField = <Values extends StringFieldFormValues = StringFieldFormValu
 
     return (
         <div className={`flex flex-col gap-2 ${styles}`}>
-            {type === 'select' ? (
+            {type === 'searchable-select' ? (
+                <SearchableSelect
+                    name={name}
+                    label={label}
+                    value={value}
+                    onChange={(val) => setFieldValue(name, val)}
+                    onBlur={() => setFieldTouched(name)}
+                    options={options}
+                    required={required}
+                    placeholder={placeholder}
+                    isLoading={isLoading}
+                />
+            ) : type === 'select' ? (
                 <SelectInput
                     name={name}
                     label={label}

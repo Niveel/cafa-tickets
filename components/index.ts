@@ -57,6 +57,7 @@ export {default as SubmitButton} from './form/SubmitButton';
 export {default as TextInput} from './form/TextInput';
 export {default as DateInput} from './form/DateInput';
 export {default as SelectInput} from './form/SelectInput';
+export {default as SearchableSelect} from './form/SearchableSelect';
 // auth
 export {default as LoginForm} from './auth/LoginForm';
 export {default as SignupForm} from './auth/SignupForm';

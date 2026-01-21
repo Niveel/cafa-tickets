@@ -2,15 +2,16 @@
 
 import { useState, useRef, useCallback } from 'react';
 import Webcam from 'react-webcam';
-import { Camera, CheckCircle, RotateCcw, X, AlertCircle } from 'lucide-react';
+import { Camera, CheckCircle, RotateCcw, X, AlertCircle, XCircle } from 'lucide-react';
 
 interface SelfieStepProps {
     onUpload: (file: File) => void;
     idImage: File | null;
     isLoading?: boolean;
+    error?: string | null; // ✅ NEW: Error prop
 }
 
-const SelfieStep = ({ onUpload, idImage, isLoading = false }: SelfieStepProps) => {
+const SelfieStep = ({ onUpload, idImage, isLoading = false, error = null }: SelfieStepProps) => {
     const [isCameraActive, setIsCameraActive] = useState(false);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const [cameraError, setCameraError] = useState<string>('');
@@ -113,6 +114,21 @@ const SelfieStep = ({ onUpload, idImage, isLoading = false }: SelfieStepProps) =
                     ID uploaded successfully!
                 </span>
             </div>
+
+            {/* ✅ NEW: Upload Error Alert */}
+            {error && (
+                <div className="mb-6 p-4 bg-red-500/10 border-2 border-red-500/50 rounded-xl flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="flex-1">
+                        <p className="normal-text-2 font-semibold text-red-400 mb-1">
+                            Verification Failed
+                        </p>
+                        <p className="small-text text-red-300">
+                            {error}
+                        </p>
+                    </div>
+                </div>
+            )}
 
             {/* Instructions */}
             <div className="mb-8">
@@ -282,7 +298,7 @@ const SelfieStep = ({ onUpload, idImage, isLoading = false }: SelfieStepProps) =
                 </div>
 
                 {/* Status Messages */}
-                {capturedImage && !isLoading && (
+                {capturedImage && !isLoading && !error && (
                     <div className="w-full py-4 bg-green-500 text-white rounded-xl font-bold big-text-5 flex items-center justify-center gap-3">
                         <CheckCircle className="w-5 h-5" aria-hidden="true" />
                         Selfie Captured Successfully

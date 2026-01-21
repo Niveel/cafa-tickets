@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import { Upload, CreditCard, AlertCircle, CheckCircle } from 'lucide-react';
+import { Upload, CreditCard, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
 
 interface IDUploadStepProps {
     onUpload: (file: File) => void;
     isLoading?: boolean;
+    error?: string | null; // ✅ NEW: Error prop
 }
 
-const IDUploadStep = ({ onUpload, isLoading = false }: IDUploadStepProps) => {
+const IDUploadStep = ({ onUpload, isLoading = false, error = null }: IDUploadStepProps) => {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -16,14 +17,12 @@ const IDUploadStep = ({ onUpload, isLoading = false }: IDUploadStepProps) => {
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-            // Validate file type
             const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
             if (!validTypes.includes(file.type)) {
                 alert('Please select a valid image file (JPG, PNG, or WebP)');
                 return;
             }
 
-            // Validate file size (10MB as per API docs)
             if (file.size > 10 * 1024 * 1024) {
                 alert('File size must be less than 10MB');
                 return;
@@ -40,7 +39,7 @@ const IDUploadStep = ({ onUpload, isLoading = false }: IDUploadStepProps) => {
     };
 
     const handleRemove = () => {
-        if (isLoading) return; // Don't allow removal during upload
+        if (isLoading) return;
         setPreview(null);
         setSelectedFile(null);
         if (fileInputRef.current) {
@@ -50,6 +49,21 @@ const IDUploadStep = ({ onUpload, isLoading = false }: IDUploadStepProps) => {
 
     return (
         <div className="bg-primary-100 rounded-2xl border-2 border-accent/30 p-8">
+            {/* ✅ NEW: Error Alert */}
+            {error && (
+                <div className="mb-6 p-4 bg-red-500/10 border-2 border-red-500/50 rounded-xl flex items-start gap-3">
+                    <XCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" aria-hidden="true" />
+                    <div className="flex-1">
+                        <p className="normal-text-2 font-semibold text-red-400 mb-1">
+                            Upload Failed
+                        </p>
+                        <p className="small-text text-red-300">
+                            {error}
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Instructions */}
             <div className="mb-8">
                 <h2 className="big-text-3 font-bold text-white mb-3">
@@ -114,7 +128,7 @@ const IDUploadStep = ({ onUpload, isLoading = false }: IDUploadStepProps) => {
                 </div>
             ) : (
                 <div className="space-y-4">
-                    {/* Preview - Fixed Size Container */}
+                    {/* Preview */}
                     <div className="relative w-full h-64 sm:h-80 md:h-96 rounded-xl overflow-hidden border-2 border-accent/30 bg-primary-200">
                         <img
                             src={preview}

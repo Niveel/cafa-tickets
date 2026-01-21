@@ -20,6 +20,9 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
     const [rejectionReason, setRejectionReason] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
+    // ✅ NEW: Error states
+    const [uploadError, setUploadError] = useState<string | null>(null);
+
     useEffect(() => {
         checkVerificationStatus();
     }, []);
@@ -33,7 +36,6 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                 const status = result.data.verification_status;
                 setVerificationStatus(status);
 
-                // Determine which step to show
                 if (status === 'not_started') {
                     setCurrentStep('id-upload');
                 } else if (status === 'id_uploaded') {
@@ -57,6 +59,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
     const handleIDUpload = async (file: File) => {
         setIdImage(file);
         setIsLoading(true);
+        setUploadError(null); // ✅ Clear previous errors
 
         try {
             const formData = new FormData();
@@ -74,11 +77,14 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                 setTimeout(() => setCurrentStep('selfie'), 500);
             } else {
                 console.error('ID Upload Failed:', data);
-                console.log(data.message || 'Failed to upload ID. Please try again.');
+
+                // ✅ FIXED: Set error state instead of console.log
+                const errorMessage = data.message || data.error || 'Failed to upload ID. Please try again.';
+                setUploadError(errorMessage);
             }
         } catch (error) {
             console.error('ID upload error:', error);
-            alert('Failed to upload ID. Please try again.');
+            setUploadError('Network error. Please check your connection and try again.');
         } finally {
             setIsLoading(false);
         }
@@ -89,6 +95,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
         setCurrentStep('result');
         setVerificationStatus('pending');
         setIsLoading(true);
+        setUploadError(null);
 
         try {
             const formData = new FormData();
@@ -105,25 +112,42 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                 if (data.data.verification_status === 'verified') {
                     setVerificationStatus('verified');
                 } else if (data.data.verification_status === 'rejected') {
-                    // Log rejection details for debugging
                     console.log('\n❌ Verification Rejected');
                     console.log('Full Response:', data);
                     console.log('Rejection Reason:', data.data.rejection_reason);
                     console.log('Message:', data.message);
                     console.log('');
-                    
+
                     setVerificationStatus('rejected');
-                    setRejectionReason(data.data.rejection_reason);
+
+                    // ✅ FIXED: Extract message from rejection_reason object
+                    const reason = data.data.rejection_reason;
+                    let reasonMessage: string;
+
+                    if (typeof reason === 'string') {
+                        // If it's already a string, use it
+                        reasonMessage = reason;
+                    } else if (reason && typeof reason === 'object' && reason.message) {
+                        // If it's an object with a message property, extract it
+                        reasonMessage = reason.message;
+                    } else {
+                        // Fallback message
+                        reasonMessage = 'Verification failed. Please try again.';
+                    }
+
+                    setRejectionReason(reasonMessage);
                 }
             } else {
                 console.error('Selfie Upload Failed:', data);
-                alert(data.message || 'Failed to upload selfie. Please try again.');
+
+                const errorMessage = data.message || data.error || 'Failed to upload selfie. Please try again.';
+                setUploadError(errorMessage);
                 setCurrentStep('selfie');
                 setVerificationStatus('id_uploaded');
             }
         } catch (error) {
             console.error('Selfie upload error:', error);
-            alert('Failed to upload selfie. Please try again.');
+            setUploadError('Network error. Please check your connection and try again.');
             setCurrentStep('selfie');
             setVerificationStatus('id_uploaded');
         } finally {
@@ -133,6 +157,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
 
     const handleRetry = async () => {
         setIsLoading(true);
+        setUploadError(null); // ✅ Clear errors
 
         try {
             const response = await fetch('/api/auth/verification/retry', {
@@ -149,11 +174,11 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                 setCurrentStep('id-upload');
             } else {
                 console.error('Retry failed:', data);
-                alert(data.message || 'Failed to reset verification. Please try again.');
+                setUploadError(data.message || 'Failed to reset verification. Please try again.');
             }
         } catch (error) {
             console.error('Retry verification error:', error);
-            alert('Failed to reset verification. Please try again.');
+            setUploadError('Network error. Please try again.');
         } finally {
             setIsLoading(false);
         }
@@ -162,11 +187,11 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
     if (isLoading && currentStep === 'result') {
         return (
             <div className="max-w-3xl mx-auto">
-                <VerificationHeader 
+                <VerificationHeader
                     currentStep={currentStep}
                     userName={user?.full_name || 'there'}
                 />
-                <VerificationResult 
+                <VerificationResult
                     status="pending"
                     idImage={idImage}
                     selfieImage={selfieImage}
@@ -179,7 +204,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
 
     return (
         <div className="max-w-3xl mx-auto">
-            <VerificationHeader 
+            <VerificationHeader
                 currentStep={currentStep}
                 userName={user?.full_name || 'there'}
             />
@@ -193,7 +218,11 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <IDUploadStep onUpload={handleIDUpload} isLoading={isLoading} />
+                        <IDUploadStep
+                            onUpload={handleIDUpload}
+                            isLoading={isLoading}
+                            error={uploadError} // ✅ Pass error to component
+                        />
                     </motion.div>
                 )}
 
@@ -205,10 +234,11 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                         exit={{ opacity: 0, x: -20 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <SelfieStep 
+                        <SelfieStep
                             onUpload={handleSelfieUpload}
                             idImage={idImage}
                             isLoading={isLoading}
+                            error={uploadError} // ✅ Pass error to component
                         />
                     </motion.div>
                 )}
@@ -221,7 +251,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ duration: 0.4 }}
                     >
-                        <VerificationResult 
+                        <VerificationResult
                             status={verificationStatus}
                             idImage={idImage}
                             selfieImage={selfieImage}

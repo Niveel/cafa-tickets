@@ -46,9 +46,6 @@ const PaymentProfilesPage = async () => {
                         • Add your or <strong>Bank Account</strong> to receive payments
                     </p>
                     <p className="normal-text text-slate-200">
-                        • A <strong>1 GHS verification fee</strong> will be deducted to verify your account (non-refundable)
-                    </p>
-                    <p className="normal-text text-slate-200">
                         • Set one profile as <strong>default</strong> for automatic payouts
                     </p>
                     <p className="normal-text text-slate-200">
