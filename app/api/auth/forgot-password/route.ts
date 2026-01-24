@@ -5,6 +5,8 @@ export async function POST(request: Request) {
     try {
         const body = await request.json();
 
+        console.log('Forgot password request:', body);
+
         const response = await fetch(`${BASE_URL}/auth/users/reset_password/`, {
             method: 'POST',
             headers: {

@@ -11,7 +11,7 @@ import { navLinks, profileMenuItems } from "@/data/static.general";
 import { ProfileDropdown, AppButton, Modal } from "@/components";
 import { CurrentUser as CurrentUserType } from "@/types/general.types";
 
-interface NavBarProps {
+interface NavBarProps { 
     isLoggedIn?: boolean;
     currentUser?: CurrentUserType | null;
 }

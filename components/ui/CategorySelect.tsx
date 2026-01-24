@@ -35,6 +35,7 @@ const CategorySelect = ({
                 const response = await fetch('/api/events/categories');
                 const data = await response.json();
                 setCategories(data.categories || []);
+                console.log('Fetched categories:', data.categories);
             } catch (error) {
                 console.error('Failed to fetch categories:', error);
             } finally {

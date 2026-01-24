@@ -5,6 +5,9 @@ import { getMyPaymentProfiles } from '@/app/lib/dashboard';
 
 const PaymentProfilesPage = async () => {
     const paymentProfiles = await getMyPaymentProfiles();
+
+    // console.log('Payment Profiles:', paymentProfiles);
+    // console.log('Initial Profiles:', paymentProfiles?.results[0].account_details || []);
     
     return (
         <main className='dash-page space-y-6'>

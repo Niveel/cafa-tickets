@@ -45,11 +45,12 @@ export async function POST(request: Request) {
             body: JSON.stringify({ email, password }),
         });
 
-        console.log('Login response status:', response.status);
+        console.log('Login response:', response);
 
         const data = await response.json();
 
         if (!response.ok) {
+            console.log('Login error:', data);
             return NextResponse.json(data, { status: response.status });
         }
 

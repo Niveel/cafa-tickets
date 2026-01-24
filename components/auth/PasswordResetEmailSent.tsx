@@ -1,12 +1,68 @@
-import React from 'react';
-import { Mail, CheckCircle } from 'lucide-react';
+"use client";
+
+import React, { useState } from 'react';
+import { Mail, CheckCircle, Loader2 } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'sonner';
 
 type Props = {
     email: string;
 };
 
 const PasswordResetEmailSent = ({ email }: Props) => {
+    const [isResending, setIsResending] = useState(false);
+    const [canResend, setCanResend] = useState(true);
+    const [countdown, setCountdown] = useState(0);
+
+    const requestNewLink = async () => {
+        if (!canResend || isResending) return;
+
+        setIsResending(true);
+
+        try {
+            const response = await fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            if (response.status === 204 || response.ok) {
+                toast.success('New reset link sent!', {
+                    description: 'Please check your email inbox.',
+                });
+
+                // Start 60 second cooldown
+                setCanResend(false);
+                setCountdown(60);
+
+                const timer = setInterval(() => {
+                    setCountdown((prev) => {
+                        if (prev <= 1) {
+                            clearInterval(timer);
+                            setCanResend(true);
+                            return 0;
+                        }
+                        return prev - 1;
+                    });
+                }, 1000);
+            } else {
+                const data = await response.json();
+                toast.error('Failed to resend link', {
+                    description: data.message || 'Please try again later.',
+                });
+            }
+        } catch (error) {
+            console.error('Error resending reset link:', error);
+            toast.error('Network error', {
+                description: 'Please check your connection and try again.',
+            });
+        } finally {
+            setIsResending(false);
+        }
+    };
+
     return (
         <div className="w-full max-w-2xl mx-auto">
             {/* Success Icon */}
@@ -55,7 +111,7 @@ const PasswordResetEmailSent = ({ email }: Props) => {
                                 Check your inbox
                             </p>
                             <p className="small-text text-slate-400">
-                                Look for an email from Cafa Ticket with the subject &quot;Password Reset Request&quot;
+                                Look for an email from Cafa Tickets with the subject &quot;Password Reset Request&quot;
                             </p>
                         </div>
                     </div>
@@ -100,9 +156,18 @@ const PasswordResetEmailSent = ({ email }: Props) => {
                 <div className="mt-4 p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
                     <p className="small-text text-blue-300">
                         💡 <strong>Didn&apos;t receive the email?</strong> Check your spam folder or{' '}
-                        <Link href="/forgot-password" className="text-blue-400 hover:text-blue-300 font-semibold underline">
-                            request a new link
-                        </Link>
+                        <button
+                            onClick={requestNewLink}
+                            disabled={!canResend || isResending}
+                            className={`font-semibold underline inline-flex items-center gap-1 ${
+                                canResend && !isResending
+                                    ? 'text-blue-400 hover:text-blue-300 cursor-pointer'
+                                    : 'text-blue-600 cursor-not-allowed opacity-50'
+                            }`}
+                        >
+                            {isResending && <Loader2 className="w-3 h-3 animate-spin" />}
+                            {isResending ? 'Sending...' : canResend ? 'request a new link' : `wait ${countdown}s`}
+                        </button>
                     </p>
                 </div>
 
