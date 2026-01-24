@@ -4,7 +4,7 @@ export const placeholderImage = "https://images.unsplash.com/photo-1559551538-96
 
 export const BASE_URL = process.env.NODE_ENV === "production"
         ? "https://api.cafatickets.com/api/v1"
-        : "https://api.cafatickets.com/api/v1";
+        : "http://localhost:8000/api/v1";
 
 // "https://cafaticket.pythonanywhere.com/api/v1"
 // export const BASE_URL = "http://localhost:8000/api/v1"

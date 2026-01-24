@@ -127,7 +127,7 @@ const CreateEventForm = ({ paymentProfiles }: Props) => {
             setSubmitError(null);
             setSubmitSuccess(false);
 
-            console.log('Creating event with values:', values);
+            // console.log('Creating event with values:', values);
 
             // ✅ Build FormData payload
             const formData = buildEventFormData({
@@ -212,14 +212,10 @@ const CreateEventForm = ({ paymentProfiles }: Props) => {
                 throw new Error(errorMessage);
             }
 
-            console.log('Event created successfully:', data);
+            // console.log('Event created successfully:', data);
             setSubmitSuccess(true);
-
-            setTimeout(() => {
-                const slug = data.event?.slug || data.slug;
-                const id = data.event?.id || data.id;
-                router.push(`/dashboard/events/${slug || id}`);
-            }, 2000);
+            
+            router.push(`/dashboard/events/${data.slug || data.id}`);
 
         } catch (error: unknown) {
             if (error instanceof Error) {

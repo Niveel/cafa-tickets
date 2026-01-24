@@ -38,9 +38,11 @@ const LocationSelector = ({
     // Load Google Maps API
     const { isLoaded, loadError } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '',
+        googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || '', 
         libraries: LIBRARIES,
     });
+
+    console.log("google maps api key:", process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY);
 
     // Extract city from address components
     const extractCityFromComponents = (addressComponents: google.maps.GeocoderAddressComponent[]) => {
