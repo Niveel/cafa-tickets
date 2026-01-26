@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
         hostname: 'cafaticket.pythonanywhere.com',
         pathname: '/media/**',
       },
+      {
+      protocol: 'http',
+      hostname: 'api.cafatickets.com',
+      pathname: '/media/**',
+    },
     ],
     dangerouslyAllowSVG: true,
     unoptimized: process.env.NODE_ENV === 'development',
