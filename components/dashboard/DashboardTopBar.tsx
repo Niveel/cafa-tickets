@@ -19,6 +19,8 @@ const DashboardTopBar: React.FC<Props> = ({ user }) => {
     const navRef = useRef<HTMLDivElement>(null);
     const pathname = usePathname();
 
+    console.log('Rendering DashboardNav with user image:', user?.profile_image);
+
     const activeLink = dashboardSideLinks
         .filter(link => pathname === link.link || pathname.startsWith(link.link + '/'))
         .sort((a, b) => b.link.length - a.link.length)[0];

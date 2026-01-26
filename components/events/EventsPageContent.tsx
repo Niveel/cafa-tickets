@@ -105,7 +105,7 @@ const EventsPageContent = ({ categories }: Props) => {
             }
 
             const data = await response.json();
-            console.log('Fetched events data:', data);
+            // console.log('Fetched events data:', data);
 
             if (resetEvents) {
                 setEvents(data.results);

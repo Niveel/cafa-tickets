@@ -76,6 +76,7 @@ const EventsHistoryContent = () => {
             }
 
             const data = await response.json();
+            console.log('Fetched past events data:', data);
 
             if (resetEvents) {
                 setEvents(data.results);
