@@ -22,6 +22,8 @@ const EventDetailsPage = async ({ params }: Props) => {
         getCurrentUser()
     ])
 
+    // console.log('Event Details:', eventDetails);
+
     if (!eventDetails) {
         return <EventNotFound />;
     }

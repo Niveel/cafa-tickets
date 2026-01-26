@@ -3,21 +3,22 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { 
-    Calendar, 
-    MapPin, 
-    Users, 
-    Share2, 
+import {
+    Calendar,
+    MapPin,
+    Users,
+    Share2,
     ChevronLeft,
     ChevronRight,
     X
 } from 'lucide-react';
 import { EventDetails } from '@/types/events.types';
 import { formatDate, formatTime } from '@/utils/format';
+import { getFullImageUrl } from '@/utils/imageUrl';
 import { placeholderImage } from '@/data/constants';
 
 interface EventHeroProps {
-    event: EventDetails; 
+    event: EventDetails;
 }
 
 const EventHero = ({ event }: EventHeroProps) => {
@@ -25,10 +26,12 @@ const EventHero = ({ event }: EventHeroProps) => {
     const [showLightbox, setShowLightbox] = useState<boolean>(false);
 
     // ✅ Safely handle additional_images - it might be empty, undefined, or not an array
-    const additionalImages = Array.isArray(event.additional_images) ? event.additional_images : [];
+    const additionalImages = Array.isArray(event.additional_images)
+        ? event.additional_images.map(getFullImageUrl).filter(Boolean)
+        : [];
     const allImages = [event.featured_image, ...additionalImages];
     const hasMultipleImages = allImages.length > 1;
-    
+
     // ✅ Check if event is recurring by checking recurrence_info
     const isRecurring = event.is_recurring && event.recurrence_info !== null;
 
@@ -76,7 +79,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                         {/* Left - Image Gallery */}
                         <div className="space-y-4">
                             {/* Main Image */}
-                            <div 
+                            <div
                                 className="relative aspect-4/3 rounded-2xl overflow-hidden border-2 border-accent cursor-pointer group"
                                 onClick={() => setShowLightbox(true)}
                             >
@@ -87,7 +90,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                                     priority
                                 />
-                                
+
                                 {/* Overlay on hover */}
                                 <div className="absolute inset-0 bg-primary/0 group-hover:bg-primary/20 transition-all duration-300 flex items-center justify-center">
                                     <span className="opacity-0 group-hover:opacity-100 text-white font-bold normal-text transition-opacity duration-300">
@@ -134,13 +137,12 @@ const EventHero = ({ event }: EventHeroProps) => {
 
                                 {/* Status Badge */}
                                 <div className="absolute top-4 left-4">
-                                    <span className={`px-4 py-2 rounded-lg font-bold small-text border-2 ${
-                                        event.status === 'ongoing' 
-                                            ? 'bg-accent border-accent text-white animate-pulse' 
+                                    <span className={`px-4 py-2 rounded-lg font-bold small-text border-2 ${event.status === 'ongoing'
+                                            ? 'bg-accent border-accent text-white animate-pulse'
                                             : event.status === 'upcoming'
-                                            ? 'bg-primary/90 backdrop-blur-sm border-accent text-accent-50'
-                                            : 'bg-slate-600/90 backdrop-blur-sm border-slate-600 text-slate-200'
-                                    }`}>
+                                                ? 'bg-primary/90 backdrop-blur-sm border-accent text-accent-50'
+                                                : 'bg-slate-600/90 backdrop-blur-sm border-slate-600 text-slate-200'
+                                        }`}>
                                         {event.status === 'ongoing' && (
                                             <span className="flex items-center gap-2">
                                                 <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
@@ -160,11 +162,10 @@ const EventHero = ({ event }: EventHeroProps) => {
                                         <button
                                             key={index}
                                             onClick={() => setSelectedImage(index)}
-                                            className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                                                selectedImage === index 
-                                                    ? 'border-accent scale-105' 
+                                            className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all duration-300 ${selectedImage === index
+                                                    ? 'border-accent scale-105'
                                                     : 'border-accent/30 hover:border-accent'
-                                            }`}
+                                                }`}
                                             type="button"
                                             aria-label={`View image ${index + 1}`}
                                         >
@@ -183,7 +184,7 @@ const EventHero = ({ event }: EventHeroProps) => {
                         {/* Right - Event Info */}
                         <div className="space-y-6">
                             {/* Category Badge */}
-                            <Link 
+                            <Link
                                 href={`/events?category=${event.category.slug}`}
                                 className="inline-flex items-center gap-2 px-4 py-2 bg-accent/20 backdrop-blur-sm rounded-xl border border-accent hover:bg-accent/30 transition-all duration-300 group"
                             >
@@ -254,10 +255,10 @@ const EventHero = ({ event }: EventHeroProps) => {
                                             {event.tickets_available.toLocaleString()} tickets remaining
                                         </p>
                                         <div className="mt-2 h-2 bg-primary-200 rounded-full overflow-hidden">
-                                            <div 
+                                            <div
                                                 className="h-full bg-accent-50 rounded-full transition-all duration-500"
-                                                style={{ 
-                                                    width: `${(event.tickets_sold / event.max_attendees) * 100}%` 
+                                                style={{
+                                                    width: `${(event.tickets_sold / event.max_attendees) * 100}%`
                                                 }}
                                             ></div>
                                         </div>
@@ -286,7 +287,7 @@ const EventHero = ({ event }: EventHeroProps) => {
 
             {/* Lightbox Modal */}
             {showLightbox && (
-                <div 
+                <div
                     className="fixed inset-0 bg-primary/95 backdrop-blur-sm z-10000 flex items-center justify-center p-4"
                     onClick={() => setShowLightbox(false)}
                 >

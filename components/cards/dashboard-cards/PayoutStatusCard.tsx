@@ -8,7 +8,7 @@ type Props = {
     revenueByMonth?: RevenueSummary['revenue_by_month'];
 };
 
-const PayoutStatusCard = ({ payoutStatus, summary, revenueByMonth }: Props) => {
+const PayoutStatusCard = ({ payoutStatus, summary, revenueByMonth }: Props) => { 
     // Calculate actual monthly growth
     const calculateMonthlyGrowth = () => {
         if (!revenueByMonth || revenueByMonth.length < 2) {

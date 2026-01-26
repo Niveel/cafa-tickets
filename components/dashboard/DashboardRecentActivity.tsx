@@ -118,7 +118,7 @@ const DashboardRecentActivity = ({ activities }: Props) => {
                 )}
             </div>
 
-            {activities.length > 0 && (
+            {/* {activities.length > 0 && (
                 <div className="mt-4 text-center">
                     <Link
                         href="/dashboard/activities" 
@@ -128,7 +128,7 @@ const DashboardRecentActivity = ({ activities }: Props) => {
                         View All Activities →
                     </Link>
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

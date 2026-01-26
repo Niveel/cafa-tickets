@@ -1,7 +1,6 @@
 import { BASE_URL } from "@/data/constants";
 import { PaginatedEventsResponse, EventFilters, EventDetails } from "@/types/events.types";
 import { sanitizeEventsResponse } from "@/utils/sanitizeEventData";
-import { sanitizeEventDetailsResponse } from "@/utils/sanitizeEventDetails";
 
 /**
  * Fetch paginated events from the backend
@@ -84,11 +83,9 @@ export async function getEventBySlug(slug: string): Promise<EventDetails | null>
         }
 
         const data: EventDetails = await response.json();
+        // console.log('Raw Event Details:', data);
         
-        // ✨ Sanitize image URLs before returning
-        const sanitizedData = sanitizeEventDetailsResponse(data);
-        
-        return sanitizedData;
+        return data;
 
     } catch (error) {
         console.error(`Error fetching event ${slug}:`, error);
