@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Loader2, Edit } from 'lucide-react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
 import { 
     EventDetailsHeader,
     EventInfoSection,
@@ -13,7 +13,6 @@ import {
 } from '@/components';
 import { getMyCreatedEventDetails, getMyCreatedEventAnalytics } from '@/app/lib/dashboard';
 import { getFullImageUrl } from '@/utils/imageUrl';
-import { console } from 'inspector';
 
 type Props = {
     params: Promise<{ slug: string }>;
