@@ -12,6 +12,8 @@ import {
     EventImageGallery,
 } from '@/components';
 import { getMyCreatedEventDetails, getMyCreatedEventAnalytics } from '@/app/lib/dashboard';
+import { getFullImageUrl } from '@/utils/imageUrl';
+import { console } from 'inspector';
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -49,9 +51,7 @@ const EventDetailsPage = async ({ params }: Props) => {
 
     const eventDetails = myEventDetails;
 
-    const galleryImages = eventDetails.additional_images.map(img => 
-        img.startsWith('http') ? img : `http://localhost:8000${img}`
-    );
+    const galleryImages = eventDetails.additional_images.map(img => getFullImageUrl(img)).filter((img): img is string => Boolean(img));
 
     return (
         <main className='dash-page space-y-8'>
@@ -70,7 +70,7 @@ const EventDetailsPage = async ({ params }: Props) => {
 
             {eventDetails.additional_images && eventDetails.additional_images.length > 0 && (
                 <EventImageGallery 
-                    images={galleryImages}
+                    images={galleryImages || []}
                     eventTitle={eventDetails.title}
                 />
             )}
