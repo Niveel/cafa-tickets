@@ -7,6 +7,7 @@ type Props = {
 }
 
 const DashboardNav = ({ children, user }: Props) => {
+    console.log('Rendering DashboardNav with user image:', user?.profile_image);
 
     return (
         <div className="min-h-screen p-2 xs:p-4 max-w-[1400px] mx-auto bg-primary text-white">

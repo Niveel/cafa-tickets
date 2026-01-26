@@ -45,7 +45,7 @@ export async function POST(request: Request) {
             body: JSON.stringify({ email, password }),
         });
 
-        console.log('Login response:', response);
+        // console.log('Login response:', response);
 
         const data = await response.json();
 

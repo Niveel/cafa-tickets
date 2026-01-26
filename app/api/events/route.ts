@@ -10,7 +10,7 @@ import type { PaginatedEventsResponse } from "@/types/events.types";
  */
 export async function GET(request: Request) {
     try {
-        const { searchParams } = new URL(request.url);
+        const { searchParams } = new URL(request.url); 
         
         // Forward all query params to backend
         const queryString = searchParams.toString();
