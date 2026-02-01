@@ -7,7 +7,7 @@ import { getMyAttendedEvents } from '@/app/lib/dashboard';
 const AttendedEventsPage = async () => {
     const attendedEvents = await getMyAttendedEvents();
 
-    console.log("Attended Events:", attendedEvents);
+    // console.log("Attended Events:", attendedEvents);
 
     return (
         <main className='dash-page space-y-6'>

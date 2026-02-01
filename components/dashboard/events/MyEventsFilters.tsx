@@ -3,6 +3,7 @@
 import React, { useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Filter, Search, X, ArrowUpDown } from 'lucide-react';
+
 import { CategorySelect } from '@/components';
 
 type Props = {

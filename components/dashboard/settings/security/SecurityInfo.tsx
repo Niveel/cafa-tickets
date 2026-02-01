@@ -14,7 +14,6 @@ const SecurityInfo = () => {
                         <li>• Use a strong, unique password (at least 8 characters with uppercase, lowercase, and numbers)</li>
                         <li>• Don&apos;t share your password with anyone</li>
                         <li>• Changing your email or username requires verification</li>
-                        <li>• Username can only be changed once every 30 days</li>
                     </ul>
                 </div>
             </div>

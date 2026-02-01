@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { User, CheckCircle } from 'lucide-react';
+
 import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader } from '@/components';
 import { passwordValidation } from '@/utils/validationUtils';
 import { CurrentUser } from '@/types/general.types';

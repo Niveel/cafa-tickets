@@ -1,6 +1,7 @@
 import React from 'react';
-import { TicketPurchaseInfo as PurchaseInfoType } from '@/types/tickets.types';
 import { Receipt, Calendar, CreditCard, CheckCircle, Clock, XCircle, RotateCcw } from 'lucide-react';
+
+import { TicketPurchaseInfo as PurchaseInfoType } from '@/types/tickets.types';
 
 type Props = {
     purchaseInfo: PurchaseInfoType;

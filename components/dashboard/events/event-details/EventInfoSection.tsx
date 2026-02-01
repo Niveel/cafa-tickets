@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { FileText, Calendar, MapPin, Users, Repeat, CheckCircle, Eye, EyeOff } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
 import { EventInfo } from '@/types/dash-events.types';
 
 type Props = {

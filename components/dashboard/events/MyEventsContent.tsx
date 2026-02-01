@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { AlertCircle } from 'lucide-react';
+
 import { MyEventsFilters, MyEventsList } from "@/components";
 import { MyEvent } from '@/types/dash-events.types';
 import { useInfiniteScroll } from '@/hooks';

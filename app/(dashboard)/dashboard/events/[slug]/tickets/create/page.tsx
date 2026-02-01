@@ -10,8 +10,7 @@ type Props = {
     params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const { slug } = await params;
+export async function generateMetadata(): Promise<Metadata> {
     return {
         title: `Add Ticket Type | Cafa Ticket`,
         description: 'Add a new ticket type to your event.',

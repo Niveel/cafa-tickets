@@ -5,7 +5,7 @@ import { fetchMyTickets } from '@/app/lib/dashboard';
 import { getEventCategories } from '@/app/lib/general';
 import { redirect } from 'next/navigation';
 
-type Props = {
+type Props = { 
     searchParams: Promise<{
         status?: string;
         search?: string;

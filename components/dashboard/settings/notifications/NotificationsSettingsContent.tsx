@@ -7,7 +7,6 @@ import {
     NotificationInfo
 } from '@/components';
 
-// Mock current settings - in production, fetch from API
 const mockSettings = {
     marketing_emails: false,
     event_reminders: true,

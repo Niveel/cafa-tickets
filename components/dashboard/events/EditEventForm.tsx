@@ -16,7 +16,6 @@ import {
     EventCapacitySection,
     EventPaymentProfileSection, 
     EventImagesSection,
-    EventTicketTypesSection,
     EventPublishSection
 } from '@/components';
 import { PaymentProfile } from "@/types/payments.types";

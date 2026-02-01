@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Calendar } from 'lucide-react';
+
 import { AttendedEventsResponse } from '@/types/dash-events.types';
 import { AttendedEventCard } from '@/components';
 

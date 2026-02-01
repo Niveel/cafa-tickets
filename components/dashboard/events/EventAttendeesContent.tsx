@@ -2,10 +2,11 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { Loader2, AlertCircle } from 'lucide-react';
+
 import { EventAttendees, EventAttendee } from '@/types/dash-events.types';
 import { EventAttendeesFilters, EventAttendeesTable } from '@/components';
 import { useInfiniteScroll, useDebounce } from '@/hooks';
-import { Loader2, AlertCircle } from 'lucide-react';
 
 type Props = {
     eventSlug: string;

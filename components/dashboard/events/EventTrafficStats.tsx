@@ -1,5 +1,6 @@
 import React from 'react';
 import { Eye, Users, TrendingUp } from 'lucide-react';
+
 import { MyEventAnalytics } from '@/types/dash-events.types';
 
 type Props = {

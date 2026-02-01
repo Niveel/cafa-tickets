@@ -12,7 +12,7 @@ export async function DELETE(request: Request, context: RouteContext) {
     try {
         const { slug } = await context.params;
 
-        console.log('Deleting event:', slug);
+        // console.log('Deleting event:', slug);
 
         const response = await fetchWithAuthRetry(`${BASE_URL}/events/${slug}/delete/`, {
             method: 'DELETE',

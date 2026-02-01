@@ -8,9 +8,6 @@ export const metadata: Metadata = {
 };
 
 const SettingsPage = async () => {
-    // In production: Fetch user settings
-    // const response = await fetch('/api/v1/users/settings/');
-    // const settings = await response.json();
 
     return (
         <main className="dash-page">

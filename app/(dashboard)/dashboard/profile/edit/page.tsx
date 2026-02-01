@@ -1,9 +1,9 @@
-import React from 'react';
-import { redirect } from 'next/navigation';
-import { EditProfileForm } from '@/components';
-import { getCurrentUser } from '@/app/lib/auth';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
+
+import { EditProfileForm } from '@/components';
+import { getCurrentUser } from '@/app/lib/auth';
 
 const EditProfilePage = async () => {
     const currentUser = await getCurrentUser();

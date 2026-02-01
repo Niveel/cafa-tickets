@@ -2,15 +2,16 @@
 
 import React from 'react';
 import { MapPin, Info, CheckCircle } from 'lucide-react';
-import { LocationSelector, type LocationData } from '@/components';
 import { useFormikContext } from 'formik';
+
+import { LocationSelector, type LocationData } from '@/components';
 
 const EventVenueSection = () => {
     const { setFieldValue, values, errors, touched } = useFormikContext<any>();
     const [locationSelected, setLocationSelected] = React.useState(false);
 
     // Handle location selection from Google Maps
-    const handleLocationSelect = (location: LocationData) => {
+    const handleLocationSelect = (location: LocationData) => { 
         // Set all venue fields
         setFieldValue('venue_name', location.venue_name);
         setFieldValue('venue_address', location.venue_address);

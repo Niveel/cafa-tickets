@@ -3,10 +3,10 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Formik, Form } from 'formik';
+import { CheckCircle, AlertCircle, Ticket, } from 'lucide-react';
 
 import { ticketTypeSchema, TicketTypeFormValues } from '@/data/eventsSchema';
 import { AppFormField, SubmitButton, FormLoader } from '@/components';
-import { CheckCircle, AlertCircle, Ticket, } from 'lucide-react';
 
 type Props = {
     eventSlug: string;

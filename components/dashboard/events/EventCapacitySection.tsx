@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { Users, Info, AlertCircle } from 'lucide-react';
-import { AppFormField } from '@/components';
 import { useFormikContext } from 'formik';
+
+import { AppFormField } from '@/components';
 
 const EventCapacitySection = () => {
     const { values, errors } = useFormikContext<any>();

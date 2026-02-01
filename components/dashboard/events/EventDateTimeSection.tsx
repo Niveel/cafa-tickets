@@ -1,9 +1,10 @@
 "use client";
 
 import React from 'react';
-import { Calendar, Clock } from 'lucide-react';
-import { AppFormField } from '@/components';
+import { Calendar } from 'lucide-react';
 import { useFormikContext } from 'formik';
+
+import { AppFormField } from '@/components';
 
 const EventDateTimeSection = () => {
     const { values, setFieldValue } = useFormikContext<any>();

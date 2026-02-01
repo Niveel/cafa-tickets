@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Share2, Facebook, Twitter, Mail, Link as LinkIcon, Check } from 'lucide-react';
 import { FaWhatsapp } from 'react-icons/fa';
-import { EventDetails, RecurringEventDetails } from '@/types/events.types';
 import Link from 'next/link';
+
+import { EventDetails, RecurringEventDetails } from '@/types/events.types';
 
 interface ShareSectionProps {
     event: EventDetails | RecurringEventDetails;

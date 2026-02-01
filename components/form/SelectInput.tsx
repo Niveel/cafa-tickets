@@ -14,7 +14,7 @@ type Props = {
     onBlur: () => void;
     options: Option[];
     required?: boolean;
-    placeholder?: string;
+    placeholder?: string; 
 };
 
 const SelectInput = ({ 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Ticket } from 'lucide-react';
+
 import { MyEventAnalytics } from '@/types/dash-events.types';
 
 type Props = {

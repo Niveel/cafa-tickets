@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import { Calendar, MapPin, Ticket, DollarSign, CheckCircle } from 'lucide-react';
+
 import { AttendedEventsResponse } from '@/types/dash-events.types';
 import { placeholderImage } from '@/data/constants';
 

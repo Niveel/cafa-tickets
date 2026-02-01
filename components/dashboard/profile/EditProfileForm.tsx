@@ -4,8 +4,9 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { SubmitButton, FormLoader, ImageUpload, AppFormField } from '@/components';
 import { CheckCircle, AlertCircle, User, MapPin } from 'lucide-react';
+
+import { SubmitButton, FormLoader, ImageUpload, AppFormField } from '@/components';
 import { CurrentUser } from '@/types/general.types';
 
 type Props = {
@@ -43,7 +44,6 @@ const profileEditSchema = Yup.object().shape({
         .max(100, 'Country must not exceed 100 characters'),
     profile_image: Yup.string().nullable()
 });
-
 type ProfileFormValues = Yup.InferType<typeof profileEditSchema>;
 
 const EditProfileForm = ({ user }: Props) => {

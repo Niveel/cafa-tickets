@@ -1,6 +1,7 @@
 "use client";
 
 import { Sparkles } from 'lucide-react';
+
 import { EventDetails, RecurringEventDetails } from '@/types/events.types';
 import {SimilarEventCard} from '@/components';
 

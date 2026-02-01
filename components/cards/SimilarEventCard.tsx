@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { MapPin, ArrowRight } from 'lucide-react';
+
 import { SimilarEvent } from '@/types/events.types';
 import { placeholderImage } from '@/data/constants';
 

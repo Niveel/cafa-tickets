@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { Shield, Bell, Lock, Trash2, ChevronRight } from 'lucide-react';
+import { Shield, Bell, Lock, ChevronRight } from 'lucide-react';
 
 const SettingsNavigationCards = () => {
     const settingsSections = [

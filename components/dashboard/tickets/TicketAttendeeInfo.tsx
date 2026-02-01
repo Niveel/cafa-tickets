@@ -1,6 +1,7 @@
 import React from 'react';
-import { TicketAttendeeInfo as AttendeeInfoType } from '@/types/tickets.types';
 import { User, Mail, Phone } from 'lucide-react';
+
+import { TicketAttendeeInfo as AttendeeInfoType } from '@/types/tickets.types';
 
 type Props = {
     attendeeInfo: AttendeeInfoType;

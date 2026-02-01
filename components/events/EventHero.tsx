@@ -12,6 +12,7 @@ import {
     ChevronRight,
     X
 } from 'lucide-react';
+
 import { EventDetails } from '@/types/events.types';
 import { formatDate, formatTime } from '@/utils/format';
 import { getFullImageUrl } from '@/utils/imageUrl';

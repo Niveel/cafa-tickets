@@ -1,6 +1,7 @@
 import React from 'react';
-import { TicketDetails } from '@/types/tickets.types';
 import { Ticket, CheckCircle, XCircle, Clock } from 'lucide-react';
+
+import { TicketDetails } from '@/types/tickets.types';
 
 type Props = {
     ticket: TicketDetails;

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Trophy, TrendingUp, Users, ArrowRight } from 'lucide-react';
+
 import { UserStats } from '@/types/dashboard.types';
 
 type Props = {

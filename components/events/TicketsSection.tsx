@@ -1,10 +1,11 @@
 "use client";
 
 import { Ticket as TicketIcon, Clock, Ban, Info, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
+
 import { EventDetails, RecurringEventDetails } from '@/types/events.types';
 import { CurrentUser } from '@/types/general.types';
 import { TicketCard } from '@/components';
-import Link from 'next/link';
 
 interface TicketsSectionProps {
     event: EventDetails | RecurringEventDetails;

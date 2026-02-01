@@ -2,10 +2,11 @@
 
 import React from 'react';
 import { Image as ImageIcon, Info, X } from 'lucide-react';
-import { ImageUpload } from '@/components';
 import { useFormikContext } from 'formik';
-import { formatImageUrls } from '@/utils/functions';
 import Image from 'next/image';
+
+import { formatImageUrls } from '@/utils/functions';
+import { ImageUpload } from '@/components';
 
 const EventImagesSection = () => {
     const { values, setFieldValue, errors, touched } = useFormikContext<any>();

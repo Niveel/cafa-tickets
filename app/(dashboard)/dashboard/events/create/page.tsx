@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 
 import {CreateEventForm} from '@/components';
-import { getMyPaymentProfiles } from '@/app/lib/dashboard';
+import { getMyPaymentProfiles } from '@/app/lib/dashboard'; 
 import { getCurrentUser } from '@/app/lib/auth';
 
 export const metadata: Metadata = {

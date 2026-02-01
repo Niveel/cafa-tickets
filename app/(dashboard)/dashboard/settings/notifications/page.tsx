@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+
 import { NotificationsSettingsContent } from '@/components';
 
 export const metadata: Metadata = {
@@ -8,9 +9,6 @@ export const metadata: Metadata = {
 };
 
 const NotificationsSettingsPage = async () => {
-    // In production: Fetch user notification settings
-    // const response = await fetch('/api/v1/users/settings/');
-    // const settings = await response.json();
 
     return (
         <main className="dash-page">

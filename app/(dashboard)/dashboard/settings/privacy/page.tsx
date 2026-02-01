@@ -8,12 +8,6 @@ export const metadata: Metadata = {
 };
 
 const PrivacySettingsPage = async () => {
-    // In production: Fetch user data and check for active tickets/events
-    // const response = await fetch('/api/v1/users/profile/');
-    // const user = await response.json();
-    
-    // const activeResponse = await fetch('/api/v1/users/active-items/');
-    // const activeItems = await activeResponse.json();
 
     return (
         <main className="dash-page">

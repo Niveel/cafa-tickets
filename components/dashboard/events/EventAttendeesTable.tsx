@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CheckCircle, XCircle, Mail, Phone, Users, X } from 'lucide-react';
+
 import { EventAttendee } from '@/types/dash-events.types';
 
 type Props = {

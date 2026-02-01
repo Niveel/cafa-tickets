@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { X, Ticket as TicketIcon, Clock } from 'lucide-react';
+
 import { TicketType, EventDetails, RecurringEventDetails } from '@/types/events.types';
 import { CurrentUser } from '@/types/general.types';
 import { getTicketTheme } from '@/utils/functions';

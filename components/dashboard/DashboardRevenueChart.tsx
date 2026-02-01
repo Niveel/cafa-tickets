@@ -1,5 +1,6 @@
 import React from 'react';
 import { TrendingUp, Calendar } from 'lucide-react';
+
 import { UserStats } from '@/types/dashboard.types';
 
 type Props = {

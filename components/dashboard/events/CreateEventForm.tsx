@@ -6,8 +6,7 @@ import { Formik, Form } from 'formik';
 import { CheckCircle, AlertCircle, AlertTriangle } from 'lucide-react';
 
 import { eventCreationSchema, EventFormValues } from '@/data/eventsSchema';
-import { SubmitButton, FormLoader } from '@/components';
-import { EventBasicInfoSection, EventVenueSection, EventDateTimeSection, EventTypeSection, EventCapacitySection, EventPaymentProfileSection, EventImagesSection, EventTicketTypesSection, EventPublishSection } from "@/components"
+import { EventBasicInfoSection, EventVenueSection, EventDateTimeSection, EventTypeSection, EventCapacitySection, EventPaymentProfileSection, EventImagesSection, EventTicketTypesSection, EventPublishSection, SubmitButton, FormLoader } from "@/components"
 import { buildEventFormData } from '@/utils/buildEventFormData';
 import { RecurrencePattern } from '@/types/dash-events.types';
 import { base64ToFile } from '@/utils/base64ToFile';

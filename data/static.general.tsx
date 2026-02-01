@@ -61,12 +61,6 @@ export const contactInfo = [
         value: "info@cafaticket.com",
         href: "mailto:info@cafaticket.com",
     },
-    // {
-    //     id: 2,
-    //     label: "Phone",
-    //     value: "+233 5455454 545",
-    //     href: "tel:+233555454545",
-    // },
 ];
 
 export const profileMenuItems: ProfileMenuItem[] = [

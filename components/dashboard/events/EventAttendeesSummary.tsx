@@ -1,5 +1,6 @@
 import React from 'react';
 import { Users, CheckCircle, XCircle, Percent } from 'lucide-react';
+
 import { EventAttendees } from '@/types/dash-events.types';
 
 type Props = {

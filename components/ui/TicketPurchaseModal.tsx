@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, Ticket, User, AlertCircle, Loader2, ShoppingCart } from 'lucide-react';
+
 import { TicketType, EventDetails, RecurringEventDetails } from '@/types/events.types';
 import { CurrentUser } from '@/types/general.types';
 

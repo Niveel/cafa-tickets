@@ -52,7 +52,6 @@ const LoginForm = () => {
         setNeedsEmailVerification(false); // ✅ Reset verification state
         setResendSuccess(false); // ✅ Reset resend success
 
-        // Backend expects "email" field but accepts email or username
         const payload = {
             email: values.emailOrUsername,
             password: values.password,

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Calendar, TrendingUp } from 'lucide-react';
+
 import { RevenueSummary } from '@/types/payments.types';
 
 type Props = {

@@ -2,8 +2,9 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { TicketDetails } from '@/types/tickets.types';
 import { Download, Eye, Share2, Loader2, CheckCircle } from 'lucide-react';
+
+import { TicketDetails } from '@/types/tickets.types';
 
 type Props = {
     ticket: TicketDetails;

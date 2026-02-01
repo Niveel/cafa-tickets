@@ -23,7 +23,6 @@ type Props = {
 };
 
 const EventAttendeesFilters = ({
-    eventSlug,
     ticketTypes,
     search,
     ticketTypeId,

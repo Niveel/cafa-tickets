@@ -1,7 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { TicketDetails } from '@/types/tickets.types';
 import { QrCode, Info } from 'lucide-react';
+
+import { TicketDetails } from '@/types/tickets.types';
 import { placeholderImage } from '@/data/constants';
 
 type Props = {

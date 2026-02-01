@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
 import { TicketDetailsContent } from '@/components';
 import { getMyTicketDetails } from '@/app/lib/dashboard';
 

@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { FileText, Info } from 'lucide-react';
-import { AppFormField, CategorySelect } from '@/components';
 import { useFormikContext } from 'formik';
+
+import { AppFormField, CategorySelect } from '@/components';
 
 const EventBasicInfoSection = () => {
     const { values, setFieldValue } = useFormikContext<any>();

@@ -1,4 +1,4 @@
-import { TrendingUp, Calendar, DollarSign, BarChart3, Wallet, Clock } from 'lucide-react';
+import { TrendingUp, DollarSign, BarChart3, Wallet } from 'lucide-react';
 
 import { RevenueSummary } from '@/types/payments.types';
 

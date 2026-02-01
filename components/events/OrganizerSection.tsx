@@ -1,10 +1,8 @@
 "use client";
 
-import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
-
 import { User, Calendar, Ticket, TrendingUp, Mail } from 'lucide-react';
+
 import { EventDetails, RecurringEventDetails } from '@/types/events.types';
 import { placeholderPic } from '@/data/constants';
 

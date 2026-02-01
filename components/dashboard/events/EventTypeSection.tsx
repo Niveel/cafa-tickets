@@ -2,8 +2,9 @@
 
 import React from 'react';
 import { Repeat, Info, CheckCircle } from 'lucide-react';
-import { AppFormField } from '@/components';
 import { useFormikContext } from 'formik';
+
+import { AppFormField } from '@/components';
 
 const EventTypeSection = () => {
     const { values, setFieldValue } = useFormikContext<any>();

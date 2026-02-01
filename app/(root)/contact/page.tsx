@@ -1,6 +1,5 @@
 import React from 'react';
-import { Mail, Phone, MapPin, MessageCircle, Clock, HeadphonesIcon } from 'lucide-react';
-import Link from 'next/link';
+import { Mail, MessageCircle, Clock, HeadphonesIcon } from 'lucide-react';
 
 import { ContactForm } from '@/components';
 import { getCurrentUser } from '@/app/lib/auth';
@@ -87,33 +86,6 @@ const ContactPage = async () => {
 
                         {/* Sidebar Info */}
                         <div className="lg:col-span-2 space-y-6">
-                            {/* Support Hours */}
-                            <div className="bg-primary-100 rounded-xl p-6 border-2 border-accent/20">
-                                <div className="flex items-start gap-3 mb-4">
-                                    <div className="w-10 h-10 rounded-lg bg-accent/20 flex-center shrink-0 border border-accent/30">
-                                        <Clock className="w-5 h-5 text-accent-50" />
-                                    </div>
-                                    <div>
-                                        <h3 className="big-text-5 font-bold text-white mb-2">
-                                            Support Hours
-                                        </h3>
-                                        <div className="space-y-2 normal-text-2 text-slate-200">
-                                            <p className="flex justify-between">
-                                                <span className="text-slate-300">Monday - Friday:</span>
-                                                <span className="font-semibold">8am - 5pm</span>
-                                            </p>
-                                            <p className="flex justify-between">
-                                                <span className="text-slate-300">Saturday:</span>
-                                                <span className="font-semibold">9am - 2pm</span>
-                                            </p>
-                                            <p className="flex justify-between">
-                                                <span className="text-slate-300">Sunday:</span>
-                                                <span className="font-semibold">Closed</span>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                             {/* Quick Help */}
                             <div className="bg-primary-100 rounded-xl p-6 border-2 border-accent/20">

@@ -4,7 +4,6 @@ import React from 'react';
 import {
     PrivacySettingsHeader,
     PrivacyInfo,
-    // DataPrivacySection,
     DeleteAccountSection
 } from '@/components';
 
@@ -16,9 +15,6 @@ const PrivacySettingsContent = () => {
 
             {/* Privacy Info */}
             <PrivacyInfo />
-
-            {/* Data Privacy Section */}
-            {/* <DataPrivacySection /> */}
 
             {/* Delete Account Section */}
             <DeleteAccountSection />

@@ -2,6 +2,7 @@
 
 import { FileText, Calendar, MapPin } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+
 import { EventDetails, RecurringEventDetails } from '@/types/events.types';
 import Link from 'next/link';
 

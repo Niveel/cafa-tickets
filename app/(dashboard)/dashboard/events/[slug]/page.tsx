@@ -1,12 +1,13 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+
 import { 
     EventDetailsHeader,
     EventInfoSection,
     EventTicketTypesManagement,
     EventAnalyticsOverview,
-    EventSalesByTicketType,
+    EventSalesByTicketType, 
     EventTrafficStats,
     EventRecentSales,
     EventImageGallery,
