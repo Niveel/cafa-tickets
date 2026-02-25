@@ -178,7 +178,7 @@ export const CurrencyProvider = ({ children }: { children: React.ReactNode }) =>
                 }
 
                 // Fetch fresh rates
-                console.log('🔄 Fetching fresh exchange rates...');
+                console.log('🔄 Fetching fresh exchange rates...'); 
 
                 // ✅ Replace with your actual API key
                 const API_KEY = process.env.NEXT_PUBLIC_EXCHANGE_RATE_API_KEY || 'YOUR_API_KEY_HERE';

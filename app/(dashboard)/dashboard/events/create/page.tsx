@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 const CreateEventPage = async () => {
-    const [paymentProfiles, user] = await Promise.all([ 
+    const [paymentProfiles, user] = await Promise.all([  
         getMyPaymentProfiles(),
         getCurrentUser()
     ]);

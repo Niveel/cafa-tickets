@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+
 import { MyEvent } from '@/types/dash-events.types';
 import { CheckInSuccessResponse, CheckInHistoryItem } from '@/types/dashboard.types';
 import {

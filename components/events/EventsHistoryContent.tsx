@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Event } from '@/types/events.types';
 import { History, Archive } from 'lucide-react';
+
 import { useDebounce, useInfiniteScroll } from '@/hooks';
+import { Event } from '@/types/events.types';
 import {
     EventsSortTab,
     ActiveFiltersDisplay,

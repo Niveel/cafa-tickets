@@ -1,12 +1,13 @@
 "use client";
 
 import React from 'react';
+import { Loader2 } from 'lucide-react';
+
 import { PaymentHistory } from "@/types/payments.types";
 import { 
     PaymentHistoryFilters,
     PaymentHistoryList
 } from "@/components";
-import { Loader2 } from 'lucide-react';
 
 const PaymentHistoryContent = () => {
     const [payments, setPayments] = React.useState<PaymentHistory | null>(null);

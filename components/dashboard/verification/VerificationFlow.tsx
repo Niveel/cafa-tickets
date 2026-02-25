@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+
 import { VerificationHeader, IDUploadStep, SelfieStep, VerificationResult } from "@/components";
 import { CurrentUser } from '@/types/general.types';
 import type { VerificationStatus, VerificationStatusResponse } from '@/types/verification.types';

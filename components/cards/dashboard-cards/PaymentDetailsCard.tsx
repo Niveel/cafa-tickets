@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowLeft, CreditCard, Smartphone, Calendar, MapPin, User, Mail, Phone, Download, CheckCircle, Clock, XCircle } from 'lucide-react';
+
 import { PaymentDetails } from '@/types/payments.types';
 
 type Props = {

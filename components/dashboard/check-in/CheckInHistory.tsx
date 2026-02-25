@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
-import { CheckInHistoryItem } from '@/types/dashboard.types';
 import { History, User, Clock, Ticket, RefreshCw } from 'lucide-react';
+
+import { CheckInHistoryItem } from '@/types/dashboard.types';
 
 type Props = {
     eventSlug: string;
@@ -17,7 +18,7 @@ const CheckInHistory = ({ eventSlug, latestCheckIn }: Props) => {
     const fetchHistory = async () => {
         try {
             setIsLoading(true);
-            setError(null);
+            setError(null); 
 
             const response = await fetch(`/api/dashboard/events/${eventSlug}/check-in/history`);
 

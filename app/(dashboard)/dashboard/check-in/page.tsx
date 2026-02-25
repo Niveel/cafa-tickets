@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     description: 'Check in attendees at your events using QR code scanner or manual entry.',
     keywords: ['event check-in', 'QR scanner', 'attendee management', 'events'],
 };
-
+ 
 const CheckInPage = async () => {
     // Fetch upcoming and ongoing events from backend using filters
     const [upcomingData, ongoingData] = await Promise.all([

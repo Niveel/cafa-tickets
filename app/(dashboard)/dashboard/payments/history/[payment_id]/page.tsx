@@ -1,7 +1,8 @@
-import { PaymentDetailsCard } from "@/components";
-import { getPaymentDetailsById } from "@/app/lib/dashboard";
 import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
+
+import { PaymentDetailsCard } from "@/components";
+import { getPaymentDetailsById } from "@/app/lib/dashboard";
 
 type PaymentDetailsPageProps = {
     params: Promise<{ payment_id: string }>;

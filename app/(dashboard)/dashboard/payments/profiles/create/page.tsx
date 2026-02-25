@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+
 import { CreatePaymentProfileForm } from "@/components";
 
 const CreatePaymentProfilePage = () => {

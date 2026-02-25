@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CheckCircle, XCircle, Loader2, Lock, ArrowLeft } from "lucide-react";
+import { CheckCircle, XCircle, Lock, ArrowLeft } from "lucide-react";
 
 import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader } from "@/components";
 import { PasswordResetValidationSchema, PasswordResetFormValues } from "@/data/validationConstants";

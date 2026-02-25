@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { CheckCircle, Loader2, XCircle, ArrowRight, RefreshCw } from 'lucide-react';
+
 import type { VerificationStatus } from '@/types/verification.types';
 
 interface VerificationResultProps {

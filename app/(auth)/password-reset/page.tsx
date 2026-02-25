@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
-import { PasswordResetContent } from '@/components';
 import Link from 'next/link';
+
+import { PasswordResetContent } from '@/components';
 
 export const metadata: Metadata = {
     title: 'Reset Password | Cafa Ticket',

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DollarSign, X, AlertCircle, CheckCircle, Wallet, ArrowRight } from 'lucide-react';
+
 import FaceVerificationModal from './FaceVerificationModal';
 
 interface RequestPayoutButtonProps {

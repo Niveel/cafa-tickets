@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
-import { MyEvent } from '@/types/dash-events.types';
 import { Calendar, MapPin, Users, ChevronRight, Search, X, Loader2 } from 'lucide-react';
 
+import { MyEvent } from '@/types/dash-events.types';
 import { placeholderImage } from '@/data/constants';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useInfiniteScroll } from '@/hooks/useInfiniteScroll';
@@ -257,4 +257,5 @@ const EventSelector = ({ events, onSelectEvent, hasMore = false, isLoading = fal
     );
 };
 
-export default EventSelector;
+export default EventSelector
+

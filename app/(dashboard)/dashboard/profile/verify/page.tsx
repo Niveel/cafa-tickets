@@ -14,7 +14,7 @@ const VerifyProfilePage = async () => {
 
     return (
         <main className='dash-page'>
-            <VerificationFlow user={currentUser} />
+            <VerificationFlow user={currentUser} /> 
         </main>
     );
 };

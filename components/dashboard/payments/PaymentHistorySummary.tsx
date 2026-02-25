@@ -1,5 +1,6 @@
 import React from 'react';
 import { DollarSign, CheckCircle, Clock, XCircle } from 'lucide-react';
+
 import { PaymentHistory } from '@/types/payments.types';
 
 type Props = {

@@ -1,8 +1,7 @@
 // utils/countryDetection.ts
-
 import { ISO_TO_PAYSTACK } from '@/data/countryMappings';
 
-export type DetectedCountry = {
+export type DetectedCountry = { 
     code: string;
     name: string;
     countryCode: string;

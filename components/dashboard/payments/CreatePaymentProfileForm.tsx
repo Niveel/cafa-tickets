@@ -21,7 +21,6 @@ const FormFields = () => {
         selectedCountry,
         setSelectedCountry,
         isDetectingCountry,
-        getBankFromCode,
     } = useBankForm();
 
     const { countryOptions, isLoading: isLoadingCountries } = useCountries();
@@ -119,7 +118,7 @@ const CreatePaymentProfileForm = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     
-    const { selectedCountry, isDetectingCountry, getBankFromCode } = useBankForm();
+    const { selectedCountry, getBankFromCode } = useBankForm();
 
     const handleSubmit = async (values: Record<string, string>) => {
         setIsSubmitting(true);

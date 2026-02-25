@@ -1,6 +1,7 @@
 import React from 'react';
-import { MyEvent } from '@/types/dash-events.types';
 import { Users, CheckCircle, Clock, TrendingUp } from 'lucide-react';
+
+import { MyEvent } from '@/types/dash-events.types';
 
 type Props = {
     event: MyEvent;

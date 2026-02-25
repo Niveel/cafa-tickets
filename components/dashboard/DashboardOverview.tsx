@@ -11,7 +11,7 @@ type Props = {
 
 const DashboardOverview = ({ stats }: Props) => {
     const { overview } = stats;
-    const { convertFromGHS, formatCurrency, displayCurrency } = useCurrency();
+    const { convertFromGHS, formatCurrency } = useCurrency();
 
     const getAccountAge = (days: number, display: string) => {
         if (days === 0) return display; // "5h" or "Just now"

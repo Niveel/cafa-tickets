@@ -2,6 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { CheckCircle, XCircle, AlertTriangle, X } from 'lucide-react';
+
 import { CheckInResponse } from '@/types/dashboard.types';
 
 type Props = {

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito, Rhodium_Libre, Metrophobic } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+
 import "./globals.css";
 import "@/styles/general.css";
 import { CurrencyProvider } from "@/contexts/CurrencyContext";
