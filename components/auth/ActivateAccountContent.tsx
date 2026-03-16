@@ -264,7 +264,7 @@ const ActivateAccountContent = ({ uid, token }: Props) => {
                             <p className="normal-text-2 text-red-400 mb-2">
                                 {error}
                             </p>
-                            {errorDetails && (
+                            {!!errorDetails && (
                                 <details className="mt-3">
                                     <summary className="small-text text-red-300 cursor-pointer hover:text-red-200">
                                         Show technical details
