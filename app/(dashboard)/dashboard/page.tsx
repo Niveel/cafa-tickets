@@ -8,9 +8,13 @@ import {
     DashboardRevenueChart 
 } from "@/components";
 import { getUserStats } from "@/app/lib/dashboard";
+import { getCurrentUser } from "@/app/lib/auth";
 
 const DashboardPage = async () => {
-    const userStats = await getUserStats();
+    const [userStats, currentUser] = await Promise.all([
+        getUserStats(),
+        getCurrentUser(),
+    ]);
 
     // Redirect if no stats (no token)
     if (!userStats) {
@@ -24,7 +28,7 @@ const DashboardPage = async () => {
             <DashboardOverview stats={userStats} />
 
             {/* Quick Actions */}
-            <DashboardQuickActions />
+            <DashboardQuickActions canCreateEvent={!!currentUser?.is_organizer} />
 
             {/* Two Column Layout - Activity & Tickets */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">

@@ -4,7 +4,7 @@ import React from 'react';
 import {
     SecuritySettingsHeader,
     ChangePasswordForm,
-    ChangeEmailForm,
+    // ChangeEmailForm,
     ChangeUsernameForm,
     SecurityInfo
 } from '@/components';
@@ -25,12 +25,12 @@ const SecuritySettingsContent = ({ currentUser }: Props) => {
             <SecurityInfo />
 
             {/* Forms */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6">
                 {/* Change Password */}
                 <ChangePasswordForm />
 
-                {/* Change Email */}
-                <ChangeEmailForm />
+                {/* Change Email - temporarily disabled until backend support is available */}
+                {/* <ChangeEmailForm /> */}
             </div>
 
             {/* Change Username */}

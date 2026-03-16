@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { RefreshCw, AlertTriangle, Home, ArrowLeft, Mail, Bug } from 'lucide-react';
 import Link from 'next/link';
+import { useAlertModal } from '@/contexts/AlertModalContext';
 
 interface ErrorProps {
     error: Error & { digest?: string };
@@ -10,6 +11,8 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
+    const { showAlert } = useAlertModal();
+
     useEffect(() => {
         // Log error to console for debugging
         console.error('Application Error:', error);
@@ -29,9 +32,12 @@ export default function Error({ error, reset }: ErrorProps) {
     const copyErrorToClipboard = () => {
         const errorText = `Error: ${error.message}\nDigest: ${error.digest || 'N/A'}\nStack: ${error.stack || 'N/A'}`;
         navigator.clipboard.writeText(errorText);
-        
-        // Show temporary success message (you could add a toast here)
-        alert('Error details copied to clipboard!');
+
+        showAlert({
+            title: 'Copied',
+            message: 'Error details copied to clipboard!',
+            variant: 'success',
+        });
     };
 
     return (

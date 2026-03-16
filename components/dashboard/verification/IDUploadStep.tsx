@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { Upload, CreditCard, AlertCircle, CheckCircle, XCircle } from 'lucide-react';
+import { useAlertModal } from '@/contexts/AlertModalContext';
 
 interface IDUploadStepProps {
     onUpload: (file: File) => void;
@@ -13,18 +14,27 @@ const IDUploadStep = ({ onUpload, isLoading = false, error = null }: IDUploadSte
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
+    const { showAlert } = useAlertModal();
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
             if (!validTypes.includes(file.type)) {
-                alert('Please select a valid image file (JPG, PNG, or WebP)');
+                showAlert({
+                    title: 'Invalid File Type',
+                    message: 'Please select a valid image file (JPG, PNG, or WebP)',
+                    variant: 'error',
+                });
                 return;
             }
 
             if (file.size > 10 * 1024 * 1024) {
-                alert('File size must be less than 10MB');
+                showAlert({
+                    title: 'File Too Large',
+                    message: 'File size must be less than 10MB',
+                    variant: 'error',
+                });
                 return;
             }
 

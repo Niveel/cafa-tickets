@@ -5,7 +5,7 @@ import { Lock, Bell, CreditCard } from 'lucide-react';
 const ProfileQuickActions = () => {
     const actions = [
         {
-            title: 'Change Password',
+            title: 'Security Settings',
             description: 'Update your password',
             icon: Lock,
             href: '/dashboard/settings/security',

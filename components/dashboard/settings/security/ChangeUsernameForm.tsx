@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import * as Yup from 'yup';
 import { User, CheckCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 import { AppForm, AppFormField, AppErrorMessage, SubmitButton, FormLoader } from '@/components';
 import { passwordValidation } from '@/utils/validationUtils';
@@ -31,10 +32,12 @@ type ChangeUsernameFormValues = {
 };
 
 const ChangeUsernameForm = ({ currentUser }: Props) => {
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState(false);
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [displayUsername, setDisplayUsername] = useState(currentUser.username);
 
     const handleSubmit = async (values: ChangeUsernameFormValues, { resetForm }: any) => {
         setLoading(true);
@@ -59,7 +62,9 @@ const ChangeUsernameForm = ({ currentUser }: Props) => {
             }
 
             setSuccess(true);
+            setDisplayUsername(values.newUsername);
             resetForm();
+            router.refresh();
             setTimeout(() => setSuccess(false), 3000);
 
         } catch (err: any) {
@@ -80,7 +85,7 @@ const ChangeUsernameForm = ({ currentUser }: Props) => {
                         Change Username
                     </h2>
                     <p className="small-text text-slate-400">
-                        Current username: <span className="font-semibold text-white">@{currentUser.username}</span>
+                        Current username: <span className="font-semibold text-white">@{displayUsername}</span>
                     </p>
                 </div>
             </div>

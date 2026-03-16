@@ -1,19 +1,19 @@
 "use client";
 
 import React from 'react';
-import Link from 'next/link';
 import { Plus } from 'lucide-react';
 
-import { MyEventCard } from '@/components';
+import { CreateEventGuardButton, MyEventCard } from '@/components';
 import { MyEvent } from '@/types/dash-events.types';
 
 
 type Props = {
     events: MyEvent[];
     onDelete: (eventId: number, eventSlug: string, eventTitle: string) => void;
+    canCreateEvent: boolean;
 };
 
-const MyEventsList = ({ events, onDelete }: Props) => {
+const MyEventsList = ({ events, onDelete, canCreateEvent }: Props) => {
     if (events.length === 0) {
         return (
             <div role="region" aria-label="My events" className="bg-primary rounded-xl p-12 border-2 border-accent/30 text-center">
@@ -27,13 +27,12 @@ const MyEventsList = ({ events, onDelete }: Props) => {
                     You haven&apos;t created any events yet. Start by creating your first event and reach thousands of attendees.
                 </p>
 
-                <Link
-                    href="/dashboard/events/create"
+                <CreateEventGuardButton
+                    canCreateEvent={canCreateEvent}
+                    createLabel="Create Your First Event"
+                    verifyLabel="Verify to Create Event"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300"
-                >
-                    <Plus className="w-5 h-5" aria-hidden="true" />
-                    Create Your First Event
-                </Link>
+                />
             </div>
         );
     }

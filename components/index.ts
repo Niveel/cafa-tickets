@@ -101,6 +101,7 @@ export {default as FaceVerificationModal} from './dashboard/payments/FaceVerific
 export {default as MyEventsFilters} from './dashboard/events/MyEventsFilters';
 export {default as MyEventsList} from './dashboard/events/MyEventsList';
 export {default as MyEventsContent} from './dashboard/events/MyEventsContent';
+export {default as CreateEventGuardButton} from './dashboard/events/CreateEventGuardButton';
 export {default as AttendedEventsList} from './dashboard/events/AttendedEventsList';
 export {default as EventAnalyticsOverview} from './dashboard/events/EventAnalyticsOverview';
 export {default as EventSalesByTicketType} from './dashboard/events/EventSalesByTicketType';

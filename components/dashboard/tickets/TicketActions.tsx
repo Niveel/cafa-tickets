@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Download, Eye, Share2, Loader2, CheckCircle } from 'lucide-react';
 
 import { TicketDetails } from '@/types/tickets.types';
+import { useAlertModal } from '@/contexts/AlertModalContext';
 
 type Props = {
     ticket: TicketDetails;
@@ -13,6 +14,7 @@ type Props = {
 const TicketActions = ({ ticket }: Props) => {
     const [isDownloading, setIsDownloading] = useState(false);
     const [downloadSuccess, setDownloadSuccess] = useState(false);
+    const { showAlert } = useAlertModal();
 
     const handleDownload = async () => {
         setIsDownloading(true);
@@ -45,7 +47,11 @@ const TicketActions = ({ ticket }: Props) => {
             setTimeout(() => setDownloadSuccess(false), 3000);
         } catch (error) {
             console.error('Download failed:', error);
-            alert(error instanceof Error ? error.message : 'Failed to download ticket');
+            showAlert({
+                title: 'Download Failed',
+                message: error instanceof Error ? error.message : 'Failed to download ticket',
+                variant: 'error',
+            });
         } finally {
             setIsDownloading(false);
         }
@@ -61,7 +67,11 @@ const TicketActions = ({ ticket }: Props) => {
         } else {
             // Fallback: Copy to clipboard
             navigator.clipboard.writeText(window.location.href);
-            alert('Link copied to clipboard!');
+            showAlert({
+                title: 'Copied',
+                message: 'Link copied to clipboard!',
+                variant: 'success',
+            });
         }
     };
 

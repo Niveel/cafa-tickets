@@ -83,7 +83,7 @@ const ProfileHeader = ({ user }: Props) => {
                             <div className="inline-flex items-center gap-2 mt-2 px-3 py-1.5 bg-emerald-500/20 rounded-lg border border-emerald-500/30">
                                 <CheckCircle className="w-4 h-4 text-emerald-400" aria-hidden="true" />
                                 <span className="small-text text-emerald-400 font-semibold">
-                                    Verified Account
+                                    Email Verified
                                 </span>
                             </div>
                         )}

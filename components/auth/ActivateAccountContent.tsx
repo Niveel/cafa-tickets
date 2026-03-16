@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { CheckCircle, XCircle, Loader2, Mail } from 'lucide-react';
+import { useAlertModal } from '@/contexts/AlertModalContext';
 
 type Props = {
     uid: string;
@@ -13,9 +14,10 @@ type ActivationState = 'loading' | 'success' | 'error';
 
 const ActivateAccountContent = ({ uid, token }: Props) => {
     const router = useRouter();
+    const { showAlert } = useAlertModal();
     const [status, setStatus] = useState<ActivationState>('loading');
     const [error, setError] = useState('');
-    const [errorDetails, setErrorDetails] = useState<any>(null);
+    const [errorDetails, setErrorDetails] = useState<unknown>(null);
     const [countdown, setCountdown] = useState(3);
     const [showResendOption, setShowResendOption] = useState(false);
     const [resendEmail, setResendEmail] = useState('');
@@ -90,23 +92,34 @@ const ActivateAccountContent = ({ uid, token }: Props) => {
 
             setStatus('success');
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Activation error:', err);
-            setError(err.message || 'Failed to activate account. The link may be invalid or expired.');
+            const message = err instanceof Error
+                ? err.message
+                : 'Failed to activate account. The link may be invalid or expired.';
+            setError(message);
             setStatus('error');
         }
     };
 
     const handleResendActivation = async () => {
         if (!resendEmail.trim()) {
-            alert('Please enter your email address');
+            showAlert({
+                title: 'Email Required',
+                message: 'Please enter your email address',
+                variant: 'error',
+            });
             return;
         }
 
         // Basic email validation
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(resendEmail)) {
-            alert('Please enter a valid email address');
+            showAlert({
+                title: 'Invalid Email',
+                message: 'Please enter a valid email address',
+                variant: 'error',
+            });
             return;
         }
 
@@ -140,18 +153,24 @@ const ActivateAccountContent = ({ uid, token }: Props) => {
 
             setResendSuccess(true);
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error('Resend error:', err);
             
             // Show user-friendly error
-            let displayError = err.message || 'Failed to resend activation email. Please try again.';
+            let displayError = err instanceof Error
+                ? err.message
+                : 'Failed to resend activation email. Please try again.';
             
             // Add helpful hints for common errors
             if (displayError.toLowerCase().includes('not found') || displayError.toLowerCase().includes('does not exist')) {
                 displayError += '\n\nMake sure you entered the exact email address you used to sign up.';
             }
             
-            alert(displayError);
+            showAlert({
+                title: 'Resend Failed',
+                message: displayError,
+                variant: 'error',
+            });
         } finally {
             setResendLoading(false);
         }

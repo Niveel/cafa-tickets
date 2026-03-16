@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -10,6 +10,7 @@ import { placeholderPic } from '@/data/constants';
 import { navLinks, profileMenuItems } from "@/data/static.general";
 import { ProfileDropdown, AppButton, Modal } from "@/components";
 import { CurrentUser as CurrentUserType } from "@/types/general.types";
+import { useAlertModal } from "@/contexts/AlertModalContext";
 
 interface NavBarProps { 
     isLoggedIn?: boolean;
@@ -17,6 +18,7 @@ interface NavBarProps {
 }
 
 const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
+    const router = useRouter();
     const [navbarActive, setNavbarActive] = useState<boolean>(true);
     const [showBg, setShowBg] = useState<boolean>(false);
     const [mobileNavMenuActive, setMobileNavMenuActive] = useState<boolean>(false);
@@ -28,6 +30,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
 
     const mobileMenuRef = useRef<HTMLDivElement>(null);
     const closeButtonRef = useRef<HTMLButtonElement>(null);
+    const { showConfirm } = useAlertModal();
 
     const pathname = usePathname();
 
@@ -141,6 +144,26 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
         }
     };
 
+    const handleCreateEventClick = () => {
+        if (currentUser?.is_organizer) {
+            router.push('/dashboard/events/create');
+            setMobileNavMenuActive(false);
+            return;
+        }
+
+        showConfirm({
+            title: 'Identity Verification Required',
+            message: 'You need to complete identity verification before creating an event.',
+            confirmText: 'Start Verification',
+            cancelText: 'Cancel',
+            variant: 'info',
+            onConfirm: () => {
+                setMobileNavMenuActive(false);
+                router.push('/dashboard/profile/verify');
+            },
+        });
+    };
+
     return (
         <>
             <nav
@@ -218,7 +241,7 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                                     <div className="hidden sm:block">
                                         <AppButton
                                             title="Create Event"
-                                            url="/dashboard/events/create"
+                                            onClick={handleCreateEventClick}
                                             variant="primary"
                                             size="md"
                                             icon={<Plus className="w-4 h-4" />}
@@ -342,13 +365,13 @@ const Navbar = ({ isLoggedIn = false, currentUser = null }: NavBarProps) => {
                                 >
                                     My Tickets
                                 </Link>
-                                <Link
-                                    href="/events/create"
+                                <button
+                                    type="button"
                                     className="px-3 py-2 rounded-lg bg-accent text-white text-center small-text font-medium hover:bg-accent-100 transition-colors"
-                                    onClick={() => setMobileNavMenuActive(false)}
+                                    onClick={handleCreateEventClick}
                                 >
                                     Create Event
-                                </Link>
+                                </button>
                             </div>
                         </div>
                     )}

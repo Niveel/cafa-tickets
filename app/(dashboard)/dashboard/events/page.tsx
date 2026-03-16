@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { Plus, Calendar, Loader2, ShieldCheck } from 'lucide-react';
+import { Calendar, Loader2, ShieldCheck } from 'lucide-react';
 
-import { MyEventsContent } from '@/components';
+import { CreateEventGuardButton, MyEventsContent } from '@/components';
 import { getCurrentUser } from '@/app/lib/auth';
 
 const DashboardEventsPage = async () => {
@@ -29,22 +29,10 @@ const DashboardEventsPage = async () => {
                         <Calendar className="w-5 h-5" aria-hidden="true" />
                         Attended Events
                     </Link>
-                    <Link
-                        href={isOrganizer ? "/dashboard/events/create" : "/dashboard/profile/verify"}
+                    <CreateEventGuardButton
+                        canCreateEvent={!!isOrganizer}
                         className="inline-flex items-center gap-2 px-6 py-3 bg-accent text-white rounded-xl font-semibold normal-text-2 hover:bg-accent-100 transition-all duration-300 hover:scale-[1.02]"
-                    >
-                        {isOrganizer ? (
-                            <>
-                                <Plus className="w-5 h-5" aria-hidden="true" />
-                                Create Event
-                            </>
-                        ) : (
-                            <>
-                                <ShieldCheck className="w-5 h-5" aria-hidden="true" />
-                                Verify to Create Event
-                            </>
-                        )}
-                    </Link>
+                    />
                 </div>
             </div>
 
@@ -80,7 +68,7 @@ const DashboardEventsPage = async () => {
                     <Loader2 className="w-8 h-8 text-accent animate-spin" />
                 </div>
             }>
-                <MyEventsContent />
+                <MyEventsContent canCreateEvent={!!isOrganizer} />
             </Suspense>
         </main>
     );

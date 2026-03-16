@@ -8,11 +8,12 @@ import { Modal } from '@/components';
 
 type Props = {
     profiles: PaymentProfile[];
-    onSetDefault: (profileId: string) => void;
+    onSetDefault: (profileId: string) => Promise<void>;
     onDelete: (profileId: string) => void;
+    settingDefaultId?: string | null;
 };
 
-const PaymentProfilesList = ({ profiles, onSetDefault, onDelete }: Props) => {
+const PaymentProfilesList = ({ profiles, onSetDefault, onDelete, settingDefaultId = null }: Props) => {
     const [deletingId, setDeletingId] = React.useState<string | null>(null);
     const [showDeleteModal, setShowDeleteModal] = React.useState(false);
     const [profileToDelete, setProfileToDelete] = React.useState<{ id: string; name: string } | null>(null);
@@ -100,6 +101,7 @@ const PaymentProfilesList = ({ profiles, onSetDefault, onDelete }: Props) => {
                     const statusBadge = getStatusBadge(profile.status);
                     const StatusIcon = statusBadge.icon;
                     const isDeleting = deletingId === profile.id;
+                    const isSettingDefault = settingDefaultId === profile.id;
 
                     return (
                         <div 
@@ -214,11 +216,20 @@ const PaymentProfilesList = ({ profiles, onSetDefault, onDelete }: Props) => {
                                         <button
                                             type="button"
                                             onClick={() => onSetDefault(profile.id)}
-                                            disabled={isDeleting}
+                                            disabled={isDeleting || settingDefaultId !== null}
                                             className="flex items-center justify-center gap-2 px-4 py-2 bg-accent/20 text-accent-50 rounded-lg font-semibold normal-text-2 hover:bg-accent/30 transition-all duration-300 border border-accent/30 disabled:opacity-50 whitespace-nowrap"
                                         >
-                                            <Star className="w-4 h-4" aria-hidden="true" />
-                                            Set Default
+                                            {isSettingDefault ? (
+                                                <>
+                                                    <div className="w-4 h-4 border-2 border-accent-50 border-t-transparent rounded-full animate-spin" />
+                                                    Setting...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Star className="w-4 h-4" aria-hidden="true" />
+                                                    Set Default
+                                                </>
+                                            )}
                                         </button>
                                     )}
                                     

@@ -7,7 +7,7 @@ import { MyEventsFilters, MyEventsList } from "@/components";
 import { MyEvent } from '@/types/dash-events.types';
 import { useInfiniteScroll } from '@/hooks';
 
-const MyEventsContent = () => {
+const MyEventsContent = ({ canCreateEvent }: { canCreateEvent: boolean }) => {
     const [events, setEvents] = useState<MyEvent[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [hasMore, setHasMore] = useState(false);
@@ -184,6 +184,7 @@ const MyEventsContent = () => {
                     <MyEventsList
                         events={events}
                         onDelete={handleDeleteClick}
+                        canCreateEvent={canCreateEvent}
                     />
 
                     {hasMore && <div ref={scrollRef} className="h-10" />}

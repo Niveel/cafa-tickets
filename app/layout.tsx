@@ -4,7 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
 import "@/styles/general.css";
-import { CurrencyProvider } from "@/contexts/CurrencyContext";
+import AppProviders from "@/components/providers/AppProviders";
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 0; // Don't cache
@@ -225,9 +225,9 @@ export default function RootLayout({
         className={`${nunito.variable} ${rhodiumLibre.variable} ${metrophobic.variable} antialiased`}
       >
         <Analytics />
-        <CurrencyProvider>
+        <AppProviders>
           {children}
-        </CurrencyProvider>
+        </AppProviders>
       </body>
     </html>
   );

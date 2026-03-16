@@ -49,8 +49,11 @@ const AppFormField = <Values extends StringFieldFormValues = StringFieldFormValu
                     name={name}
                     label={label}
                     value={value}
-                    onChange={(val) => setFieldValue(name, val)}
-                    onBlur={() => setFieldTouched(name)}
+                    onChange={(val) => {
+                        setFieldValue(name, val, true);
+                        setFieldTouched(name, true, true);
+                    }}
+                    onBlur={() => setFieldTouched(name, true, true)}
                     options={options}
                     required={required}
                     placeholder={placeholder}

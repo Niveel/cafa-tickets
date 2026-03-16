@@ -8,6 +8,7 @@ import { Calendar, MapPin, Clock, CheckCircle, Download, Eye, Loader2 } from 'lu
 import { placeholderImage } from '@/data/constants';
 import { MyTicket } from '@/types/tickets.types';
 import { sanitizeImageUrl } from '@/utils/sanitizeEventData';
+import { useAlertModal } from '@/contexts/AlertModalContext';
 
 type Props = {
     ticket: MyTicket;
@@ -15,6 +16,7 @@ type Props = {
 
 const MyTicketCard = ({ ticket }: Props) => {
     const [isDownloading, setIsDownloading] = useState(false);
+    const { showAlert } = useAlertModal();
 
     const formatDate = (date: string) => {
         return new Date(date).toLocaleDateString('en-GH', {
@@ -81,7 +83,11 @@ const MyTicketCard = ({ ticket }: Props) => {
             document.body.removeChild(a);
         } catch (error) {
             console.error('Download failed:', error);
-            alert(error instanceof Error ? error.message : 'Failed to download ticket');
+            showAlert({
+                title: 'Download Failed',
+                message: error instanceof Error ? error.message : 'Failed to download ticket',
+                variant: 'error',
+            });
         } finally {
             setIsDownloading(false);
         }

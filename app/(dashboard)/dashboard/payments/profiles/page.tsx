@@ -46,7 +46,7 @@ const PaymentProfilesPage = async () => {
                 </h2>
                 <div className="space-y-2">
                     <p className="normal-text text-slate-200">
-                        • Add your or <strong>Bank Account</strong> to receive payments
+                        • Add your <strong>Bank Account</strong> to receive payments.
                     </p>
                     <p className="normal-text text-slate-200">
                         • Set one profile as <strong>default</strong> for automatic payouts

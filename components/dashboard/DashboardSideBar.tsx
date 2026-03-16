@@ -7,12 +7,14 @@ import { LogOut, AlertTriangle } from "lucide-react";
 
 import { dashboardSideLinks } from "@/data/static.general";
 import { AppButton, Modal } from "@/components";
+import { useAlertModal } from "@/contexts/AlertModalContext";
 
 const DashboardSideBar = () => {
     const pathname = usePathname();
     const router = useRouter();
     const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const { showAlert } = useAlertModal();
 
     const activeLink = dashboardSideLinks
         .filter(link => pathname === link.link || pathname.startsWith(link.link + '/'))
@@ -33,11 +35,19 @@ const DashboardSideBar = () => {
                 router.push('/login');
             } else {
                 console.error('Logout failed:', response.status);
-                alert('Failed to logout. Please try again.');
+                showAlert({
+                    title: 'Logout Failed',
+                    message: 'Failed to logout. Please try again.',
+                    variant: 'error',
+                });
             }
         } catch (error) {
             console.error('Logout error:', error);
-            alert('An error occurred. Please try again.');
+            showAlert({
+                title: 'Logout Failed',
+                message: 'An error occurred. Please try again.',
+                variant: 'error',
+            });
         } finally {
             setIsLoggingOut(false);
             setShowLogoutModal(false);
