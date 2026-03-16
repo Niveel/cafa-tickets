@@ -156,6 +156,7 @@ const DashboardTopBar: React.FC<Props> = ({ user }) => {
                             <li key={index}>
                                 <Link
                                     href={link.link}
+                                    prefetch={false}
                                     className={`px-4 py-3 rounded-xl duration-300 flex items-center gap-3 w-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-accent transition-all ${
                                         isActive 
                                             ? 'bg-accent text-white shadow-lg border-2 border-accent' 

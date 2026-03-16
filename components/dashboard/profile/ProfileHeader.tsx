@@ -34,8 +34,6 @@ const ProfileHeader = ({ user }: Props) => {
         return formatDate(date);
     };
 
-    console.log("Profile image", user.profile_image);
-
     return (
         <div role="region" aria-label="Profile header" className="bg-primary rounded-xl p-4 sm:p-8">
             <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">

@@ -71,6 +71,7 @@ const DashboardSideBar = () => {
                                 <Link
                                     key={index}
                                     href={link.link}
+                                    prefetch={false}
                                     className={`flex items-center rounded-xl gap-3 px-3 py-2 transition-all duration-300 relative group ${
                                         isActive
                                             ? "bg-accent text-white shadow-lg border-2 border-accent"
