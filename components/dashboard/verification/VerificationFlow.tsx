@@ -8,6 +8,9 @@ import { CurrentUser } from '@/types/general.types';
 import type { VerificationStatus, VerificationStatusResponse } from '@/types/verification.types';
 
 type VerificationStep = 'id-upload' | 'selfie' | 'result';
+type VerificationDisplayStatus = VerificationStatus | 'timeout';
+
+const SELFIE_VERIFICATION_TIMEOUT_MS = 45000;
 
 interface VerificationFlowProps {
     user: CurrentUser | null;
@@ -17,16 +20,37 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
     const [currentStep, setCurrentStep] = useState<VerificationStep>('id-upload');
     const [idImage, setIdImage] = useState<File | null>(null);
     const [selfieImage, setSelfieImage] = useState<File | null>(null);
-    const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>('not_started');
+    const [verificationStatus, setVerificationStatus] = useState<VerificationDisplayStatus>('not_started');
     const [rejectionReason, setRejectionReason] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-
-    // ✅ NEW: Error states
     const [uploadError, setUploadError] = useState<string | null>(null);
+    const [pendingStartedAt, setPendingStartedAt] = useState<number | null>(null);
 
     useEffect(() => {
         checkVerificationStatus();
     }, []);
+
+    useEffect(() => {
+        if (verificationStatus !== 'pending' || currentStep !== 'result') {
+            return;
+        }
+
+        const startedAt = pendingStartedAt ?? Date.now();
+        if (!pendingStartedAt) {
+            setPendingStartedAt(startedAt);
+        }
+
+        const elapsed = Date.now() - startedAt;
+        const remaining = Math.max(SELFIE_VERIFICATION_TIMEOUT_MS - elapsed, 0);
+
+        const timeoutId = window.setTimeout(() => {
+            setVerificationStatus('timeout');
+            setRejectionReason('Verification timed out. Please retry and upload your ID and selfie again.');
+            setIsLoading(false);
+        }, remaining);
+
+        return () => window.clearTimeout(timeoutId);
+    }, [currentStep, pendingStartedAt, verificationStatus]);
 
     const checkVerificationStatus = async () => {
         try {
@@ -36,6 +60,12 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
             if (response.ok && result.success) {
                 const status = result.data.verification_status;
                 setVerificationStatus(status);
+
+                if (status === 'pending') {
+                    setPendingStartedAt(Date.now());
+                } else {
+                    setPendingStartedAt(null);
+                }
 
                 if (status === 'not_started') {
                     setCurrentStep('id-upload');
@@ -60,7 +90,8 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
     const handleIDUpload = async (file: File) => {
         setIdImage(file);
         setIsLoading(true);
-        setUploadError(null); // ✅ Clear previous errors
+        setUploadError(null);
+        setRejectionReason(null);
 
         try {
             const formData = new FormData();
@@ -75,11 +106,10 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
 
             if (response.ok && data.success) {
                 setVerificationStatus('id_uploaded');
+                setPendingStartedAt(null);
                 setTimeout(() => setCurrentStep('selfie'), 500);
             } else {
-                console.error('ID Upload Failed:', data);
-
-                // ✅ FIXED: Set error state instead of console.log
+                console.error('ID upload failed:', data);
                 const errorMessage = data.message || data.error || 'Failed to upload ID. Please try again.';
                 setUploadError(errorMessage);
             }
@@ -95,70 +125,79 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
         setSelfieImage(file);
         setCurrentStep('result');
         setVerificationStatus('pending');
+        setPendingStartedAt(Date.now());
         setIsLoading(true);
         setUploadError(null);
+        setRejectionReason(null);
+
+        let timeoutId: number | undefined;
 
         try {
             const formData = new FormData();
             formData.append('selfie_image', file);
 
+            const controller = new AbortController();
+            timeoutId = window.setTimeout(() => controller.abort(), SELFIE_VERIFICATION_TIMEOUT_MS);
+
             const response = await fetch('/api/auth/verification/upload-selfie', {
                 method: 'POST',
                 body: formData,
+                signal: controller.signal,
             });
 
+            window.clearTimeout(timeoutId);
             const data = await response.json();
 
             if (response.ok && data.success) {
                 if (data.data.verification_status === 'verified') {
                     setVerificationStatus('verified');
+                    setPendingStartedAt(null);
                 } else if (data.data.verification_status === 'rejected') {
-                    console.log('\n❌ Verification Rejected');
-                    console.log('Full Response:', data);
-                    console.log('Rejection Reason:', data.data.rejection_reason);
-                    console.log('Message:', data.message);
-                    console.log('');
-
                     setVerificationStatus('rejected');
+                    setPendingStartedAt(null);
 
-                    // ✅ FIXED: Extract message from rejection_reason object
                     const reason = data.data.rejection_reason;
-                    let reasonMessage: string;
-
-                    if (typeof reason === 'string') {
-                        // If it's already a string, use it
-                        reasonMessage = reason;
-                    } else if (reason && typeof reason === 'object' && reason.message) {
-                        // If it's an object with a message property, extract it
-                        reasonMessage = reason.message;
-                    } else {
-                        // Fallback message
-                        reasonMessage = 'Verification failed. Please try again.';
-                    }
+                    const reasonMessage =
+                        typeof reason === 'string'
+                            ? reason
+                            : reason && typeof reason === 'object' && 'message' in reason
+                                ? String(reason.message)
+                                : 'Verification failed. Please try again.';
 
                     setRejectionReason(reasonMessage);
+                } else {
+                    setVerificationStatus('pending');
                 }
             } else {
-                console.error('Selfie Upload Failed:', data);
-
+                console.error('Selfie upload failed:', data);
                 const errorMessage = data.message || data.error || 'Failed to upload selfie. Please try again.';
                 setUploadError(errorMessage);
                 setCurrentStep('selfie');
                 setVerificationStatus('id_uploaded');
+                setPendingStartedAt(null);
             }
         } catch (error) {
             console.error('Selfie upload error:', error);
-            setUploadError('Network error. Please check your connection and try again.');
-            setCurrentStep('selfie');
-            setVerificationStatus('id_uploaded');
+            if (error instanceof DOMException && error.name === 'AbortError') {
+                setVerificationStatus('timeout');
+                setRejectionReason('Verification timed out. Please retry and upload your ID and selfie again.');
+            } else {
+                setUploadError('Network error. Please check your connection and try again.');
+                setCurrentStep('selfie');
+                setVerificationStatus('id_uploaded');
+                setPendingStartedAt(null);
+            }
         } finally {
+            if (timeoutId) {
+                window.clearTimeout(timeoutId);
+            }
             setIsLoading(false);
         }
     };
 
     const handleRetry = async () => {
         setIsLoading(true);
-        setUploadError(null); // ✅ Clear errors
+        setUploadError(null);
 
         try {
             const response = await fetch('/api/auth/verification/retry', {
@@ -173,6 +212,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                 setRejectionReason(null);
                 setVerificationStatus('not_started');
                 setCurrentStep('id-upload');
+                setPendingStartedAt(null);
             } else {
                 console.error('Retry failed:', data);
                 setUploadError(data.message || 'Failed to reset verification. Please try again.');
@@ -185,7 +225,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
         }
     };
 
-    if (isLoading && currentStep === 'result') {
+    if (isLoading && currentStep === 'result' && verificationStatus === 'pending') {
         return (
             <div className="max-w-3xl mx-auto">
                 <VerificationHeader
@@ -222,7 +262,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                         <IDUploadStep
                             onUpload={handleIDUpload}
                             isLoading={isLoading}
-                            error={uploadError} // ✅ Pass error to component
+                            error={uploadError}
                         />
                     </motion.div>
                 )}
@@ -239,7 +279,7 @@ const VerificationFlow = ({ user }: VerificationFlowProps) => {
                             onUpload={handleSelfieUpload}
                             idImage={idImage}
                             isLoading={isLoading}
-                            error={uploadError} // ✅ Pass error to component
+                            error={uploadError}
                         />
                     </motion.div>
                 )}

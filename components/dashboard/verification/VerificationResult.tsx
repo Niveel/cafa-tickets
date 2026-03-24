@@ -5,8 +5,10 @@ import { CheckCircle, Loader2, XCircle, ArrowRight, RefreshCw } from 'lucide-rea
 
 import type { VerificationStatus } from '@/types/verification.types';
 
+type VerificationDisplayStatus = VerificationStatus | 'timeout';
+
 interface VerificationResultProps {
-    status: VerificationStatus;
+    status: VerificationDisplayStatus;
     idImage: File | null;
     selfieImage: File | null;
     rejectionReason: string | null;
@@ -84,6 +86,30 @@ const VerificationResult = ({ status, rejectionReason, onRetry }: VerificationRe
                 >
                     <RefreshCw className="w-5 h-5" />
                     Try Again
+                </button>
+            </div>
+        );
+    }
+
+    if (status === 'timeout') {
+        return (
+            <div className="bg-primary-100 rounded-2xl border-2 border-red-500 p-12 text-center">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-red-500/20 flex items-center justify-center">
+                    <XCircle className="w-10 h-10 text-red-400" />
+                </div>
+                <h2 className="big-text-2 font-bold text-white mb-3">
+                    Verification Timed Out
+                </h2>
+                <p className="normal-text text-slate-300 mb-8">
+                    {rejectionReason || 'Verification is taking too long. Please restart and upload your ID and selfie again.'}
+                </p>
+
+                <button
+                    onClick={onRetry}
+                    className="inline-flex items-center gap-3 px-8 py-4 bg-accent text-white rounded-xl font-bold big-text-5 hover:bg-accent-100 transition-all"
+                >
+                    <RefreshCw className="w-5 h-5" />
+                    Retry Verification
                 </button>
             </div>
         );
