@@ -1,5 +1,11 @@
 import { BASE_URL } from '@/data/constants';
 
+interface SitemapEvent {
+    slug: string;
+    updated_at?: string;
+    created_at?: string;
+}
+
 export async function GET() {
     // Frontend base URL
     const frontendUrl = process.env.NODE_ENV === 'production'
@@ -13,6 +19,7 @@ export async function GET() {
         '/contact',
         '/events',
         '/events/history',
+        '/onboarding',
         '/privacy',
         '/terms',
         
@@ -42,14 +49,14 @@ export async function GET() {
     ];
 
     // Fetch dynamic events from backend
-    let events: any[] = [];
+    let events: SitemapEvent[] = [];
     try {
         const response = await fetch(`${BASE_URL}/events/?page_size=1000`, {
             cache: 'no-store',
         });
         if (response.ok) {
             const data = await response.json();
-            events = data.results;
+            events = Array.isArray(data?.results) ? data.results : [];
         }
     } catch (error) {
         console.error('Error fetching events for sitemap:', error);
