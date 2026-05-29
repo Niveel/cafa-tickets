@@ -71,12 +71,15 @@ ${staticRoutes.map(route => `  <url>
     <changefreq>weekly</changefreq>
     <priority>${route === '' ? '1.0' : '0.8'}</priority>
   </url>`).join('\n')}
-${events.map(event => `  <url>
+${events.map(event => {
+    const lastMod = event.updated_at ?? event.created_at ?? new Date().toISOString();
+    return `  <url>
     <loc>${frontendUrl}/events/${event.slug}</loc>
-    <lastmod>${new Date(event.updated_at || event.created_at).toISOString()}</lastmod>
+    <lastmod>${new Date(lastMod).toISOString()}</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
-  </url>`).join('\n')}
+  </url>`;
+}).join('\n')}
 </urlset>`;
 
     return new Response(xml, {
